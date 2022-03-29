@@ -24,4 +24,6 @@ public class UserDTOService {
         }
         return false;
     }
+
+    //Some text to check something
 }
