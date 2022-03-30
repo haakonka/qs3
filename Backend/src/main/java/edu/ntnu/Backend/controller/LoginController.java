@@ -1,6 +1,7 @@
 package edu.ntnu.Backend.controller;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
+import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +15,29 @@ import java.util.List;
 @CrossOrigin
 public class LoginController {
     private final UserService userService;
+    private final AutenticationService autenticationService;
 
 
-    public LoginController(UserService userService) {
+    public LoginController(UserService userService, AutenticationService autenticationService) {
         this.userService = userService;
+        this.autenticationService = autenticationService;
     }
 
-    @GetMapping("/")
-    public List<UserDAO> checkIfUserIsValid() {
+
+//remove before final submit
+    @GetMapping("/test")
+    public List<UserDAO> test() {
 
     return userService.findAll();
+    }
+
+
+    @GetMapping("/autent")
+    public Object checkIfUserIsValidAndSendToken(){
+
+
+        return false;
+
     }
 
 }

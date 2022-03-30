@@ -3,7 +3,6 @@ import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
