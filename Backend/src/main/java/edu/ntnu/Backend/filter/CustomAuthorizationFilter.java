@@ -25,8 +25,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/api/login")){
+        if(request.getServletPath().contains("/api/login")){
             filterChain.doFilter(request,response);
+            System.out.println("hei");
         }else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
