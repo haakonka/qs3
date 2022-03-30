@@ -21,19 +21,9 @@ public class BackendApplication {
 
 
 	@Bean
-	PasswordEncoder passwordEncoder(){
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	//for testing without frontend
-	//int id, String firstName, String lastName, String hash, String salt, String email, int roles
-	@Bean
-	CommandLineRunner run(UserService userService){
-		return args -> {
-			userService.saveUserDAO(new UserDAO("test","testington","veldigKulHash", userService.generateSalt(),"Yahoo@yahoo.com",0 ));
-			TimeUnit.SECONDS.sleep(30);
-			userService.deleteUserDAO(userService.findByEmail("Yahoo@yahoo.com"));
-		};
-	}
 
 }

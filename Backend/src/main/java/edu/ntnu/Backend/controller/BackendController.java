@@ -17,18 +17,33 @@ public class BackendController {
     private final UserService userService;
     private final AutenticationService autenticationService;
 
+    /*ADMIN API CALLS /api/admin/**
+      STUDASS API CALLS /api/studass/**
+      USER API CALLS /api/user**
 
-//remove before final submit
-    @GetMapping("/test")
+     */
+
+
+    //remove before final submit
+    @GetMapping("/admin")
     public ResponseEntity<List<UserDAO>> test() {
-
     return ResponseEntity.ok().body(userService.findAll());
     }
 
-    @PostMapping("/save/user")
+    @PostMapping("/admin/saveuser")
     public ResponseEntity<UserDAO> saveUser(@RequestBody UserDAO userDAO) {
         return ResponseEntity.ok().body(userService.saveUserDAO(userDAO));
     }
+
+    @GetMapping("/studass/")
+    public String testStudass() {
+        return "hello im a studass";
+    }
+    @GetMapping("/user/")
+    public String testUser() {
+        return "Hello im a user";
+    }
+
 
 
 
