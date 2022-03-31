@@ -10,6 +10,7 @@ import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -34,8 +35,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("FILTER");
         if(request.getServletPath().equals("/api/login")){
-            filterChain.doFilter(request,response);
             System.out.println("hei");
+
         }else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             System.out.println("CHECKING AUTHEADER");

@@ -1,6 +1,5 @@
 package edu.ntnu.Backend.security;
 
-import edu.ntnu.Backend.filter.CustomAutenticationFilter;
 import edu.ntnu.Backend.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -43,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAutenticationFilter customAutenticationFilter = new CustomAutenticationFilter(authenticationManagerBean());
-        customAutenticationFilter.setFilterProcessesUrl("/api/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
@@ -60,7 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //http.authorizeRequests().antMatchers("/api/admin/users").permitAll();
 
-        http.addFilter(customAutenticationFilter);
 
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

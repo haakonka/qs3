@@ -2,7 +2,7 @@
   <title>QS3</title>
   <h1>QS3</h1>
   <div class="login">
-    <form @submit="onSubmit">
+    <form @submit.prevent="onSubmit">
       <p>
         <label for="email"> E-post </label>
         <input v-model="email" name="email" type="email" placeholder="E-post" />
@@ -58,6 +58,7 @@ label {
 </style>
 
 <script>
+import axios from "axios";
 export default {
   name: "LoginView",
   components: {},
@@ -70,17 +71,27 @@ export default {
   },
   methods: {
     onSubmit() {
+      console.log("data :" + this.password + "   " + this.email);
       /*
-      // send a POST request
-      axios({
-        method: "post",
-        url: "/login",
-        data: {
-          email: this.email,
+     var username = {
+        params: {
+          username: this.email,
+        },
+      };
+      var password = {
+        params: {
           password: this.password,
         },
-      }); */
-      this.$router.push("/home");
+      };
+      */
+
+      let res = axios.post("http://localhost:8081/api/login/authentication", {
+        username: this.email,
+        password: this.password,
+      });
+      console.log(res);
+
+      //this.$router.push("/home");
     },
   },
 };

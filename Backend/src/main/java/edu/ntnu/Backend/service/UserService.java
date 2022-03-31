@@ -20,10 +20,17 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
-@Service @Transactional @RequiredArgsConstructor
+@Service @Transactional
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
 
 
     @Override
