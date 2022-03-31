@@ -25,8 +25,9 @@ public class BackendController {
 
 
     //remove before final submit
-    @GetMapping("/admin")
+    @GetMapping("/admin/users")
     public ResponseEntity<List<UserDAO>> test() {
+        System.out.println("Tryng to acess all users");
     return ResponseEntity.ok().body(userService.findAll());
     }
 
@@ -39,6 +40,7 @@ public class BackendController {
     public String testStudass() {
         return "hello im a studass";
     }
+
     @GetMapping("/user/")
     public String testUser() {
         return "Hello im a user";

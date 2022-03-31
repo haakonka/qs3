@@ -1,6 +1,7 @@
 package edu.ntnu.Backend.security;
 
 import edu.ntnu.Backend.filter.CustomAutenticationFilter;
+import edu.ntnu.Backend.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -57,9 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET,"/api/user/**").hasAnyAuthority("0");
         http.authorizeRequests().antMatchers(POST,"/api/user/**").hasAnyAuthority("0");
 
+        //http.authorizeRequests().antMatchers("/api/admin/users").permitAll();
+
         http.addFilter(customAutenticationFilter);
 
-        http.addFilterBefore(new CustomAutenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
