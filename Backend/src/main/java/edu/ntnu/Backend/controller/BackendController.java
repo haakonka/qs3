@@ -4,6 +4,7 @@ import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,17 +33,17 @@ public class BackendController {
 
 
     @PostMapping("/login/authentication")
-    public String loggingIn(@RequestBody LoginDTO loginDTO) throws NoSuchAlgorithmException, ServletException, IOException {
+    public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO) throws NoSuchAlgorithmException, ServletException, IOException {
         System.out.println("in login methode");
         System.out.println(loginDTO.password);
         System.out.println(loginDTO.username);
         if (autenticationService.attemptAuthentication(loginDTO.getUsername(), loginDTO.getPassword())) {
             UserDAO user = userService.findByEmail(loginDTO.getUsername());
             String token = autenticationService.successfulAuthentication(user);
-            return token;
+            return new ResponseEntity(token,HttpStatus.OK);
         }
 
-        return "failed authentication";
+        return new ResponseEntity("Failed login", HttpStatus.BAD_REQUEST);
     }
 
 

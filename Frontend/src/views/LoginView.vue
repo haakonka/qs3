@@ -38,26 +38,28 @@ export default {
   methods: {
     async onSubmit() {
       console.log("data :" + this.password + "   " + this.email);
-
-      let res = await axios.post(
-        "http://localhost:8081/api/login/authentication",
-        {
+      let gotError = false;
+      let res = await axios
+        .post("http://localhost:8081/api/login/authentication", {
           username: this.email,
           password: this.password,
-        }
-      );
-      console.log(res);
-      let token = res.data;
-      localStorage.setItem("token", token);
-      let decoded = jwt_decode(token);
-      console.log(JSON.stringify(localStorage.getItem("token")));
+        })
+        .catch((error) => {
+          console.log(error);
+          gotError = true;
+        });
+      if (!gotError) {
+        console.log(res);
+        let token = res.data;
+        localStorage.setItem("token", token);
+        let decoded = jwt_decode(token);
 
-      localStorage.setItem("user", JSON.stringify(decoded));
-      console.log("user: " + decoded);
-
-      if (token != undefined) {
-        this.$router.push("/home");
+        localStorage.setItem("user", JSON.stringify(decoded));
+        console.log("user: " + decoded);
       }
+
+      //this wont work if they get a invalid respons, see navigation gurad in router.
+      this.$router.push("/home");
     },
   },
 };

@@ -32,10 +32,8 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from, next) => {
-  if (
-    to.name !== "login" &&
-    JSON.stringify(localStorage.getItem("token")).length < 40
-  ) {
+  let token = JSON.stringify(localStorage.getItem("token"));
+  if (to.name !== "login" && token.split(".").length < 3) {
     console.log("not allowed:");
     console.log(JSON.stringify(localStorage.getItem("token")));
     next({ name: "login" });
