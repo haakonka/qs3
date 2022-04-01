@@ -31,5 +31,18 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
+router.beforeEach((to, from, next) => {
+  if (
+    to.name !== "login" &&
+    JSON.stringify(localStorage.getItem("token")).length < 40
+  ) {
+    console.log("not allowed:");
+    console.log(JSON.stringify(localStorage.getItem("token")));
+    next({ name: "login" });
+  } else {
+    console.log("allowed");
+    next();
+  }
+});
 
 export default router;

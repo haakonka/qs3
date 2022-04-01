@@ -1,13 +1,11 @@
 package edu.ntnu.Backend.controller;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
-import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
+import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -38,7 +36,7 @@ public class BackendController {
         System.out.println("in login methode");
         System.out.println(loginDTO.password);
         System.out.println(loginDTO.username);
-        if(autenticationService.attemptAuthentication(loginDTO.getUsername(), loginDTO.getPassword())){
+        if (autenticationService.attemptAuthentication(loginDTO.getUsername(), loginDTO.getPassword())) {
             UserDAO user = userService.findByEmail(loginDTO.getUsername());
             String token = autenticationService.successfulAuthentication(user);
             return token;
@@ -52,7 +50,7 @@ public class BackendController {
     @GetMapping("/admin/users")
     public ResponseEntity<List<UserDAO>> test() {
         System.out.println("Tryng to acess all users");
-    return ResponseEntity.ok().body(userService.findAll());
+        return ResponseEntity.ok().body(userService.findAll());
     }
 
     @PostMapping("/admin/saveuser")
@@ -72,7 +70,7 @@ public class BackendController {
 
 
     @RequestMapping("/autent")
-    public Object checkIfUserIsValidAndSendToken(){
+    public Object checkIfUserIsValidAndSendToken() {
 
         return "helloWord";
 

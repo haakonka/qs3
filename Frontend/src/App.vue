@@ -8,7 +8,7 @@
 
 <style>
 body {
-  background: linear-gradient(-45deg, #ff6ec7, #feeb75);
+  background: linear-gradient(-45deg, #6d327c, #485da6, #00a1ba);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
