@@ -22,6 +22,7 @@ import java.util.Date;
 public class AutenticationService {
     //make jwt TOKEN with name, role, epost
     private UserService userService;
+    private Algorithm algorithm = Algorithm.HMAC256("tiL8yZXjlEvxKImZS0YeIQC5V29PFDcm2wSHn47texw6fpNKv34uqyWe/NUz5go3aAkRflcDFVfpfYwoLPZrFA==".getBytes(StandardCharsets.UTF_8));
 
     public AutenticationService(UserService userService) {
         this.userService = userService;
@@ -62,7 +63,6 @@ public class AutenticationService {
     }
 
     public boolean checkIfAuthorized(String token, int requirment){
-        Algorithm algorithm = Algorithm.HMAC256("tiL8yZXjlEvxKImZS0YeIQC5V29PFDcm2wSHn47texw6fpNKv34uqyWe/NUz5go3aAkRflcDFVfpfYwoLPZrFA==".getBytes(StandardCharsets.UTF_8));
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);
         String userEmail = decodedJWT.getSubject();
@@ -74,6 +74,12 @@ public class AutenticationService {
             return true;
         }
         return false;
+    }
+
+    public UserDAO getUserFromJWT(String token){
+        JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = jwtVerifier.verify(token);
+        return userService.findByEmail(decodedJWT.getSubject());
     }
 
 

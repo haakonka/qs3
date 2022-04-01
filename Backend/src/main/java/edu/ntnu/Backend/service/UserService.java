@@ -21,13 +21,6 @@ public class UserService{
         this.userRepository = userRepository;
     }
 
-    /*public UserDAO saveUserDAO(UserDAO userDAO) {
-        //ADD VALIDATION
-        System.out.println("SAVING USER");
-        //fix password
-        return userRepository.save(userDAO);
-    }*/
-
     public void deleteUserDAO(UserDAO userDAO) {
         System.out.println("we deleted user with the email: " + userDAO.getEmail());
         userRepository.delete(userDAO);

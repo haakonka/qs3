@@ -5,14 +5,15 @@ import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.model.DTO.TokenDTO;
 import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
+import edu.ntnu.Backend.service.UserSubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.json.Json;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -20,17 +21,13 @@ import java.util.List;
 public class BackendController {
     private final UserService userService;
     private final AutenticationService autenticationService;
+    private final UserSubjectService userSubjectService;
 
-    public BackendController(UserService userService) {
+    public BackendController(UserService userService, UserSubjectService userSubjectService ) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
+        this.userSubjectService = userSubjectService;
     }
-
-    /*ADMIN API CALLS /api/admin/**
-      STUDASS API CALLS /api/studass/**
-      USER API CALLS /api/user**
-     */
-
 
     @PostMapping("/login/authentication")
     public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO) throws NoSuchAlgorithmException, ServletException, IOException {
@@ -58,29 +55,20 @@ public class BackendController {
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
 
     }
-/*
-    @PostMapping("/admin/saveuser")
-    public ResponseEntity<UserDAO> saveUser(@RequestBody UserDAO userDAO) {
-        return ResponseEntity.ok().body(userService.saveUserDAO(userDAO));
-    }
-    */
 
-    @GetMapping("/studass/")
-    public String testStudass() {
-        return "hello im a studass";
-    }
 
-    @GetMapping("/user/")
-    public String testUser() {
-        return "Hello im a user";
+    @PostMapping("/user/subjects")
+    public ResponseEntity getSubjectForUser(@RequestBody TokenDTO token){
+        System.out.println("Tryng to acess all users");
+        System.out.println("token:" + token.getToken());
+        if(autenticationService.checkIfAuthorized(token.getToken(), 0)){
+            UserDAO user = autenticationService.getUserFromJWT(token.getToken());
+            System.out.println(userSubjectService.findByUserId(user.getId()).get(0).getSubjectCode());
+            return ResponseEntity.ok().body(userSubjectService.findByUserId(user.getId()));
+        }
+
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
-
-    @RequestMapping("/autent")
-    public Object checkIfUserIsValidAndSendToken() {
-
-        return "helloWord";
-
-    }
 
 }

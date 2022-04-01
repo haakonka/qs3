@@ -46,7 +46,7 @@ export default {
       });
 
       let res = await axios
-        .post("http://localhost:8081/api/admin/users", {
+        .post("http://localhost:8081/api/user/subjects", {
           token: tokenFromLocal,
         })
         .catch((error) => {

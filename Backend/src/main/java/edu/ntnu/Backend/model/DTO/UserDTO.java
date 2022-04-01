@@ -2,7 +2,7 @@ package edu.ntnu.Backend.model.DTO;
 
 public class UserDTO {
     String email;
-    String role;
+    String[] role;
 
     public String getEmail() {
         return email;
@@ -12,11 +12,11 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getRole() {
+    public String[] getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(String[] role) {
         this.role = role;
     }
 }
