@@ -1,6 +1,7 @@
 <template>
   <div class="about">
     <h2>Aktiv kø</h2>
+    <button v-on:click="showAllUsers">ShowAllUsers</button>
     <div class="container">
       <div class="activeSubjects">
         <div class="activeSubject">Emne 1</div>
@@ -30,11 +31,29 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   setup() {},
   methods: {
     onAssignmentSubmit() {
       this.$router.push("/assignments");
+    },
+
+    async showAllUsers() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      console.log({
+        token: tokenFromLocal,
+      });
+
+      let res = await axios
+        .post("http://localhost:8081/api/admin/users", {
+          token: tokenFromLocal,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      console.log(res);
     },
   },
 };

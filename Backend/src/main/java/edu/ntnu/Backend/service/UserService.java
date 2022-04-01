@@ -2,11 +2,6 @@ package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.repository.UserRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,39 +13,20 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserService implements UserDetailsService {
+public class UserService{
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDAO userDAO = userRepository.findByEmail(email);
-        if (userDAO == null) {
-            System.err.println("User does not exist/ or cant be found in the database");
-            throw new UsernameNotFoundException("User does not exist/ or cant be found in the database");
-        } else {
-            System.out.println("Found user in DB by email: " + userDAO.getEmail());
-        }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (int i = 0; i <= userDAO.getRoles(); i++) {
-            authorities.add(new SimpleGrantedAuthority(String.valueOf(i)));
-        }
-        return new org.springframework.security.core.userdetails.User(userDAO.getEmail(), userDAO.getHash(), authorities);
-    }
-
-    public UserDAO saveUserDAO(UserDAO userDAO) {
+    /*public UserDAO saveUserDAO(UserDAO userDAO) {
         //ADD VALIDATION
         System.out.println("SAVING USER");
-        userDAO.setHash(passwordEncoder.encode(userDAO.getHash()));
+        //fix password
         return userRepository.save(userDAO);
-    }
+    }*/
 
     public void deleteUserDAO(UserDAO userDAO) {
         System.out.println("we deleted user with the email: " + userDAO.getEmail());

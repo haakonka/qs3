@@ -1,11 +1,14 @@
 package edu.ntnu.Backend.service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import edu.ntnu.Backend.model.DAO.UserDAO;
-import org.springframework.security.core.AuthenticationException;
+import edu.ntnu.Backend.model.DTO.UserDTO;
 import org.springframework.stereotype.Service;
-
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +27,7 @@ public class AutenticationService {
         this.userService = userService;
     }
 
-    public boolean attemptAuthentication(String email, String password) throws AuthenticationException, NoSuchAlgorithmException {
+    public boolean attemptAuthentication(String email, String password) throws NoSuchAlgorithmException {
         System.out.println("The email was: " + email + " And the password is: " + password);
         UserDAO user = userService.findByEmail(email);
         MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -53,8 +56,24 @@ public class AutenticationService {
                 .withClaim("roles", privs)
                 .sign(algorithm);
 
-        System.out.println("You were autenticated");
+
+        System.out.println("You were autenticated : " + access_token);
         return access_token;
+    }
+
+    public boolean checkIfAuthorized(String token, int requirment){
+        Algorithm algorithm = Algorithm.HMAC256("tiL8yZXjlEvxKImZS0YeIQC5V29PFDcm2wSHn47texw6fpNKv34uqyWe/NUz5go3aAkRflcDFVfpfYwoLPZrFA==".getBytes(StandardCharsets.UTF_8));
+        JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = jwtVerifier.verify(token);
+        String userEmail = decodedJWT.getSubject();
+        System.out.println("JWT useremail:" + userEmail);
+        String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+        System.out.println(roles.length-1);
+        System.out.println(requirment);
+        if((roles.length-1)>=requirment){
+            return true;
+        }
+        return false;
     }
 
 

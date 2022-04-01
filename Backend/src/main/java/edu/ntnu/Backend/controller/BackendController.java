@@ -2,6 +2,7 @@ package edu.ntnu.Backend.controller;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
+import edu.ntnu.Backend.model.DTO.TokenDTO;
 import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api")
 @RestController
 @CrossOrigin
-
 public class BackendController {
     private final UserService userService;
     private final AutenticationService autenticationService;
@@ -42,22 +42,28 @@ public class BackendController {
             String token = autenticationService.successfulAuthentication(user);
             return new ResponseEntity(token,HttpStatus.OK);
         }
-
         return new ResponseEntity("Failed login", HttpStatus.BAD_REQUEST);
     }
 
 
     //remove before final submit
-    @GetMapping("/admin/users")
-    public ResponseEntity<List<UserDAO>> test() {
+    @PostMapping("/admin/users")
+    public ResponseEntity test(@RequestBody TokenDTO token) {
         System.out.println("Tryng to acess all users");
-        return ResponseEntity.ok().body(userService.findAll());
-    }
+        System.out.println("token:" + token.getToken());
+        if(autenticationService.checkIfAuthorized(token.getToken(), 2)){
+            return ResponseEntity.ok().body(userService.findAll());
+        }
 
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+
+    }
+/*
     @PostMapping("/admin/saveuser")
     public ResponseEntity<UserDAO> saveUser(@RequestBody UserDAO userDAO) {
         return ResponseEntity.ok().body(userService.saveUserDAO(userDAO));
     }
+    */
 
     @GetMapping("/studass/")
     public String testStudass() {

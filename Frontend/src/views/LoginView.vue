@@ -56,10 +56,8 @@ export default {
 
         localStorage.setItem("user", JSON.stringify(decoded));
         console.log("user: " + decoded);
+        this.$router.push("/home");
       }
-
-      //this wont work if they get a invalid respons, see navigation gurad in router.
-      this.$router.push("/home");
     },
   },
 };
