@@ -2,7 +2,7 @@
   <div class="login">
     <title>QS3</title>
     <h1>QS3</h1>
-    <form @submit="onSubmit">
+    <form @submit.prevent="onSubmit">
       <p>
         <label for="email"> E-post </label>
         <input v-model="email" name="email" type="email" placeholder="E-post" />
@@ -21,12 +21,12 @@
     </form>
   </div>
 </template>
-<style scoped>
+<style>
 .login {
   overflow-y: hidden;
   height: 100vh;
   font-size: 20px;
-  color: darkgray;
+  color: #cdcdcd;
   font-size: 30px;
 }
 h1 {
@@ -61,6 +61,8 @@ label {
 </style>
 
 <script>
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 export default {
   name: "LoginView",
   components: {},
@@ -72,18 +74,27 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      /*
-      // send a POST request
-      axios({
-        method: "post",
-        url: "/login",
-        data: {
-          email: this.email,
+    async onSubmit() {
+      console.log("data :" + this.password + "   " + this.email);
+      let gotError = false;
+      let res = await axios
+        .post("http://localhost:8081/api/login/authentication", {
+          username: this.email,
           password: this.password,
-        },
-      }); */
-      this.$router.push("/home");
+        })
+        .catch((error) => {
+          console.log(error);
+          gotError = true;
+        });
+      if (!gotError) {
+        console.log(res);
+        let token = res.data;
+        localStorage.setItem("token", token);
+        let decoded = jwt_decode(token);
+        localStorage.setItem("user", JSON.stringify(decoded));
+        console.log("user: " + decoded);
+        this.$router.push("/home");
+      }
     },
   },
 };
