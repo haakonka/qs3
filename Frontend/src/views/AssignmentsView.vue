@@ -1,14 +1,18 @@
 <template>
   <head> </head>
   <body>
-    <div layout="column">Hello;</div>
+    <div layout="column">Hello this is the page for;</div>
     <button @click.prevent="onStart">Press to add assignment</button>
     <div
       v-for="assignment in assignments"
       :key="assignment"
       class="assignments"
     >
-      <div>{{ assignment.subjectCode }} + this is the status</div>
+      <div>
+        {{ assignment.subjectCode }} + {{ assignment.schoolYear }} +
+        {{ assignment.assignmentNumber }} this is the status:
+        {{ assignment.status }}
+      </div>
     </div>
   </body>
 </template>
@@ -48,7 +52,12 @@ export default {
       if (res != undefined) {
         let jsonArray = res.data;
         console.log(jsonArray[0].schoolYear);
-        this.assignments = res.data;
+        for (var i = 0; i < jsonArray.length; i++) {
+          if (jsonArray[i].status === 1) {
+            jsonArray[i].status = "Godkjent";
+          }
+        }
+        this.assignments = jsonArray;
       }
     },
   },

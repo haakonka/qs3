@@ -18,11 +18,11 @@ public class AssignmentUserService {
 
     public List<AssignmentUserDAO> findBySubjectCodeAndYearAndUserID(String subjectCode, int schoolYear, int userID) {
         System.out.println("finding assignmentUser by userID, subjectCode and schoolYear: " + userID + ", " + subjectCode + " and " + schoolYear);
-        return assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserId(subjectCode,schoolYear,userID);
+        return assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode,schoolYear,userID);
     }
 
     public List<AssignmentUserDAO> findAllSubjectsByUserID(int userID) {
         System.out.println("FINDING ALL SUBJECTS FOR USER ID: " + userID);
-        return assignmentUserRepository.findAssignmentUserDAOByUserId(userID);
+        return assignmentUserRepository.findAssignmentUserDAOByUserID(userID);
     }
 }

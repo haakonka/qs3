@@ -81,13 +81,11 @@ public class BackendController {
         System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
         if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
             UserDAO user = autenticationService.getUserFromJWT(assignmentUserDTO.getToken());
-            /*
             System.out.println(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()).get(0).getStatus());
             return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()));
-             */
-            return ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
+            //return ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
         }
 
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);

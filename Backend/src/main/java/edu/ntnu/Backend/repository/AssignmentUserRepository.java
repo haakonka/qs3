@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface AssignmentUserRepository extends JpaRepository<AssignmentUserDAO, Long> {
 
-    List<AssignmentUserDAO> findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserId(String subjectCode, int schoolYear, int userID);
+    List<AssignmentUserDAO> findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(String subjectCode, int schoolYear, int userID);
 
-    List<AssignmentUserDAO> findAssignmentUserDAOByUserId(int userID);
+    List<AssignmentUserDAO> findAssignmentUserDAOByUserID(int userID);
 }

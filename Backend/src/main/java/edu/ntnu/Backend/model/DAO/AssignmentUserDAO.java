@@ -12,27 +12,27 @@ import java.io.Serializable;
 @Table(name = "assignmentuser", schema = "qsusers")
 public class AssignmentUserDAO implements Serializable {
     @Id
-    @Column(name = "assignmentUserID")
+    @Column(name = "assignment_user_id")
     private int assignmentUserID;
 
-    @Column(name = "userID")
-    private int userId;
+    @Column(name = "user_id")
+    private int userID;
 
-    @Column(name = "subjectCode")
+    @Column(name = "subject_code")
     private String subjectCode;
 
-    @Column(name = "schoolYear")
+    @Column(name = "school_year")
     private int schoolYear;
 
-    @Column(name = "assignmentNumber")
+    @Column(name = "assignment_number")
     private int assignmentNumber;
 
     @Column(name = "status")
     private int status;
 
-    public AssignmentUserDAO(int assignmentUserID, int userId, String subjectCode, int schoolYear, int assignmentNumber, int status) {
+    public AssignmentUserDAO(int assignmentUserID, int userID, String subjectCode, int schoolYear, int assignmentNumber, int status) {
         this.assignmentUserID = assignmentUserID;
-        this.userId = userId;
+        this.userID = userID;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
         this.assignmentNumber = assignmentNumber;
@@ -46,9 +46,9 @@ public class AssignmentUserDAO implements Serializable {
 
     public void setAssignmentUserID(int assignmentUserID) {this.assignmentUserID = assignmentUserID;}
 
-    public int getUserId() {return userId;}
+    public int getUserID() {return userID;}
 
-    public void setUserId(int userId) {this.userId = userId;}
+    public void setUserID(int userId) {this.userID = userId;}
 
     public String getSubjectCode() {return subjectCode;}
 
