@@ -116,20 +116,22 @@ public class BackendController {
     }
 
     @PostMapping("user/que/participants")
-    public ResponseEntity getAllParticipantsInQue(@RequestBody SubjectIdDTO subjectIdDTO) {
+    public ResponseEntity getAQueObject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access all participants within a specific que");
         System.out.println("Token:" + subjectIdDTO.getToken());
         System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
         System.out.println("School year:" + subjectIdDTO.getSchoolYear());
         if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
-            System.out.println("The amount of participants in this que are: " + queService.getAllParticipantsInAQue(
+            System.out.println("The status of the que is: " + queService.findAQue(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(subjectIdDTO.getSchoolYear())).size());
-            return ResponseEntity.ok().body(queService.getAllParticipantsInAQue(
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())).getStatusQue());
+            return ResponseEntity.ok().body(queService.findAQue(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear())));
         }
 
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
+
+
 }

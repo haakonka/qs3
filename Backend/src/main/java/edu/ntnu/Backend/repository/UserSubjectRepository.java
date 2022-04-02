@@ -11,6 +11,5 @@ public interface UserSubjectRepository extends JpaRepository<UserSubjectDAO, Lon
 
     List<UserSubjectDAO> findUserSubjectDAOByUserId(int userid);
 
-
-
+    
 }
