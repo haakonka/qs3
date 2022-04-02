@@ -31,6 +31,10 @@ public class AutenticationService {
     public boolean attemptAuthentication(String email, String password) throws NoSuchAlgorithmException {
         System.out.println("The email was: " + email + " And the password is: " + password);
         UserDAO user = userService.findByEmail(email);
+        if (user ==null){
+            return false;
+        }
+
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(Base64.getDecoder().decode(user.getSalt()));
         byte[] hasedPassword = Base64.getEncoder().encode(md.digest(password.getBytes(StandardCharsets.UTF_8)));
