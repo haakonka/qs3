@@ -1,8 +1,10 @@
 package edu.ntnu.Backend.controller;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
+import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.model.DTO.TokenDTO;
+import edu.ntnu.Backend.service.AssignmentUserService;
 import edu.ntnu.Backend.service.AutenticationService;
 import edu.ntnu.Backend.service.UserService;
 import edu.ntnu.Backend.service.UserSubjectService;
@@ -10,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.json.Json;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -22,11 +23,13 @@ public class BackendController {
     private final UserService userService;
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
+    private final AssignmentUserService assignmentUserService;
 
-    public BackendController(UserService userService, UserSubjectService userSubjectService ) {
+    public BackendController(UserService userService, UserSubjectService userSubjectService, AssignmentUserService assignmentUserService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
+        this.assignmentUserService = assignmentUserService;
     }
 
     @PostMapping("/login/authentication")
@@ -65,6 +68,26 @@ public class BackendController {
             UserDAO user = autenticationService.getUserFromJWT(token.getToken());
             System.out.println(userSubjectService.findByUserId(user.getId()).get(0).getSubjectCode());
             return ResponseEntity.ok().body(userSubjectService.findByUserId(user.getId()));
+        }
+
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("user/assignments")
+    public ResponseEntity getAssignmentsForUser(@RequestBody AssignmentUserDTO assignmentUserDTO){
+        System.out.println("Tryng to acess all assignments within a specific subject");
+        System.out.println("Token:" + assignmentUserDTO.getToken());
+        System.out.println("Subject code:" + assignmentUserDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
+            UserDAO user = autenticationService.getUserFromJWT(assignmentUserDTO.getToken());
+            /*
+            System.out.println(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()).get(0).getStatus());
+            return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()));
+             */
+            return ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
         }
 
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);

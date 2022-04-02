@@ -35,8 +35,31 @@ import axios from "axios";
 export default {
   setup() {},
   methods: {
-    onAssignmentSubmit() {
-      this.$router.push("/assignments");
+    async onAssignmentSubmit() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let res = await axios
+        .post("http://localhost:8081/api/user/subjects", {
+          token: tokenFromLocal,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+
+      //Do a check on res to see if correct
+      if (res != undefined) {
+        let jsonArray = res.data;
+        console.log(jsonArray[0].subjectCode);
+        localStorage.setItem(
+          "subjectCode",
+          JSON.stringify(jsonArray[0].subjectCode)
+        );
+        localStorage.setItem(
+          "schoolYear",
+          JSON.stringify(jsonArray[0].schoolYear)
+        );
+        this.$router.push("/assignments");
+      }
     },
 
     async showAllUsers() {
