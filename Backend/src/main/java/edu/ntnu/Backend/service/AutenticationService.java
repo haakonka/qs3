@@ -53,6 +53,8 @@ public class AutenticationService {
         System.out.println("Making jwt");
         String access_token = JWT.create()
                 .withSubject(user.getEmail())
+                .withClaim("firstname", user.getFirstName())
+                .withClaim("lastname", user.getLastName())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 48 * 60 * 1000))
                 .withClaim("roles", privs)
                 .sign(algorithm);

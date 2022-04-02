@@ -67,6 +67,8 @@ public class BackendController {
         if(autenticationService.checkIfAuthorized(token.getToken(), 0)){
             UserDAO user = autenticationService.getUserFromJWT(token.getToken());
             System.out.println(userSubjectService.findByUserId(user.getId()).get(0).getSubjectCode());
+            //got list of subject that the user has in the form of subjectuser
+
             return ResponseEntity.ok().body(userSubjectService.findByUserId(user.getId()));
         }
 
