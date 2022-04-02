@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserService{
     private final UserRepository userRepository;
 
@@ -21,9 +20,12 @@ public class UserService{
         this.userRepository = userRepository;
     }
 
-    public void deleteUserDAO(UserDAO userDAO) {
-        System.out.println("we deleted user with the email: " + userDAO.getEmail());
-        userRepository.delete(userDAO);
+    public boolean deleteUserDAO(String email) {
+        System.out.println("we deleted user with the email: " + email);
+        if(userRepository.deleteUserDAOByEmail(email)){
+            return true;
+        }
+        return false;
     }
 
 
@@ -39,10 +41,12 @@ public class UserService{
     }
 
     //gotta fix
-    public boolean CheckIfUserExists(String email, String password) {
-        userRepository.findAll();
+    public boolean CheckIfUserExists(String email) {
+        if(userRepository.findByEmail(email)!= null){
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     public String generateSalt() {
