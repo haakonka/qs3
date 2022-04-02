@@ -1,6 +1,8 @@
 package edu.ntnu.Backend.controller;
 
+import edu.ntnu.Backend.model.DAO.SubjectDAO;
 import edu.ntnu.Backend.model.DAO.UserDAO;
+import edu.ntnu.Backend.model.DAO.UserSubjectDAO;
 import edu.ntnu.Backend.model.DTO.SubjectIdDTO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.model.DTO.TokenDTO;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
+import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -23,16 +27,18 @@ public class BackendController {
     private final AssignmentUserService assignmentUserService;
     private final AssignmentIntervalService assignmentIntervalService;
     private final QueService queService;
+    private final SubjectService subjectService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
                              AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
-                             QueService queService) {
+                             QueService queService, SubjectService subjectService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
         this.assignmentUserService = assignmentUserService;
         this.assignmentIntervalService = assignmentIntervalService;
         this.queService = queService;
+        this.subjectService = subjectService;
     }
 
     @PostMapping("/login/authentication")
@@ -72,7 +78,13 @@ public class BackendController {
             System.out.println(userSubjectService.findByUserId(user.getId()).get(0).getSubjectCode());
             //got list of subject that the user has in the form of subjectuser
 
-            return ResponseEntity.ok().body(userSubjectService.findByUserId(user.getId()));
+            List<UserSubjectDAO> userSubjects = userSubjectService.findByUserId(user.getId());
+            List<SubjectDAO> subjects = new LinkedList<>();
+            for(int i = 0; i < userSubjects.size(); i++) {
+                subjects.add(subjectService.findSubjectBySubjectId(
+                        userSubjects.get(i).getSubjectCode(),userSubjects.get(i).getSchoolYear()));
+            }
+            return ResponseEntity.ok().body(subjects);
         }
 
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);

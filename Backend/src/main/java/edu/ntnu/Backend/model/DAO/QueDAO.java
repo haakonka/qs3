@@ -1,12 +1,12 @@
 package edu.ntnu.Backend.model.DAO;
 
-import edu.ntnu.Backend.model.PK.QuePK;
+import edu.ntnu.Backend.model.PK.SubjectIDPK;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@IdClass(QuePK.class)
+@IdClass(SubjectIDPK.class)
 @Table(name = "que", schema = "qsusers")
 public class QueDAO implements Serializable {
     @Id

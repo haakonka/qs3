@@ -2,11 +2,11 @@ package edu.ntnu.Backend.model.PK;
 
 import java.io.Serializable;
 
-public class QuePK implements Serializable {
+public class SubjectIDPK implements Serializable {
     private String subjectCode;
     private int schoolYear;
 
-    public QuePK(){
+    public SubjectIDPK(){
     }
 
     public String getSubjectCode() {return subjectCode;}
@@ -21,7 +21,7 @@ public class QuePK implements Serializable {
         if (obj == this) return true;
         if (!(obj instanceof UserSubjectPK)) return false;
         if (obj == null) return false;
-        QuePK pk = (QuePK) obj;
+        SubjectIDPK pk = (SubjectIDPK) obj;
         return pk.schoolYear == schoolYear && pk.subjectCode.equals(subjectCode);
     }
 }
