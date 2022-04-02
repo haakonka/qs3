@@ -1,7 +1,7 @@
 package edu.ntnu.Backend.controller;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
-import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
+import edu.ntnu.Backend.model.DTO.SubjectIdDTO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.model.DTO.TokenDTO;
 import edu.ntnu.Backend.service.*;
@@ -22,14 +22,17 @@ public class BackendController {
     private final UserSubjectService userSubjectService;
     private final AssignmentUserService assignmentUserService;
     private final AssignmentIntervalService assignmentIntervalService;
+    private final QueService queService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
-                             AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService) {
+                             AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
+                             QueService queService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
         this.assignmentUserService = assignmentUserService;
         this.assignmentIntervalService = assignmentIntervalService;
+        this.queService = queService;
     }
 
     @PostMapping("/login/authentication")
@@ -76,18 +79,18 @@ public class BackendController {
     }
 
     @PostMapping("user/assignments")
-    public ResponseEntity getAssignmentsForUserInASpecificSubject(@RequestBody AssignmentUserDTO assignmentUserDTO){
+    public ResponseEntity getAssignmentsForUserInASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO){
         System.out.println("Trying to access all assignments within a specific subject for a user");
-        System.out.println("Token:" + assignmentUserDTO.getToken());
-        System.out.println("Subject code:" + assignmentUserDTO.getSubjectCode().replace("\\",""));
-        System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
-        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
-            UserDAO user = autenticationService.getUserFromJWT(assignmentUserDTO.getToken());
-            System.out.println(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()).get(0).getStatus());
+        System.out.println("Token:" + subjectIdDTO.getToken());
+        System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + subjectIdDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
+            UserDAO user = autenticationService.getUserFromJWT(subjectIdDTO.getToken());
+            System.out.println(assignmentUserService.findBySubjectCodeAndYearAndUserID(subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear()), user.getId()).get(0).getStatus());
             return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(
-                    assignmentUserDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()));
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear()), user.getId()));
             //return ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
         }
 
@@ -95,18 +98,36 @@ public class BackendController {
     }
 
     @PostMapping("user/assignments/interval")
-    public ResponseEntity getAssignmentIntervallForASpecificSubject(@RequestBody AssignmentUserDTO assignmentUserDTO){
+    public ResponseEntity getAssignmentIntervallForASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO){
         System.out.println("Trying to access all assignments intervals within a specific subject");
-        System.out.println("Token:" + assignmentUserDTO.getToken());
-        System.out.println("Subject code:" + assignmentUserDTO.getSubjectCode().replace("\\",""));
-        System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
-        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
+        System.out.println("Token:" + subjectIdDTO.getToken());
+        System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + subjectIdDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
             System.out.println("Min assignments are: " +assignmentIntervalService.findBySubjectCodeAndYear(
-                    assignmentUserDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(assignmentUserDTO.getSchoolYear())).get(0).getMinAssignments());
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())).get(0).getMinAssignments());
             return ResponseEntity.ok().body(assignmentIntervalService.findBySubjectCodeAndYear(
-                    assignmentUserDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(assignmentUserDTO.getSchoolYear())));
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())));
+        }
+
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("user/que/participants")
+    public ResponseEntity getAllParticipantsInQue(@RequestBody SubjectIdDTO subjectIdDTO) {
+        System.out.println("Trying to access all participants within a specific que");
+        System.out.println("Token:" + subjectIdDTO.getToken());
+        System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + subjectIdDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
+            System.out.println("The amount of participants in this que are: " + queService.getAllParticipantsInAQue(
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())).size());
+            return ResponseEntity.ok().body(queService.getAllParticipantsInAQue(
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())));
         }
 
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
