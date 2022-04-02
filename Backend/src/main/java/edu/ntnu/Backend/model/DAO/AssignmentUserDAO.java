@@ -6,8 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-
-//TODO fix the wrong spelled id so it can access the correct table, gotta check with omar to see which it is
 @Entity
 @Table(name = "assignmentuser", schema = "qsusers")
 public class AssignmentUserDAO implements Serializable {

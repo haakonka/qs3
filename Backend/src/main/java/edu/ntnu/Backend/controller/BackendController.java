@@ -4,10 +4,7 @@ import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
 import edu.ntnu.Backend.model.DTO.LoginDTO;
 import edu.ntnu.Backend.model.DTO.TokenDTO;
-import edu.ntnu.Backend.service.AssignmentUserService;
-import edu.ntnu.Backend.service.AutenticationService;
-import edu.ntnu.Backend.service.UserService;
-import edu.ntnu.Backend.service.UserSubjectService;
+import edu.ntnu.Backend.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +21,15 @@ public class BackendController {
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
     private final AssignmentUserService assignmentUserService;
+    private final AssignmentIntervalService assignmentIntervalService;
 
-    public BackendController(UserService userService, UserSubjectService userSubjectService, AssignmentUserService assignmentUserService) {
+    public BackendController(UserService userService, UserSubjectService userSubjectService,
+                             AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
         this.assignmentUserService = assignmentUserService;
+        this.assignmentIntervalService = assignmentIntervalService;
     }
 
     @PostMapping("/login/authentication")
@@ -74,8 +74,8 @@ public class BackendController {
     }
 
     @PostMapping("user/assignments")
-    public ResponseEntity getAssignmentsForUser(@RequestBody AssignmentUserDTO assignmentUserDTO){
-        System.out.println("Tryng to acess all assignments within a specific subject");
+    public ResponseEntity getAssignmentsForUserInASpecificSubject(@RequestBody AssignmentUserDTO assignmentUserDTO){
+        System.out.println("Trying to access all assignments within a specific subject for a user");
         System.out.println("Token:" + assignmentUserDTO.getToken());
         System.out.println("Subject code:" + assignmentUserDTO.getSubjectCode().replace("\\",""));
         System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
@@ -83,7 +83,8 @@ public class BackendController {
             UserDAO user = autenticationService.getUserFromJWT(assignmentUserDTO.getToken());
             System.out.println(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()).get(0).getStatus());
-            return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(assignmentUserDTO.getSubjectCode().replace("\\",""),
+            return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(
+                    assignmentUserDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(assignmentUserDTO.getSchoolYear()), user.getId()));
             //return ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
         }
@@ -91,5 +92,21 @@ public class BackendController {
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
+    @PostMapping("user/assignments/interval")
+    public ResponseEntity getAssignmentIntervallForASpecificSubject(@RequestBody AssignmentUserDTO assignmentUserDTO){
+        System.out.println("Trying to access all assignments intervals within a specific subject");
+        System.out.println("Token:" + assignmentUserDTO.getToken());
+        System.out.println("Subject code:" + assignmentUserDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + assignmentUserDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
+            System.out.println("Min assignments are: " +assignmentIntervalService.findBySubjectCodeAndYear(
+                    assignmentUserDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(assignmentUserDTO.getSchoolYear())).get(0).getMinAssignments());
+            return ResponseEntity.ok().body(assignmentIntervalService.findBySubjectCodeAndYear(
+                    assignmentUserDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(assignmentUserDTO.getSchoolYear())));
+        }
 
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
 }
