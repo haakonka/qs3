@@ -28,6 +28,9 @@ class UserServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         userService = new UserService(userRepository);
+        allUsers.add(adminUser);
+        allUsers.add(studassUser);
+        allUsers.add(user);
 
         Mockito.when(userRepository.findByEmail("omar@omar.com")).thenReturn(adminUser);
         Mockito.when(userRepository.findByEmail("haakon@haakon.com")).thenReturn(studassUser);
@@ -50,7 +53,7 @@ class UserServiceTest {
     @Test
     void checkIfUserExists() {
         Assertions.assertTrue(userService.CheckIfUserExists("omar@omar.com"));
-        Assertions.assertFalse(userService.CheckIfUserExists("tullemail@Tull.tull"));
+        Assertions.assertFalse(userService.CheckIfUserExists("wrongEmail@wreong.wrong"));
     }
 
     @Test
