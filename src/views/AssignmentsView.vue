@@ -18,6 +18,7 @@ export default {
     return {
       assignments: [],
       assignmentIntervals: [],
+      studass: false,
     };
   },
   created() {
@@ -51,6 +52,8 @@ export default {
         for (var i = 0; i < jsonArray.length; i++) {
           if (jsonArray[i].status === 1) {
             jsonArray[i].status = "Godkjent";
+          } else if (jsonArray[i].status === 0) {
+            jsonArray[i].status = "Ikke godkjent";
           }
         }
         this.assignments = jsonArray;
@@ -73,6 +76,16 @@ export default {
 
       let assignmentDiv = null;
       let validDiv = null;
+
+      let userArray = localStorage.getItem("user");
+      console.log("Her er bruker data" + userArray);
+      let roleArrThing = userArray.split("exp");
+      console.log(roleArrThing);
+      console.log("Skal ha tilgang? " + roleArrThing[0].includes("1"));
+      if (roleArrThing[0].includes("1")) {
+        this.studass = true;
+      }
+
       console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
         assignmentDiv = document.createElement("div");
@@ -82,6 +95,10 @@ export default {
         assignmentDiv.className = "inactiveSubject";
         validDiv.textContent = this.assignments[j].status;
         validDiv.className = "assignments inactiveAssignments";
+        if (this.studass) {
+          validDiv.onclick = this.changeValidStatus;
+          validDiv.id = "studAss";
+        }
         validC.appendChild(validDiv);
         element.appendChild(assignmentDiv);
       }
@@ -129,6 +146,27 @@ export default {
         elementor.appendChild(passedReq1);
       }
     },
+    async changeValidStatus() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      //finne ut den riktige
+      //Fikse så denne endrer den den skal endre, ikke en helt random en, sette den i loopen over
+      let assignmentId = this.assignments[0].assignmentUserID;
+      console.log("assignment id" + assignmentId);
+      let res = await axios.post(
+        "http://localhost:8081/api/user/assignment/status",
+        {
+          token: tokenFromLocal,
+          assignmentUserId: assignmentId,
+        }
+      );
+      console.log(res.data);
+
+      console.log("HEi jeg blir trykka på");
+      /*
+      if (e.target.textContent == "Ikke godkjent") {
+        e.target.textContent = "Godkjent";
+      } */
+    },
     uniq_fast(a) {
       var seen = {};
       var out = [];
@@ -163,6 +201,15 @@ export default {
 }
 p {
   color: #cdcdcd;
+}
+#studAss:hover {
+  background-color: #a7a4a4;
+}
+#assignmentsC > div {
+  background-color: #ebe8e8;
+}
+#validC > div {
+  background-color: #ebe8e8;
 }
 .assignments2 {
   display: flex;
