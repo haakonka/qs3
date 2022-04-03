@@ -29,16 +29,28 @@ public class ParticipantInQueDAO implements Serializable {
     @Column(name = "joined_que")
     private Timestamp joinedQue;
 
-    public ParticipantInQueDAO(int paticipantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
+    @Column(name = "status")
+    private int status;
+
+    public ParticipantInQueDAO(int paticipantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
         this.paticipantInQueID = paticipantInQueID;
         this.userID = userID;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
         this.assignmentNumber = assignmentNumber;
         this.joinedQue = joinedQue;
+        this.status = status;
     }
 
     public ParticipantInQueDAO(){
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getPaticipantInQueID() {

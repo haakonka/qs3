@@ -34,6 +34,12 @@ public class UserService{
         return userRepository.findByEmail(email);
     }
 
+    public String findNameByUserID(int id){
+        UserDAO userDAO = userRepository.findById(id);
+        String name = userDAO.getFirstName() + " " + userDAO.getLastName();
+        return name;
+    }
+
 
     //just testing methode
     public List<UserDAO> findAll() {

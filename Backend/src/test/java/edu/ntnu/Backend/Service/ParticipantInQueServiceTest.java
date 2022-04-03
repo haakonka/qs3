@@ -18,7 +18,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ParticipantInQueServiceTest {
     java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf("2001-04-03 13:25:50.0");
-    ParticipantInQueDAO user1 = new ParticipantInQueDAO(1,23,"alquid",2001,1,timestamp);
+    ParticipantInQueDAO user1 = new ParticipantInQueDAO(1,23,"alquid",2001,1,timestamp,0);
     List<ParticipantInQueDAO> users = new LinkedList<>();
     List<ParticipantInQueDAO> users2 = new LinkedList<>();
     ParticipantInQueService participantInQueService;

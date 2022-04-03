@@ -69,7 +69,7 @@ public class BackendController {
     @PostMapping("/admin/addUserFromFile")
     public ResponseEntity addNewUserFromFile(@RequestBody CsvFileDTO csvFileDTO){
 
-        System.out.println("TOken:" + csvFileDTO.getToken());
+        System.out.println("Token:" + csvFileDTO.getToken());
         System.out.println("users:\n" + csvFileDTO.getUsers());
 
         return ResponseEntity.ok().body(null);
@@ -188,4 +188,14 @@ public class BackendController {
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
+
+    @PostMapping("user/getUser")
+    public ResponseEntity getStudentByStudentID(@RequestBody UserbyIdDTO userbyIdDTO){
+
+        if(autenticationService.checkIfAuthorized(userbyIdDTO.getToken(), 0)){
+            return ResponseEntity.ok().body(userService.findNameByUserID(userbyIdDTO.getUserID()));
+        }
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
+
 }

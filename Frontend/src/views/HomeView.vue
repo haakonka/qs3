@@ -1,6 +1,16 @@
 <template>
   <div class="about">
     <h2>Aktiv kø</h2>
+    <button v-on:click="showAllUsers">TestingShit</button>
+    <!--//MEKKE FIL
+    -->
+    <label class="file-select">
+      <div class="select-button">
+        <span v-if="value">Selected File: {{ value.name }}</span>
+        <span v-else>Select File</span>
+      </div>
+      <input type="file" @change="handleFileChange" />
+    </label>
     <div class="container">
       <div></div>
       <div class="activeSubjects" id="test"></div>
@@ -29,6 +39,10 @@ export default {
   setup() {},
   created() {
     this.showAllUsers();
+  },
+  props: {
+    // Using value here allows us to be v-model compatible.
+    value: File,
   },
   methods: {
     async showAllUsers() {
@@ -125,6 +139,31 @@ export default {
       localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
       localStorage.setItem("schoolYear", subjectThingy[2]);
       this.$router.push("/que");
+    },
+    async handleFileChange(e) {
+      this.$emit("input", e.target.files[0]);
+      let fileinput = "";
+      var reader = new FileReader();
+      reader.onload = () => {
+        console.log("reee" + reader.result);
+      };
+      reader.readAsText(file);
+
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      console.log("token: " + tokenFromLocal);
+      console.log("fileinput: " + fileinput);
+
+      // Send your file to your server and retrieve the response
+      const res = await axios.post(
+        "https://localhost:8081/api/admin/addUserFromFile",
+        {
+          token: tokenFromLocal,
+        }
+      );
+      console.log(tokenFromLocal);
+      //need to load reader
+      console.log(reader.result);
+      console.log(res);
     },
   },
 };
