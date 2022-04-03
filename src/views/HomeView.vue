@@ -103,10 +103,18 @@ export default {
     async onAssignmentSubmit(e) {
       console.log(e.target);
       let subjectThingy = e.target.classList;
-      console.log(subjectThingy[1]);
-      console.log(subjectThingy[2]);
-      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
-      localStorage.setItem("schoolYear", subjectThingy[2]);
+      if (subjectThingy[1] != "inactiveAssignments") {
+        console.log(subjectThingy[1]);
+        console.log(subjectThingy[2]);
+        localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
+        localStorage.setItem("schoolYear", subjectThingy[2]);
+      } else {
+        console.log(subjectThingy[2]);
+        console.log(subjectThingy[3]);
+        localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[2]));
+        localStorage.setItem("schoolYear", subjectThingy[3]);
+      }
+
       this.$router.push("/assignments");
     },
     goToQue(e) {

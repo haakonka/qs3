@@ -77,7 +77,8 @@ export default {
       for (var j = 0; j < this.assignments.length; j++) {
         assignmentDiv = document.createElement("div");
         validDiv = document.createElement("div");
-        assignmentDiv.textContent = this.assignments[j].assignmentNumber;
+        assignmentDiv.textContent =
+          "Øving " + this.assignments[j].assignmentNumber;
         assignmentDiv.className = "inactiveSubject";
         validDiv.textContent = this.assignments[j].status;
         validDiv.className = "assignments inactiveAssignments";
@@ -85,6 +86,7 @@ export default {
         element.appendChild(assignmentDiv);
       }
     },
+
     async getAssignmentIntervals() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let subjectCodeFromLocal = JSON.stringify(
@@ -107,8 +109,13 @@ export default {
         let jsonArray = res.data;
         this.assignmentIntervals = jsonArray;
       }
+
       const elementor = document.getElementById("passedReq");
-      elementor.textContent = "";
+      while (elementor.firstChild) {
+        elementor.removeChild(elementor.firstChild);
+      }
+
+      this.assignmentIntervals = this.uniq_fast(this.assignmentIntervals);
       let passedReq1 = null;
       for (var i = 0; i < this.assignmentIntervals.length; i++) {
         passedReq1 = document.createElement("p");
@@ -121,6 +128,20 @@ export default {
           this.assignmentIntervals[i].intervalEnd;
         elementor.appendChild(passedReq1);
       }
+    },
+    uniq_fast(a) {
+      var seen = {};
+      var out = [];
+      var len = a.length;
+      var j = 0;
+      for (var i = 0; i < len; i++) {
+        var item = a[i];
+        if (seen[item] !== 1) {
+          seen[item] = 1;
+          out[j++] = item;
+        }
+      }
+      return out;
     },
   },
 };
