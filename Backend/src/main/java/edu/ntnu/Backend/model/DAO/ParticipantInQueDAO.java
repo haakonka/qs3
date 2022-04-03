@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class ParticipantInQueDAO implements Serializable {
     @Id
     @Column(name = "participantinque_id")
-    private int participantInQueID;
+    private int paticipantInQueID;
 
     @Column(name = "user_id")
     private int userID;
@@ -29,32 +29,36 @@ public class ParticipantInQueDAO implements Serializable {
     @Column(name = "joined_que")
     private Timestamp joinedQue;
 
-    public ParticipantInQueDAO(int participantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
-        this.participantInQueID = participantInQueID;
-        this.userID = userID;
-        this.subjectCode = subjectCode;
-        this.schoolYear = schoolYear;
-        this.assignmentNumber = assignmentNumber;
-        this.joinedQue = joinedQue;
-    }
+    @Column(name = "status")
+    private int status;
 
-    public ParticipantInQueDAO(int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
+    public ParticipantInQueDAO(int paticipantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
+        this.paticipantInQueID = paticipantInQueID;
         this.userID = userID;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
         this.assignmentNumber = assignmentNumber;
         this.joinedQue = joinedQue;
+        this.status = status;
     }
 
     public ParticipantInQueDAO(){
     }
 
-    public int getParticipantInQueID() {
-        return participantInQueID;
+    public int getStatus() {
+        return status;
     }
 
-    public void setParticipantInQueID(int participantInQueID) {
-        this.participantInQueID = participantInQueID;
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getPaticipantInQueID() {
+        return paticipantInQueID;
+    }
+
+    public void setPaticipantInQueID(int paticipantInQueID) {
+        this.paticipantInQueID = paticipantInQueID;
     }
 
     public int getUserID() {
