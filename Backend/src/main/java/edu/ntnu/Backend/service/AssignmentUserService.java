@@ -1,7 +1,6 @@
 package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.AssignmentUserDAO;
-import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
 import edu.ntnu.Backend.repository.AssignmentUserRepository;
 import org.springframework.stereotype.Service;
 

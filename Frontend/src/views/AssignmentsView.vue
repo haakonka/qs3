@@ -22,6 +22,10 @@
     <button @click.prevent="changeStatusOfAssignments">
       Change the status of all your assignments
     </button>
+    <button @click.prevent="makeParticipantInQue">
+      Add a participant to que
+    </button>
+    <button @click.prevent="checkOutOfQue">Remove participant once</button>
     <div
       v-for="assignmentIntervals in assignmentIntervals"
       :key="assignmentIntervals"
@@ -111,7 +115,58 @@ export default {
         let res = await axios
           .post("http://localhost:8081/api/studass/assignment/status", {
             token: tokenFromLocal,
-            assignmentUserId: assignmentId,
+            uniqueId: assignmentId,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
+      }
+    },
+    async makeParticipantInQue() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let subjectCodeFromLocal = JSON.stringify(
+        localStorage.getItem("subjectCode")
+      );
+      let schoolYearFromLocal = JSON.stringify(
+        localStorage.getItem("schoolYear")
+      );
+      let assignmetLast =
+        this.assignments[this.assignments.length - 1].assignmentUserID;
+      assignmetLast++;
+      var joined = new Date().getTime();
+      console.log(joined);
+      let res = await axios
+        .post("http://localhost:8081/api/user/participantInQue/create", {
+          token: tokenFromLocal,
+          subjectCode: subjectCodeFromLocal,
+          schoolYear: schoolYearFromLocal,
+          assignmentNumber: assignmetLast,
+          joinedQue: joined,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+    },
+    async checkOutOfQue() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let assignmetLast = this.assignments[0].assignmentUserID;
+      console.log(assignmetLast);
+      let res = await axios
+        .post("http://localhost:8081/api/studass/assignment/status", {
+          token: tokenFromLocal,
+          uniqueId: assignmetLast,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+      if (res.data === "The status was changed") {
+        res = await axios
+          .post("http://localhost:8081/api/user/participantInQue/delete", {
+            token: tokenFromLocal,
+            uniqueId: 7,
           })
           .catch((error) => {
             console.log(error);

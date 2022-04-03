@@ -20,4 +20,25 @@ public class ParticipantInQueService {
         System.out.println("Finding all participants in the que for: " + subjectCode + " at year: " + schoolYear);
         return participantInQueRepository.findAllBySubjectCodeAndSchoolYear(subjectCode, schoolYear);
     }
+
+    public long deleteParticipantInQue(int participantInQueId) {
+        if(participantInQueId > 0) {
+            System.out.println("DELETING PARTICIPANT IN THE QUE AT ID: " + participantInQueId);
+            long deleteRecords = participantInQueRepository.deleteParticipantInQueDAOByParticipantInQueID(participantInQueId);
+            System.out.println("Length of deleteRecords are: " + deleteRecords);
+            if(deleteRecords == 1) {
+                return deleteRecords;
+            }
+            return deleteRecords;
+        }
+        return 0;
+    }
+
+    public Boolean createParticipantInQue(ParticipantInQueDAO participant) {
+        if(participant != null) {
+            participantInQueRepository.save(participant);
+            return true;
+        }
+        return false;
+    }
 }

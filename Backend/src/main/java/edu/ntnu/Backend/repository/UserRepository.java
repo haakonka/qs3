@@ -10,5 +10,4 @@ public interface UserRepository extends JpaRepository<UserDAO, Long> {
     UserDAO findByEmail(String email);
 
     Boolean deleteUserDAOByEmail(String email);
-
 }
