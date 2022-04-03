@@ -4,11 +4,8 @@ import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.List;
 
 @Service
