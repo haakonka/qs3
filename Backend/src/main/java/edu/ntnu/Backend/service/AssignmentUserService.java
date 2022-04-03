@@ -25,4 +25,15 @@ public class AssignmentUserService {
         System.out.println("FINDING ALL SUBJECTS FOR USER ID: " + userID);
         return assignmentUserRepository.findAssignmentUserDAOByUserID(userID);
     }
+
+    public void changeStatusOfAssignment(int assignmentUserId) {
+        AssignmentUserDAO assignmentToChange = assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(assignmentUserId);
+        if(assignmentToChange.getStatus() == 1) {
+            assignmentToChange.setStatus(0);
+        } else if (assignmentToChange.getStatus() == 0) {
+            assignmentToChange.setStatus(1);
+        }
+        assignmentUserRepository.save(assignmentToChange);
+        System.out.println("The assignment status has been changed");
+    }
 }

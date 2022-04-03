@@ -19,6 +19,9 @@
     <button @click.prevent="getAssignmentIntervals">
       Press this to get assignment intervals
     </button>
+    <button @click.prevent="changeStatusOfAssignments">
+      Change the status of all your assignments
+    </button>
     <div
       v-for="assignmentIntervals in assignmentIntervals"
       :key="assignmentIntervals"
@@ -98,6 +101,21 @@ export default {
       if (res != undefined) {
         let jsonArray = res.data;
         this.assignmentIntervals = jsonArray;
+      }
+    },
+    async changeStatusOfAssignments() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      for (var i = 0; i < this.assignments.length; i++) {
+        let assignmentId = this.assignments[i].assignmentUserID;
+        let res = await axios
+          .post("http://localhost:8081/api/user/assignment/status", {
+            token: tokenFromLocal,
+            assignmentUserId: assignmentId,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
       }
     },
   },
