@@ -26,19 +26,19 @@ public class BackendController {
     private final UserSubjectService userSubjectService;
     private final AssignmentUserService assignmentUserService;
     private final AssignmentIntervalService assignmentIntervalService;
-    private final QueService queService;
     private final SubjectService subjectService;
+    private final ParticipantInQueService participantInQueService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
                              AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
-                             QueService queService, SubjectService subjectService) {
+                             SubjectService subjectService, ParticipantInQueService participantInQueService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
         this.assignmentUserService = assignmentUserService;
         this.assignmentIntervalService = assignmentIntervalService;
-        this.queService = queService;
         this.subjectService = subjectService;
+        this.participantInQueService = participantInQueService;
     }
 
     @PostMapping("/login/authentication")
@@ -70,7 +70,7 @@ public class BackendController {
 
 
     @PostMapping("/user/subjects")
-    public ResponseEntity getSubjectForUser(@RequestBody TokenDTO token){
+    public ResponseEntity getSubjectsForUser(@RequestBody TokenDTO token){
         System.out.println("Tryng to acess all users");
         System.out.println("token:" + token.getToken());
         if(autenticationService.checkIfAuthorized(token.getToken(), 0)){
@@ -127,17 +127,17 @@ public class BackendController {
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping("user/que/participants")
-    public ResponseEntity getAQueObject(@RequestBody SubjectIdDTO subjectIdDTO) {
-        System.out.println("Trying to access all participants within a specific que");
+    @PostMapping("user/subject")
+    public ResponseEntity getASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
+        System.out.println("Trying to access a specific subject");
         System.out.println("Token:" + subjectIdDTO.getToken());
         System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
         System.out.println("School year:" + subjectIdDTO.getSchoolYear());
         if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
-            System.out.println("The status of the que is: " + queService.findAQueBySubjectCodeAndSchoolYear(
+            System.out.println("The status of the que is: " + subjectService.findSubjectBySubjectId(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear())).getStatusQue());
-            return ResponseEntity.ok().body(queService.findAQueBySubjectCodeAndSchoolYear(
+            return ResponseEntity.ok().body(subjectService.findSubjectBySubjectId(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear())));
         }
@@ -145,5 +145,18 @@ public class BackendController {
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
+    @PostMapping("user/participantsInQue")
+    public ResponseEntity getAllParticipantsInAQue(@RequestBody SubjectIdDTO subjectIdDTO) {
+        System.out.println("Trying to access all participants in a que");
+        System.out.println("Token:" + subjectIdDTO.getToken());
+        System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
+        System.out.println("School year:" + subjectIdDTO.getSchoolYear());
+        if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
+            return ResponseEntity.ok().body(participantInQueService.findAllParticipantsInAQue(
+                    subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear())));
+        }
 
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
 }

@@ -18,11 +18,15 @@ public class SubjectDAO implements Serializable {
     private int schoolYear;
 
     @Column(name = "subject_name")
-    private String statusQue;
+    private String subjectName;
 
-    public SubjectDAO(String subjectCode, int schoolYear, String statusQue) {
+    @Column(name = "status_que")
+    private int statusQue;
+
+    public SubjectDAO(String subjectCode, int schoolYear, String subjectName, int statusQue) {
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
+        this.subjectName = subjectName;
         this.statusQue = statusQue;
     }
 
@@ -37,7 +41,11 @@ public class SubjectDAO implements Serializable {
 
     public void setSchoolYear(int schoolYear) {this.schoolYear = schoolYear;}
 
-    public String getStatusQue() {return statusQue;}
+    public int getStatusQue() {return statusQue;}
 
-    public void setStatusQue(String statusQue) {this.statusQue = statusQue;}
+    public void setStatusQue(int statusQue) {this.statusQue = statusQue;}
+
+    public String getSubjectName() {return subjectName;}
+
+    public void setSubjectName(String subjectName) {this.subjectName = subjectName;}
 }
