@@ -127,9 +127,6 @@ export default {
 </script>
 
 <style>
-h2 {
-  color: cyan;
-}
 .assignmentsContainer {
   font-size: 20px;
   height: 100vh;
@@ -143,7 +140,9 @@ h2 {
   justify-items: stretch;
   align-items: stretch;
 }
-
+p {
+  color: #cdcdcd;
+}
 .assignments2 {
   display: flex;
   height: 2em;

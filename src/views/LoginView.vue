@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <title>QS3</title>
     <h1>QS3</h1>
     <form @submit.prevent="onSubmit">
       <p>

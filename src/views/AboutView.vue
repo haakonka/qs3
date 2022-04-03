@@ -9,12 +9,12 @@
     <h2>Inaktiv kø</h2>
     <div class="container">
       <div></div>
-      <div class="activeSubjects">
+      <div class="activeSubjects" id="inactiveSubjects">
         <div class="inactiveSubject">Emne 1</div>
         <div class="inactiveSubject">Emne 2</div>
         <div class="inactiveSubject">Emne 3</div>
       </div>
-      <div class="assignments1">
+      <div class="assignments1" id="inactiveAssignmentsID">
         <div class="assignments inactiveAssignments">Øvinger</div>
         <div class="assignments inactiveAssignments">Øvinger</div>
         <div class="assignments inactiveAssignments">Øvinger</div>
@@ -53,6 +53,8 @@ export default {
 
       const element = document.getElementById("test");
       const element2 = document.getElementById("test2");
+      const element3 = document.getElementById("inactiveSubjects");
+      const element4 = document.getElementById("inactiveAssignmentsID");
 
       while (element.firstChild) {
         element.removeChild(element.firstChild);
@@ -60,25 +62,42 @@ export default {
       while (element2.firstChild) {
         element2.removeChild(element2.firstChild);
       }
+
+      while (element3.firstChild) {
+        element3.removeChild(element3.firstChild);
+      }
+
+      while (element4.firstChild) {
+        element4.removeChild(element4.firstChild);
+      }
+
       let subjectQue = null;
       let subjectAssignment = null;
+
       for (var i = 0; i < res.data.length; i++) {
         subjectQue = document.createElement("div");
         subjectAssignment = document.createElement("div");
 
         subjectQue.textContent = "" + res.data.at(i).subjectCode + "";
-
         subjectAssignment.textContent = "Øvinger";
-        subjectQue.className = "activeSubject";
         subjectAssignment.className = "assignments";
+        if (res.data.at(i).statusQue == 1) {
+          subjectQue.className = "activeSubject";
+          subjectQue.onclick = this.goToQue;
+          element.appendChild(subjectQue);
+          element2.appendChild(subjectAssignment);
+        } else {
+          subjectQue.className = "inactiveSubject";
+          subjectAssignment.classList.add("inactiveAssignments");
+          element3.appendChild(subjectQue);
+          element4.appendChild(subjectAssignment);
+        }
+
         subjectAssignment.classList.add(res.data.at(i).subjectCode);
         subjectAssignment.classList.add(res.data.at(i).schoolYear);
         subjectQue.classList.add(res.data.at(i).subjectCode);
         subjectQue.classList.add(res.data.at(i).schoolYear);
         subjectAssignment.onclick = this.onAssignmentSubmit;
-        subjectQue.onclick = this.goToQue;
-        element.appendChild(subjectQue);
-        element2.appendChild(subjectAssignment);
       }
     },
     async onAssignmentSubmit(e) {
