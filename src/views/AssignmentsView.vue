@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     async onStart() {
-      this.assignments = [];
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let subjectCodeFromLocal = JSON.stringify(
         localStorage.getItem("subjectCode")
@@ -46,7 +45,7 @@ export default {
       console.log("Localstorage get item" + subjectCodeFromLocal);
       //Do a check on res to see if correct
       if (res != undefined) {
-        console.log("Her er arssignment array ting" + res.data);
+        console.log("Her er assignment array ting" + res.data);
         let jsonArray = res.data;
         console.log(jsonArray[0].schoolYear);
         for (var i = 0; i < jsonArray.length; i++) {
@@ -64,6 +63,14 @@ export default {
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
       const element = document.getElementById("assignmentsC");
       const validC = document.getElementById("validC");
+
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      while (validC.firstChild) {
+        validC.removeChild(validC.firstChild);
+      }
+
       let assignmentDiv = null;
       let validDiv = null;
       console.log("length of assignments" + this.assignments.length);
@@ -73,13 +80,12 @@ export default {
         assignmentDiv.textContent = this.assignments[j].assignmentNumber;
         assignmentDiv.className = "inactiveSubject";
         validDiv.textContent = this.assignments[j].status;
-        validDiv.className = "assignments";
+        validDiv.className = "assignments inactiveAssignments";
         validC.appendChild(validDiv);
         element.appendChild(assignmentDiv);
       }
     },
     async getAssignmentIntervals() {
-      this.assignmentIntervals = [];
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let subjectCodeFromLocal = JSON.stringify(
         localStorage.getItem("subjectCode")
@@ -102,6 +108,7 @@ export default {
         this.assignmentIntervals = jsonArray;
       }
       const elementor = document.getElementById("passedReq");
+      elementor.textContent = "";
       let passedReq1 = null;
       for (var i = 0; i < this.assignmentIntervals.length; i++) {
         passedReq1 = document.createElement("p");

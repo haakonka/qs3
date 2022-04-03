@@ -3,16 +3,8 @@
     <h2>Aktiv kø</h2>
     <div class="container">
       <div></div>
-      <div class="activeSubjects" id="test">
-        <div class="activeSubject" @click="goToQue">Emne 1</div>
-        <div class="activeSubject">Emne 2</div>
-        <div class="activeSubject">Emne 3</div>
-      </div>
-      <div class="assignments1" id="test2">
-        <div class="assignments" v-on:click="onAssignmentSubmit">Øvinger</div>
-        <div class="assignments" v-on:click="onAssignmentSubmit">Øvinger</div>
-        <div class="assignments" v-on:click="onAssignmentSubmit">Øvinger</div>
-      </div>
+      <div class="activeSubjects" id="test"></div>
+      <div class="assignments1" id="test2"></div>
     </div>
     <h2>Inaktiv kø</h2>
     <div class="container">
@@ -61,6 +53,13 @@ export default {
 
       const element = document.getElementById("test");
       const element2 = document.getElementById("test2");
+
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      while (element2.firstChild) {
+        element2.removeChild(element2.firstChild);
+      }
       let subjectQue = null;
       let subjectAssignment = null;
       for (var i = 0; i < res.data.length; i++) {
@@ -74,7 +73,10 @@ export default {
         subjectAssignment.className = "assignments";
         subjectAssignment.classList.add(res.data.at(i).subjectCode);
         subjectAssignment.classList.add(res.data.at(i).schoolYear);
+        subjectQue.classList.add(res.data.at(i).subjectCode);
+        subjectQue.classList.add(res.data.at(i).schoolYear);
         subjectAssignment.onclick = this.onAssignmentSubmit;
+        subjectQue.onclick = this.goToQue;
         element.appendChild(subjectQue);
         element2.appendChild(subjectAssignment);
       }
@@ -88,7 +90,13 @@ export default {
       localStorage.setItem("schoolYear", subjectThingy[2]);
       this.$router.push("/assignments");
     },
-    goToQue() {
+    goToQue(e) {
+      console.log(e.target);
+      let subjectThingy = e.target.classList;
+      console.log(subjectThingy[1]);
+      console.log(subjectThingy[2]);
+      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
+      localStorage.setItem("schoolYear", subjectThingy[2]);
       this.$router.push("/que");
     },
   },
@@ -111,45 +119,27 @@ h2 {
   grid-row-gap: 20px;
   justify-items: stretch;
   align-items: stretch;
-  /*
-  display: flex;
-  display: inline-block;
-  justify-content: center;
-  */
 }
-.activeSubjects {
-  /*justify-self: end;
-  float: left;*/
-}
-.assignments1 {
-  /*justify-self: start;
-  /* float: right; */
-}
+
 .activeSubject {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: wheat;
+  background: #ebe8e8;
   margin-right: 10px;
   margin-top: 2em;
   padding: 0.5em;
   height: 2em;
-  /*
-  height: 5em;
-  width: 20em; */
 }
 .inactiveSubject {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: lightpink;
+  background: darkgray;
   margin-right: 10px;
   margin-top: 2em;
   height: 2em;
   padding: 0.5em;
-  /*
-  height: 5em;
-  width: 20em; */
 }
 .assignments {
   display: flex;
@@ -157,21 +147,21 @@ h2 {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: wheat;
+  background: #ebe8e8;
   margin: auto;
   margin-top: 2em;
   padding: 0.5em;
 }
 .activeSubject:hover {
-  background: lightgreen;
+  background: #a7a4a4;
 }
 .assignments:hover {
-  background: lightgreen;
+  background: #a7a4a4;
 }
 .inactiveAssignments {
-  background: lightpink;
+  background: darkgray;
 }
 .inactiveAssignments:hover {
-  background: pink;
+  background: #a7a4a4;
 }
 </style>
