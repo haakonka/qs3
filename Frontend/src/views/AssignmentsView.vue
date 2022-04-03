@@ -1,34 +1,5 @@
 <template>
   <div class="assignmentsContainer">
-    <body>
-    <h2 id="header1"></h2>
-    <div class="container">
-      <div></div>
-      <div class="activeSubjects" id="assignmentsC"></div>
-      <div class="assignments1" id="validC"></div>
-    </div>
-    <button @click.prevent="getAssignmentIntervals">
-      Press this to get assignment intervals
-    </button>
-    <button @click.prevent="changeStatusOfAssignments">
-      Change the status of all your assignments
-    </button>
-    <button @click.prevent="makeParticipantInQue">
-      Add a participant to que
-    </button>
-    <button @click.prevent="checkOutOfQue">Remove participant once</button>
-    <div
-      v-for="assignmentIntervals in assignmentIntervals"
-      :key="assignmentIntervals"
-    >
-      <div>
-        Assignment number: {{ assignmentIntervals.assignmentNumber }} Start:
-        {{ assignmentIntervals.intervalStart }} End:
-        {{ assignmentIntervals.intervalEnd }} Min assignments:
-        {{ assignmentIntervals.minAssignments }}
-      </div>
-    </div>
-  </body>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
   </div>
@@ -145,7 +116,7 @@ export default {
         passedReq1.textContent =
           "Du må ha bestått: " +
           this.assignmentIntervals[i].minAssignments +
-          " av øving" +
+          " av øving " +
           this.assignmentIntervals[i].intervalStart +
           " - " +
           this.assignmentIntervals[i].intervalEnd;
@@ -208,6 +179,7 @@ export default {
         });
       console.log(res);
       if (res.data === "The status was changed") {
+        //Change the value of uniqueId to the actual value of participant in que
         res = await axios
           .post("http://localhost:8081/api/user/participantInQue/delete", {
             token: tokenFromLocal,
@@ -218,7 +190,7 @@ export default {
           });
         console.log(res);
       }
-    },    
+    },
     uniq_fast(a) {
       var seen = {};
       var out = [];
