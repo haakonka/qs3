@@ -28,6 +28,9 @@ import jwt_decode from "jwt-decode";
 export default {
   name: "LoginView",
   components: {},
+  props: {
+    value: File,
+  },
   data() {
     return {
       email: "",
@@ -36,6 +39,35 @@ export default {
     };
   },
   methods: {
+    async handleFileChange(e) {
+      // Whenever the file changes, emit the 'input' event with the file data.
+      this.$emit("input", e.target.files[0]);
+
+      const reader = new FileReader();
+
+      reader.readAsText(this.file);
+
+      reader.onload = () => {
+        console.log(reader.result); // contains the file content as a string
+      };
+
+      reader.onerror = () => {
+        console.log(reader.error);
+      };
+
+      let message = localStorage.getItem("token");
+      message = message + reader.result;
+
+      // Send your file to your server and retrieve the response
+      const res = await axios.post(
+        "https://localhost/api/admin/addUserFromFile",
+        {
+          message: message,
+        }
+      );
+      console.log(res);
+    },
+
     async onSubmit() {
       console.log("data :" + this.password + "   " + this.email);
       let gotError = false;

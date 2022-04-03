@@ -23,10 +23,10 @@ public class AssignmentUserService {
         listOfAssigments.sort(
                 (AssignmentUserDAO ad1,AssignmentUserDAO ad2) -> {
                     if(ad1.getAssignmentNumber() <= ad2.getAssignmentNumber()){
-                        return 1;
+                        return -1;
                     }
                     else{
-                        return -1;
+                        return 1;
                     }
 
                 } );

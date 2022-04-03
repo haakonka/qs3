@@ -1,7 +1,17 @@
 <template>
   <div class="about">
     <h2>Aktiv kø</h2>
-    <button v-on:click="showAllUsers">ShowAllUsers</button>
+    <button v-on:click="showAllUsers">TestingShit</button>
+    <!--//MEKKE FIL
+    -->
+    <label class="file-select">
+      <div class="select-button">
+        <span v-if="value">Selected File: {{ value.name }}</span>
+        <span v-else>Select File</span>
+      </div>
+      <input type="file" @change="handleFileChange" />
+    </label>
+
     <div class="container">
       <div class="activeSubjects">
         <div class="activeSubject">Emne 1</div>
@@ -33,6 +43,10 @@
 <script>
 import axios from "axios";
 export default {
+  props: {
+    value: File,
+  },
+
   setup() {},
   methods: {
     async onAssignmentSubmit() {
@@ -60,6 +74,36 @@ export default {
         );
         this.$router.push("/assignments");
       }
+    },
+
+    async handleFileChange(e) {
+      this.$emit("input", e.target.files[0]);
+      const reader = new FileReader();
+
+      this.file = e.target.files[0];
+      console.log(this.file);
+      reader.readAsText(this.file);
+
+      let formData = new FormData();
+      formData.append("token", this.tokenFromLocal);
+      formData.append("file", this.file);
+
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      console.log("token: " + tokenFromLocal);
+      console.log("message: " + formData);
+
+      // Send your file to your server and retrieve the response
+      const res = await axios.post(
+        "https://localhost:8081/api/admin/addUserFromFile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(tokenFromLocal);
+      console.log(res);
     },
 
     async showAllUsers() {
@@ -144,5 +188,22 @@ export default {
 
 .inactiveAssignments:hover {
   background: pink;
+}
+
+.file-select > .select-button {
+  padding: 1rem;
+
+  color: white;
+  background-color: #2ea169;
+
+  border-radius: 0.3rem;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Don't forget to hide the original file input! */
+.file-select > input[type="file"] {
+  display: none;
 }
 </style>
