@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface SubjectRepository extends JpaRepository<SubjectDAO, Long> {
 
     SubjectDAO findSubjectDAOBySubjectCodeAndSchoolYear(String subjectCode, int schoolYear);
-    
 }

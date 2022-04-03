@@ -158,9 +158,11 @@ public class BackendController {
         System.out.println("Token:" + subjectIdDTO.getToken());
         if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 1)){
             System.out.println("The que status will now change");
-            subjectService.changeStatusOfQue(subjectIdDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(subjectIdDTO.getSchoolYear()));
-            return ResponseEntity.ok().body("The que status was changed successfully");
+            if(subjectService.changeStatusOfQue(subjectIdDTO.getSubjectCode().replace("\\",""),
+                    Integer.valueOf(subjectIdDTO.getSchoolYear()))){
+                return ResponseEntity.ok().body("The que status was changed successfully");
+            }
+            return new ResponseEntity("not a valid subject",HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }

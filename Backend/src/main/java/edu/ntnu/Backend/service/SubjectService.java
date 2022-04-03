@@ -20,7 +20,11 @@ public class SubjectService {
         return subjectRepository.findSubjectDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear);
     }
 
-    public void changeStatusOfQue(String subjectCode, int schoolYear) {
+    public Boolean changeStatusOfQue(String subjectCode, int schoolYear) {
+        //Checks to see if the subject code is null or the school year is before NTNU.
+        if(subjectCode == null || schoolYear <= 1759) {
+            return false;
+        }
         System.out.println("Trying to update the que status of a subject");
         SubjectDAO subject = subjectRepository.findSubjectDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear);
         if(subject.getStatusQue() == 1) {
@@ -30,5 +34,6 @@ public class SubjectService {
         }
         subjectRepository.save(subject);
         System.out.println("The status is changed");
+        return true;
     }
 }

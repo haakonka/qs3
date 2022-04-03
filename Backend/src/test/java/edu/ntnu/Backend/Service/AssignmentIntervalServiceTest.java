@@ -17,6 +17,7 @@ class AssignmentIntervalServiceTest {
     AssignmentIntervalDAO alquid2 = new AssignmentIntervalDAO(1,"alquid",2001,10,9,11,1);
     AssignmentIntervalDAO idatt2085 = new AssignmentIntervalDAO(4,"idatt2085",2075,1,1,4,1);
     ArrayList<AssignmentIntervalDAO> alquids = new ArrayList<>();
+    AssignmentIntervalService assignmentIntervalService;
     @Mock
     AssignmentIntervalRepository assignmentIntervalRepository;
 
@@ -26,13 +27,13 @@ class AssignmentIntervalServiceTest {
         alquids.add(alquid1);
         alquids.add(alquid2);
 
-        AssignmentIntervalService assignmentIntervalService = new AssignmentIntervalService(assignmentIntervalRepository);
+        assignmentIntervalService = new AssignmentIntervalService(assignmentIntervalRepository);
 
-        Mockito.when(assignmentIntervalService.findBySubjectCodeAndYear("alquid", 2001)).thenReturn(alquids);
+        Mockito.when(assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear("alquid", 2001)).thenReturn(alquids);
     }
 
     @Test
     void findBySubjectCodeAndYear() {
-        Assertions.assertEquals(assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear("alquid",2001),alquids);
+        Assertions.assertEquals(assignmentIntervalService.findBySubjectCodeAndYear("alquid",2001),alquids);
     }
 }
