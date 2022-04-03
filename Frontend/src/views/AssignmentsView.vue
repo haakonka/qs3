@@ -104,11 +104,12 @@ export default {
       }
     },
     async changeStatusOfAssignments() {
+      //This method does not work if user is not studass or admin
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       for (var i = 0; i < this.assignments.length; i++) {
         let assignmentId = this.assignments[i].assignmentUserID;
         let res = await axios
-          .post("http://localhost:8081/api/user/assignment/status", {
+          .post("http://localhost:8081/api/studass/assignment/status", {
             token: tokenFromLocal,
             assignmentUserId: assignmentId,
           })

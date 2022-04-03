@@ -1,5 +1,6 @@
 package edu.ntnu.Backend.controller;
 
+import edu.ntnu.Backend.model.DAO.AssignmentUserDAO;
 import edu.ntnu.Backend.model.DAO.SubjectDAO;
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DAO.UserSubjectDAO;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RequestMapping("/api")
 @RestController
@@ -112,14 +114,23 @@ public class BackendController {
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping("user/assignment/status")
+    @PostMapping("studass/assignment/status")
     public ResponseEntity changeAssignmentStatusOfAssignmentForUser(@RequestBody AssignmentUserDTO assignmentUserDTO) {
         System.out.println("Trying to change the status of the assignment");
         System.out.println("Token:" + assignmentUserDTO.getToken());
         System.out.println("AssignmentUserId:" + assignmentUserDTO.getAssignmentUserId());
-        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 0)){
-            assignmentUserService.changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getAssignmentUserId()));
-            return ResponseEntity.ok().body("The status was changed");
+        if(autenticationService.checkIfAuthorized(assignmentUserDTO.getToken(), 1)){
+            UserDAO user = autenticationService.getUserFromJWT(assignmentUserDTO.getToken());
+            List<UserSubjectDAO> userSubjects = userSubjectService.findByUserId(user.getId());
+            AssignmentUserDAO assignment = assignmentUserService.findAssignmentUserById(
+                    Integer.valueOf(assignmentUserDTO.getAssignmentUserId()));
+            for(int i = 0; i < userSubjects.size(); i++) {
+                if ((userSubjects.get(i).getSubjectCode().contentEquals(assignment.getSubjectCode()))
+                        && (userSubjects.get(i).getSchoolYear() == assignment.getSchoolYear())) {
+                    assignmentUserService.changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getAssignmentUserId()));
+                    return ResponseEntity.ok().body("The status was changed");
+                }
+            }
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
@@ -163,12 +174,23 @@ public class BackendController {
         System.out.println("Trying to change the que status of a specific subject");
         System.out.println("Token:" + subjectIdDTO.getToken());
         if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 1)){
-            System.out.println("The que status will now change");
-            if(subjectService.changeStatusOfQue(subjectIdDTO.getSubjectCode().replace("\\",""),
-                    Integer.valueOf(subjectIdDTO.getSchoolYear()))){
-                return ResponseEntity.ok().body("The que status was changed successfully");
+            UserDAO user = autenticationService.getUserFromJWT(subjectIdDTO.getToken());
+            List<UserSubjectDAO> userSubjects = userSubjectService.findByUserId(user.getId());
+            AtomicReference<UserSubjectDAO> subject = null;
+            for(int i = 0; i < userSubjects.size(); i++) {
+                if((userSubjects.get(i).getSubjectCode().contentEquals(subjectIdDTO.getSubjectCode().replace("\\","")))
+                        && (userSubjects.get(i).getSchoolYear() == Integer.valueOf(subjectIdDTO.getSchoolYear()))) {
+                    subject.set(userSubjects.get(i));
+                }
             }
-            return new ResponseEntity("not a valid subject",HttpStatus.FORBIDDEN);
+            if(subject.get().getStatusOfUser() >= 1) {
+                System.out.println("The que status will now change");
+                if(subjectService.changeStatusOfQue(subjectIdDTO.getSubjectCode().replace("\\",""),
+                        Integer.valueOf(subjectIdDTO.getSchoolYear()))){
+                    return ResponseEntity.ok().body("The que status was changed successfully");
+                }
+                return new ResponseEntity("not a valid subject",HttpStatus.FORBIDDEN);
+            }
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }

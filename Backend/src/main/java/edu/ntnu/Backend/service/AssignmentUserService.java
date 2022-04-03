@@ -48,4 +48,9 @@ public class AssignmentUserService {
         assignmentUserRepository.save(assignmentToChange);
         System.out.println("The assignment status has been changed");
     }
+
+    public AssignmentUserDAO findAssignmentUserById(int assignmentUserId) {
+        System.out.println("FINDING A ASSIGNMENT FOR ID: " + assignmentUserId);
+        return assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(assignmentUserId);
+    }
 }
