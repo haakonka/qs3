@@ -42,6 +42,15 @@ public class ParticipantInQueDAO implements Serializable {
         this.status = status;
     }
 
+    public ParticipantInQueDAO(int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
+        this.userID = userID;
+        this.subjectCode = subjectCode;
+        this.schoolYear = schoolYear;
+        this.assignmentNumber = assignmentNumber;
+        this.joinedQue = joinedQue;
+        this.status = 0;
+    }
+
     public ParticipantInQueDAO(){
     }
 

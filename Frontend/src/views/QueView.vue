@@ -1,6 +1,7 @@
 <template>
   <div class="que">
     <h2 id="id123"></h2>
+    <button @click.prevent="returnToStart">Return to home</button>
     <button>Still deg i kø</button>
     <h2>Din plass i køen: 3</h2>
 
@@ -36,7 +37,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-
+      console.log(res);  
       const queDiv = document.getElementById("que");
 
       while (queDiv.firstChild) {
@@ -63,6 +64,9 @@ export default {
       const element3 = document.getElementById("id123");
       element3.textContent = localStorage.getItem("subjectCode");
       console.log("antall folk i køen" + res.data.length);
+    },
+    returnToStart() {
+      this.$router.push("/home");
     },
   },
 };

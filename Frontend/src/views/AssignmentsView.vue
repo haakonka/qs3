@@ -1,4 +1,5 @@
 <template>
+  <button @click.prevent="returnToStart">Return to home</button>
   <div class="assignmentsContainer">
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
@@ -53,6 +54,9 @@ export default {
       }
 
       this.listAssignments();
+    },
+    returnToStart() {
+      this.$router.push("/home");
     },
     listAssignments() {
       const header = document.getElementById("header1");
