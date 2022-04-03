@@ -69,6 +69,8 @@ public class BackendController {
     @PostMapping("/admin/addUserFromFile")
     public ResponseEntity addNewUserFromFile(@RequestBody CsvFileDTO csvFileDTO){
 
+        System.out.println("TOken:" + csvFileDTO.getToken());
+        System.out.println("users:\n" + csvFileDTO.getUsers());
 
         return ResponseEntity.ok().body(null);
     }
