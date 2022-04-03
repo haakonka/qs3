@@ -140,31 +140,6 @@ export default {
       localStorage.setItem("schoolYear", subjectThingy[2]);
       this.$router.push("/que");
     },
-    async handleFileChange(e) {
-      this.$emit("input", e.target.files[0]);
-      let fileinput = "";
-      var reader = new FileReader();
-      reader.onload = () => {
-        console.log("reee" + reader.result);
-      };
-      reader.readAsText(file);
-
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      console.log("token: " + tokenFromLocal);
-      console.log("fileinput: " + fileinput);
-
-      // Send your file to your server and retrieve the response
-      const res = await axios.post(
-        "https://localhost:8081/api/admin/addUserFromFile",
-        {
-          token: tokenFromLocal,
-        }
-      );
-      console.log(tokenFromLocal);
-      //need to load reader
-      console.log(reader.result);
-      console.log(res);
-    },
   },
 };
 </script>

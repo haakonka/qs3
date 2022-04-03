@@ -1,5 +1,8 @@
 <template>
   <button @click.prevent="returnToStart">Return to home</button>
+  <button @click.prevent="changeStatusOfAssignments">
+    Change status of all assignments
+  </button>
   <div class="assignmentsContainer">
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
@@ -144,32 +147,6 @@ export default {
           });
         console.log(res);
       }
-    },
-    async makeParticipantInQue() {
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      let subjectCodeFromLocal = JSON.stringify(
-        localStorage.getItem("subjectCode")
-      );
-      let schoolYearFromLocal = JSON.stringify(
-        localStorage.getItem("schoolYear")
-      );
-      let assignmetLast =
-        this.assignments[this.assignments.length - 1].assignmentUserID;
-      assignmetLast++;
-      var joined = new Date().getTime();
-      console.log(joined);
-      let res = await axios
-        .post("http://localhost:8081/api/user/participantInQue/create", {
-          token: tokenFromLocal,
-          subjectCode: subjectCodeFromLocal,
-          schoolYear: schoolYearFromLocal,
-          assignmentNumber: assignmetLast,
-          joinedQue: joined,
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      console.log(res);
     },
     async checkOutOfQue() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));

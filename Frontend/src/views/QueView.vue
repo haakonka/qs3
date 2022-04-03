@@ -2,7 +2,8 @@
   <div class="que">
     <h2 id="id123"></h2>
     <button @click.prevent="returnToStart">Return to home</button>
-    <button>Still deg i kø</button>
+    <button @click="displayQueueMenu">Still deg i kø</button>
+    <div id="queueMenu" style="display: none">Ok</div>
     <h2>Din plass i køen: 3</h2>
 
     <div id="que"></div>
@@ -15,6 +16,12 @@
 <script>
 import axios from "axios";
 export default {
+  data() {
+    return {
+      AssignmentsToApprove: [],
+      Assignments: [],
+    };
+  },
   created() {
     this.getQueParticipants();
   },
@@ -37,7 +44,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      console.log(res);  
+      console.log(res);
       const queDiv = document.getElementById("que");
 
       while (queDiv.firstChild) {
@@ -64,6 +71,79 @@ export default {
       const element3 = document.getElementById("id123");
       element3.textContent = localStorage.getItem("subjectCode");
       console.log("antall folk i køen" + res.data.length);
+    },
+    async makeParticipantInQue() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let subjectCodeFromLocal = JSON.stringify(
+        localStorage.getItem("subjectCode")
+      );
+      let schoolYearFromLocal = JSON.stringify(
+        localStorage.getItem("schoolYear")
+      );
+      let assignmetLast =
+        this.assignments[this.assignments.length - 1].assignmentUserID;
+      assignmetLast++;
+      var joined = new Date().getTime();
+      console.log(joined);
+      let res = await axios
+        .post("http://localhost:8081/api/user/participantInQue/create", {
+          token: tokenFromLocal,
+          subjectCode: subjectCodeFromLocal,
+          schoolYear: schoolYearFromLocal,
+          assignmentNumber: assignmetLast,
+          joinedQue: joined,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+    },
+    async displayQueueMenu() {
+      const myQueueMenu = document.getElementById("queueMenu");
+      var displayQueueMenu = myQueueMenu.style.display;
+      if (displayQueueMenu == "block") {
+        myQueueMenu.style.display = "none";
+      } else {
+        myQueueMenu.style.display = "block";
+
+        //Adds the assignments to the array.
+        let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+        let subjectCodeFromLocal = JSON.stringify(
+          localStorage.getItem("subjectCode")
+        );
+        let schoolYearFromLocal = JSON.stringify(
+          localStorage.getItem("schoolYear")
+        );
+
+        let res = await axios
+          .post("http://localhost:8081/api/user/assignments", {
+            token: tokenFromLocal,
+            subjectCode: subjectCodeFromLocal,
+            schoolYear: schoolYearFromLocal,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res.data);
+
+        /*
+        //Infinite loop, why????
+        while (myQueueMenu.firstChild) {
+          myQueueMenu.remove(myQueueMenu.firstChild);
+        }
+        
+        for (var j = 0; j < res.data.length; j++) {
+          if (res.data.at(j).status === "0") {
+            var myActiveAssignmentsBox = document.createElement("INPUT");
+            myActiveAssignmentsBox.setAttribute("type", "checkbox");
+            myActiveAssignmentsBox.className = "Active assignments";
+            myActiveAssignmentsBox.textContent =
+              "Assignment number: " + res.data.at(j).assignmentNumber;
+            myQueueMenu.appendChild(myActiveAssignmentsBox);
+          }
+        }
+        */
+      }
     },
     returnToStart() {
       this.$router.push("/home");
