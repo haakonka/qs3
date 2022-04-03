@@ -1,6 +1,7 @@
 package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.AssignmentUserDAO;
+import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
 import edu.ntnu.Backend.repository.AssignmentUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,18 @@ public class AssignmentUserService {
 
     public List<AssignmentUserDAO> findBySubjectCodeAndYearAndUserID(String subjectCode, int schoolYear, int userID) {
         System.out.println("finding assignmentUser by userID, subjectCode and schoolYear: " + userID + ", " + subjectCode + " and " + schoolYear);
-        return assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode,schoolYear,userID);
+        List<AssignmentUserDAO> listOfAssigments = assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode,schoolYear,userID);
+        listOfAssigments.sort(
+                (AssignmentUserDAO ad1,AssignmentUserDAO ad2) -> {
+                    if(ad1.getAssignmentNumber() <= ad2.getAssignmentNumber()){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+
+                } );
+        return listOfAssigments;
     }
 
     public List<AssignmentUserDAO> findAllSubjectsByUserID(int userID) {
