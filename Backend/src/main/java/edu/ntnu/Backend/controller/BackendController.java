@@ -3,10 +3,7 @@ package edu.ntnu.Backend.controller;
 import edu.ntnu.Backend.model.DAO.SubjectDAO;
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DAO.UserSubjectDAO;
-import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
-import edu.ntnu.Backend.model.DTO.SubjectIdDTO;
-import edu.ntnu.Backend.model.DTO.LoginDTO;
-import edu.ntnu.Backend.model.DTO.TokenDTO;
+import edu.ntnu.Backend.model.DTO.*;
 import edu.ntnu.Backend.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +62,15 @@ public class BackendController {
             return ResponseEntity.ok().body(userService.findAll());
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
+    }
+
+    //Genreate user from name, password and emil.
+
+    @PostMapping("/admin/addUserFromFile")
+    public ResponseEntity addNewUserFromFile(@RequestBody CsvFileDTO csvFileDTO){
+
+
+        return ResponseEntity.ok().body(null);
     }
 
 
