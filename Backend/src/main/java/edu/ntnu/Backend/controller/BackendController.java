@@ -67,12 +67,17 @@ public class BackendController {
     //Genreate user from name, password and emil.
 
     @PostMapping("/admin/addUserFromFile")
-    public ResponseEntity addNewUserFromFile(@RequestBody CsvFileDTO csvFileDTO){
+    public ResponseEntity addNewUserFromFile(@RequestBody NewUserDTO newUserDTO){
 
-        System.out.println("Token:" + csvFileDTO.getToken());
-        System.out.println("users:\n" + csvFileDTO.getUsers());
+        System.out.println("Token:" + newUserDTO.getToken());
+        System.out.println("users:\n" + newUserDTO.getEmail());
+        if(autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)){
+            userService.saveNewUser(newUserDTO);
+            return ResponseEntity.ok().body(null);
+        }
 
-        return ResponseEntity.ok().body(null);
+
+        return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
 
 
@@ -197,5 +202,6 @@ public class BackendController {
         }
         return new ResponseEntity("not authorized",HttpStatus.FORBIDDEN);
     }
+
 
 }

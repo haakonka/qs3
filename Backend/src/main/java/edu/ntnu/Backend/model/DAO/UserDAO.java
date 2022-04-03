@@ -44,6 +44,12 @@ public class UserDAO implements Serializable {
 
     }
 
+    public UserDAO(String email, String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public int getId() {
         return id;
     }

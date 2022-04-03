@@ -40,11 +40,24 @@ export default {
   created() {
     this.showAllUsers();
   },
-  props: {
-    // Using value here allows us to be v-model compatible.
-    value: File,
-  },
   methods: {
+    csvToArray(str, delimiter = ",") {
+      const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+
+      const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+      const arr = rows.map(function (row) {
+        const values = row.split(delimiter);
+        const el = headers.reduce(function (object, header, index) {
+          object[header] = values[index];
+          return object;
+        }, {});
+        return el;
+      });
+
+      // return the array
+      return arr;
+    },
+
     async showAllUsers() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       console.log({
@@ -142,28 +155,60 @@ export default {
     },
     async handleFileChange(e) {
       this.$emit("input", e.target.files[0]);
-      let fileinput = "";
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let file = e.target.files[0];
       var reader = new FileReader();
-      reader.onload = () => {
-        console.log("reee" + reader.result);
+
+      reader.onload = async () => {
+        let testInFile = reader.result;
+        console.log("token: " + tokenFromLocal);
+        testInFile = JSON.stringify(testInFile);
+
+        console.log("fileinput: " + testInFile);
+
+        let line = testInFile.split("\\r\\n")[0];
+        console.log(
+          "hvor mange folk skal addes" + testInFile.split("\\r\\n").length
+        );
+        //first user thingy
+        console.log("firstline: " + line);
+        console.log("lastname: " + line.split('"\\"')[1].split(",")[0]);
+        console.log("firstname: " + line.split(",")[1]);
+        console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
+        let res = await axios.post(
+          "http://localhost:8081/api/admin/addUserFromFile",
+          {
+            token: tokenFromLocal,
+            firstname: line.split(",")[1],
+            lastname: line.split('"\\"')[1].split(",")[0],
+            email: line.split(",")[2].split('\\"')[0],
+          }
+        );
+
+        //rest of the users
+        for (let i = 1; i < testInFile.split("\\r\\n").length - 1; i++) {
+          line = testInFile.split('\\r\\n\\"')[i]; //1 is the next user i
+          console.log("genreal: " + i + " : " + line);
+          console.log("lastname: " + line.split(",")[0]);
+          console.log("firstname: " + line.split(",")[1]);
+          console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
+          res = await axios.post(
+            "http://localhost:8081/api/admin/addUserFromFile",
+            {
+              token: tokenFromLocal,
+              firstname: line.split(",")[1],
+              lastname: line.split(",")[0],
+              email: line.split(",")[2].split('\\"')[0],
+            }
+          );
+        }
+
+        console.log(res);
       };
+
       reader.readAsText(file);
 
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      console.log("token: " + tokenFromLocal);
-      console.log("fileinput: " + fileinput);
-
       // Send your file to your server and retrieve the response
-      const res = await axios.post(
-        "https://localhost:8081/api/admin/addUserFromFile",
-        {
-          token: tokenFromLocal,
-        }
-      );
-      console.log(tokenFromLocal);
-      //need to load reader
-      console.log(reader.result);
-      console.log(res);
     },
   },
 };

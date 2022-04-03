@@ -1,7 +1,9 @@
 package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
+import edu.ntnu.Backend.model.DTO.NewUserDTO;
 import edu.ntnu.Backend.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,6 +40,11 @@ public class UserService{
         UserDAO userDAO = userRepository.findById(id);
         String name = userDAO.getFirstName() + " " + userDAO.getLastName();
         return name;
+    }
+
+    public void saveNewUser(NewUserDTO newUserDTO){
+        UserDAO user = new UserDAO(newUserDTO.getEmail(),newUserDTO.getFirstname(),newUserDTO.getLastname());
+        userRepository.save(user);
     }
 
 
