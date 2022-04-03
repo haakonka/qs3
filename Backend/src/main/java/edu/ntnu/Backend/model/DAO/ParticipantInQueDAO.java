@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class ParticipantInQueDAO implements Serializable {
     @Id
     @Column(name = "participantinque_id")
-    private int paticipantInQueID;
+    private int participantInQueID;
 
     @Column(name = "user_id")
     private int userID;
@@ -32,14 +32,23 @@ public class ParticipantInQueDAO implements Serializable {
     @Column(name = "status")
     private int status;
 
-    public ParticipantInQueDAO(int paticipantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
-        this.paticipantInQueID = paticipantInQueID;
+    public ParticipantInQueDAO(int participantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
+        this.participantInQueID = participantInQueID;
         this.userID = userID;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
         this.assignmentNumber = assignmentNumber;
         this.joinedQue = joinedQue;
         this.status = status;
+    }
+
+    public ParticipantInQueDAO(int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
+        this.userID = userID;
+        this.subjectCode = subjectCode;
+        this.schoolYear = schoolYear;
+        this.assignmentNumber = assignmentNumber;
+        this.joinedQue = joinedQue;
+        this.status = 0;
     }
 
     public ParticipantInQueDAO(){
@@ -53,12 +62,12 @@ public class ParticipantInQueDAO implements Serializable {
         this.status = status;
     }
 
-    public int getPaticipantInQueID() {
-        return paticipantInQueID;
+    public int getParticipantInQueID() {
+        return participantInQueID;
     }
 
-    public void setPaticipantInQueID(int paticipantInQueID) {
-        this.paticipantInQueID = paticipantInQueID;
+    public void setParticipantInQueID(int paticipantInQueID) {
+        this.participantInQueID = paticipantInQueID;
     }
 
     public int getUserID() {

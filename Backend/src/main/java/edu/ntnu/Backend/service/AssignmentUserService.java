@@ -1,7 +1,6 @@
 package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.AssignmentUserDAO;
-import edu.ntnu.Backend.model.DTO.AssignmentUserDTO;
 import edu.ntnu.Backend.repository.AssignmentUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +46,10 @@ public class AssignmentUserService {
         }
         assignmentUserRepository.save(assignmentToChange);
         System.out.println("The assignment status has been changed");
+    }
+
+    public AssignmentUserDAO findAssignmentUserById(int assignmentUserId) {
+        System.out.println("FINDING A ASSIGNMENT FOR ID: " + assignmentUserId);
+        return assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(assignmentUserId);
     }
 }

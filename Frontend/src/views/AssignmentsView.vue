@@ -1,11 +1,9 @@
 <template>
+  <button @click.prevent="returnToStart">Return to home</button>
+  <button @click.prevent="changeStatusOfAssignments">
+    Change status of all assignments
+  </button>
   <div class="assignmentsContainer">
-    <h2 id="header1"></h2>
-    <div class="container">
-      <div></div>
-      <div class="activeSubjects" id="assignmentsC"></div>
-      <div class="assignments1" id="validC"></div>
-    </div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
   </div>
@@ -59,6 +57,9 @@ export default {
       }
 
       this.listAssignments();
+    },
+    returnToStart() {
+      this.$router.push("/home");
     },
     listAssignments() {
       const header = document.getElementById("header1");
@@ -124,11 +125,53 @@ export default {
         passedReq1.textContent =
           "Du må ha bestått: " +
           this.assignmentIntervals[i].minAssignments +
-          " av øving" +
+          " av øving " +
           this.assignmentIntervals[i].intervalStart +
           " - " +
           this.assignmentIntervals[i].intervalEnd;
         elementor.appendChild(passedReq1);
+      }
+    },
+    async changeStatusOfAssignments() {
+      //This method does not work if user is not studass or admin
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      for (var i = 0; i < this.assignments.length; i++) {
+        let assignmentId = this.assignments[i].assignmentUserID;
+        let res = await axios
+          .post("http://localhost:8081/api/studass/assignment/status", {
+            token: tokenFromLocal,
+            uniqueId: assignmentId,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
+      }
+    },
+    async checkOutOfQue() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let assignmetLast = this.assignments[0].assignmentUserID;
+      console.log(assignmetLast);
+      let res = await axios
+        .post("http://localhost:8081/api/studass/assignment/status", {
+          token: tokenFromLocal,
+          uniqueId: assignmetLast,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+      if (res.data === "The status was changed") {
+        //Change the value of uniqueId to the actual value of participant in que
+        res = await axios
+          .post("http://localhost:8081/api/user/participantInQue/delete", {
+            token: tokenFromLocal,
+            uniqueId: 7,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
       }
     },
     uniq_fast(a) {

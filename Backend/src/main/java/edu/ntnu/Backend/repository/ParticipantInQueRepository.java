@@ -10,4 +10,6 @@ import java.util.List;
 public interface ParticipantInQueRepository extends JpaRepository<ParticipantInQueDAO, Long> {
 
     List<ParticipantInQueDAO> findAllBySubjectCodeAndSchoolYear(String subjectCode, int schoolYear);
+
+    long deleteParticipantInQueDAOByParticipantInQueID(int participantInQueId);
 }

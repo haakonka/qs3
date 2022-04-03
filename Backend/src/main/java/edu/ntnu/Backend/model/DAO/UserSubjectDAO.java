@@ -23,10 +23,14 @@ public class UserSubjectDAO implements Serializable {
     @Column(name = "userId")
     private int userId;
 
-    public UserSubjectDAO(int schoolYear, String subjectCode, int userId) {
+    @Column(name = "status_of_user")
+    private int statusOfUser;
+
+    public UserSubjectDAO(int schoolYear, String subjectCode, int userId, int statusOfUser) {
         this.schoolYear = schoolYear;
         this.subjectCode = subjectCode;
         this.userId = userId;
+        this.statusOfUser = statusOfUser;
     }
 
     public UserSubjectDAO() {
@@ -55,4 +59,8 @@ public class UserSubjectDAO implements Serializable {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    public int getStatusOfUser() {return statusOfUser;}
+
+    public void setStatusOfUser(int statusOfUser) {this.statusOfUser = statusOfUser;}
 }
