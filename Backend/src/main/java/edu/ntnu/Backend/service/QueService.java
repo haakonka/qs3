@@ -15,7 +15,7 @@ public class QueService {
         this.queRepository = queRepository;
     }
 
-    public QueDAO findAQue(String subjectCode, int schoolYear) {
+    public QueDAO findAQueBySubjectCodeAndSchoolYear(String subjectCode, int schoolYear) {
         System.out.println("finding all participants by subjectCode and schoolYear: " + subjectCode + " and " + schoolYear);
         return queRepository.findQueDAOBySubjectCodeAndSchoolYear(subjectCode, schoolYear);
     }

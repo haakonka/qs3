@@ -134,10 +134,10 @@ public class BackendController {
         System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\",""));
         System.out.println("School year:" + subjectIdDTO.getSchoolYear());
         if(autenticationService.checkIfAuthorized(subjectIdDTO.getToken(), 0)){
-            System.out.println("The status of the que is: " + queService.findAQue(
+            System.out.println("The status of the que is: " + queService.findAQueBySubjectCodeAndSchoolYear(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear())).getStatusQue());
-            return ResponseEntity.ok().body(queService.findAQue(
+            return ResponseEntity.ok().body(queService.findAQueBySubjectCodeAndSchoolYear(
                     subjectIdDTO.getSubjectCode().replace("\\",""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear())));
         }
