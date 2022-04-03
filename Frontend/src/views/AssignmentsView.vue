@@ -51,6 +51,8 @@ export default {
         for (var i = 0; i < jsonArray.length; i++) {
           if (jsonArray[i].status === 1) {
             jsonArray[i].status = "Godkjent";
+          } else if (jsonArray[i].status === 0) {
+            jsonArray[i].status = "Ikke godkjent";
           }
         }
         this.assignments = jsonArray;
