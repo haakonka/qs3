@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+    <h2>Velkommen Navn</h2>
     <h2>Aktiv kø</h2>
     <div class="container">
       <div></div>

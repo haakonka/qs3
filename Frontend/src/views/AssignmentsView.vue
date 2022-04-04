@@ -1,5 +1,7 @@
 <template>
   <div class="assignmentsContainer">
+    <button @click="returnToStart">Home</button>
+    <h2>Navn</h2>
     <h2 id="header1"></h2>
     <div class="container">
       <div></div>
@@ -130,6 +132,9 @@ export default {
         validC.appendChild(validDiv);
         element.appendChild(assignmentDiv);
       }
+    },
+    returnToStart() {
+      this.$router.push("/home");
     },
 
     async getAssignmentIntervals() {

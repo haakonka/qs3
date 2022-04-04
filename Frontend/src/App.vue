@@ -1,6 +1,5 @@
 <template>
   <title>QS3</title>
-  <nav></nav>
   <router-view />
 </template>
 

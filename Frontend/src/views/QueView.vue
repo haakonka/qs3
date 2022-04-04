@@ -1,14 +1,14 @@
 <template>
   <div class="que">
+    <button @click.prevent="returnToStart">Home</button>
     <h2 id="id123"></h2>
-    <button @click.prevent="returnToStart">Return to home</button>
+
     <button @click="displayQueueMenu">Still deg i kø</button>
     <div id="queueMenu" style="display: none"></div>
-    <h2>Din plass i køen: 3</h2>
+    <h2>Din plass i køen: {{ this.positionInQueue }}</h2>
 
     <div id="que"></div>
 
-    <button>Vis ekstra info</button>
     <h2 id="numOfStud"></h2>
     <h2 id="time"></h2>
   </div>
@@ -21,6 +21,7 @@ export default {
     return {
       AssignmentsToApprove: [],
       Assignments: [],
+      positionInQueue: null,
     };
   },
   created() {
@@ -106,10 +107,11 @@ export default {
         queDiv.appendChild(studentInQueDiv);
       }
 
-      const element = document.getElementById("numOfStud");
       const element2 = document.getElementById("time");
-      element.textContent = "Antall studenter i køen: " + res.data.length;
-      element2.textContent = "Estimert ventetid: " + res.data.length * 3;
+      this.positionInQueue = res.data.length;
+
+      element2.textContent =
+        "Estimert ventetid: " + res.data.length * 3 + " min";
       const element3 = document.getElementById("id123");
       element3.textContent = localStorage.getItem("subjectCode");
       console.log("antall folk i køen" + res.data.length);
@@ -270,5 +272,8 @@ export default {
 }
 #que > div {
   width: 50%;
+}
+#homeBtn {
+  width: 4em;
 }
 </style>
