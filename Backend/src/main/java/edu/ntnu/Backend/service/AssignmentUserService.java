@@ -38,6 +38,9 @@ public class AssignmentUserService {
                 } );
         return listOfAssignments;
     }
+    public List<AssignmentUserDAO> findAllThatHasLargerIdThan(int value){
+        return assignmentUserRepository.findAssignmentUserDAOByAssignmentUserIDIsGreaterThan(value);
+    }
 
     public List<AssignmentUserDAO> findAllSubjectsByUserID(int userID) {
         System.out.println("FINDING ALL SUBJECTS FOR USER ID: " + userID);

@@ -138,12 +138,21 @@ public class AssignmentController {
 
             List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(
                     Integer.parseInt(newAssignmentDTO.getSchoolYear()), newAssignmentDTO.getSubjectCode());
-
+            System.out.println("size" + usersInSub.size());
+            System.out.println("1 " + usersInSub.get(0).getUserId());
+            System.out.println("2 " + usersInSub.get(1).getUserId());
+            System.out.println("3 " + usersInSub.get(2).getUserId());
+            int j = 0;
+            while(assignmentUserService.findAllThatHasLargerIdThan(j).size()!=0){
+                j++;
+            }
             for (int i = 0; i < usersInSub.size(); i++) {
-                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(
+                //GET HIGEST NUMBER OF ASSIGNMENT ID AND USE THAT MANUALLY
+                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(j + i,
                         usersInSub.get(i).getUserId(), newAssignmentDTO.getSubjectCode(),
                         Integer.parseInt(newAssignmentDTO.getSchoolYear()),
                         newAssignmentDTO.getAssignmentNumber(), 0);
+
                 assignmentUserService.addAssignmentUser(assignmentUserDAO);
                 System.out.println("added assignment for user");
             }
