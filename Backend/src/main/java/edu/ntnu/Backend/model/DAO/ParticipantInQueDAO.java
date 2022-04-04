@@ -14,7 +14,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "participantinque", schema = "qsusers")
-public class ParticipantInQueueDAO implements Serializable {
+public class ParticipantInQueDAO implements Serializable {
     @Id
     @Column(name = "participantinque_id")
     private int participantInQueID;
@@ -37,7 +37,7 @@ public class ParticipantInQueueDAO implements Serializable {
     @Column(name = "status")
     private int status;
 
-    public ParticipantInQueueDAO(int participantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
+    public ParticipantInQueDAO(int participantInQueID, int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue, int status) {
         this.participantInQueID = participantInQueID;
         this.userID = userID;
         this.subjectCode = subjectCode;
@@ -47,7 +47,7 @@ public class ParticipantInQueueDAO implements Serializable {
         this.status = status;
     }
 
-    public ParticipantInQueueDAO(int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
+    public ParticipantInQueDAO(int userID, String subjectCode, int schoolYear, int assignmentNumber, Timestamp joinedQue) {
         this.userID = userID;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
@@ -56,7 +56,7 @@ public class ParticipantInQueueDAO implements Serializable {
         this.status = 0;
     }
 
-    public ParticipantInQueueDAO(){
+    public ParticipantInQueDAO(){
     }
 
     public int getStatus() {
