@@ -50,13 +50,13 @@ export default {
   methods: {
     goToSubjectPage(e) {
       console.log("her er jeg");
-      console.log(e.target);
+      console.log("knappen som blir trykka på" + e.target);
       let subjectThingy = e.target.classList;
 
-      console.log(subjectThingy[1]);
-      console.log(subjectThingy[2]);
-      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
-      localStorage.setItem("schoolYear", subjectThingy[2]);
+      console.log("SUbject code" + subjectThingy[0]);
+      console.log("Subject year" + subjectThingy[1]);
+      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[0]));
+      localStorage.setItem("schoolYear", subjectThingy[1]);
 
       this.$router.push("/adminSubjects");
     },
@@ -89,15 +89,23 @@ export default {
       for (var i = 0; i < res.data.length; i++) {
         subjectQue = document.createElement("div");
         let addStudents = document.createElement("button");
+        let goToSubjectsButton = document.createElement("button");
+
+        goToSubjectsButton.textContent = "Gå til emne";
+
+        goToSubjectsButton.classList.add(res.data.at(i).subjectCode);
+        goToSubjectsButton.classList.add(res.data.at(i).schoolYear);
+        goToSubjectsButton.onclick = this.goToSubjectPage;
+
         addStudents.textContent = "Legg til studenter";
-        addStudents.id = "addStudentsButton";
+        goToSubjectsButton.id = "goToSubject";
 
         addStudents.onclick = this.addStudentsToSubject;
 
         subjectQue.textContent =
           "" + res.data.at(i).subjectCode + "\n" + res.data.at(i).subjectName;
 
-        subjectQue.appendChild(addStudents);
+        subjectQue.appendChild(goToSubjectsButton);
         if (res.data.at(i).statusQue == 1) {
           subjectQue.className = "adminSubject";
           element.appendChild(subjectQue);
@@ -176,7 +184,7 @@ button:hover {
   background-color: #158487;
 }
 
-#addStudentsButton {
+#goToSubject {
   display: flex;
   float: right;
   margin: 0px;
