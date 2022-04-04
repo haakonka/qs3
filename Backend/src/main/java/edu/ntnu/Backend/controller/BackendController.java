@@ -186,6 +186,17 @@ public class BackendController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    @PostMapping("admin/addAsignment")
+    public ResponseEntity addAsignment(@RequestBody newAsignemntDTO newAsignemntDTO){
+        if(autenticationService.checkIfAuthorized(newAsignemntDTO.getToken(),2)){
+
+            List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(Integer.parseInt(newAsignemntDTO.getSchoolYear()),newAsignemntDTO.getSubjectCode());
+
+        }
+
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
 
 
 
