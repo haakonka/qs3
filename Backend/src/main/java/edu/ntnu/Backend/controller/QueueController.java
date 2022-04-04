@@ -27,10 +27,10 @@ public class QueueController {
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
     private final SubjectService subjectService;
-    private final ParticipantInQueService participantInQueueService;
+    private final ParticipantInQueueService participantInQueueService;
 
     public QueueController(AutenticationService autenticationService, UserSubjectService userSubjectService,
-                           SubjectService subjectService, ParticipantInQueService participantInQueueService) {
+                           SubjectService subjectService, ParticipantInQueueService participantInQueueService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
         this.subjectService = subjectService;
@@ -96,7 +96,7 @@ public class QueueController {
     /**
      * A method to delete a participant from the que.
      * @param participantInQueDTO The specific format of data that is needed.
-     *                            See {@link edu.ntnu.Backend.model.DTO.UniqueIdDTO UniqueIdDTO} for more information.
+     *                            See {@link UniqueIdDTO UniqueIdDTO} for more information.
      * @return Returns a response entity containing the status message of the request,
      * or a http status forbidden the user is not logged-in.
      */
@@ -139,7 +139,7 @@ public class QueueController {
                     Integer.valueOf(participantInQueueDTO.getSchoolYear()),
                     Integer.valueOf(participantInQueueDTO.getAssignmentNumber()),
                     timeStamp);
-            if (participantInQueueService.createParticipantInQueue(participant)) {
+            if (participantInQueueService.createParticipantInQue(participant)) {
                 return ResponseEntity.ok().body("The participant was made");
             }
         }

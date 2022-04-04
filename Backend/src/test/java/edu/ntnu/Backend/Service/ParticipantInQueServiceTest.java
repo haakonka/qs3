@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ParticipantInQueueServiceTest {
+class ParticipantInQueueServiceTest {
     java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf("2001-04-03 13:25:50.0");
     ParticipantInQueueDAO user1 = new ParticipantInQueueDAO(1,23,"alquid",2001,1,timestamp,0);
     List<ParticipantInQueueDAO> users = new LinkedList<>();
