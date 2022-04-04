@@ -18,6 +18,9 @@ public class AssignmentIntervalService {
 
     public List<AssignmentIntervalDAO> findBySubjectCodeAndYear(String subjectCode, int schoolYear) {
         System.out.println("finding assignment interval by subjectCode and schoolYear: " + subjectCode + " and " + schoolYear);
+        if( assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear).isEmpty()){
+            return null;
+        }
         return assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear);
     }
 }

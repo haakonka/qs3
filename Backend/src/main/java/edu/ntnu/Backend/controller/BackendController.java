@@ -266,7 +266,5 @@ public class BackendController {
             return ResponseEntity.ok().body(userService.findNameByUserID(userbyIdDTO.getUserID()));
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
-    }<<<<<<<HEAD
-
-    =======>>>>>>>61ef 0 aeba6b54b57d9309efe788483bb82e778f6
+    }
 }

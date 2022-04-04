@@ -58,7 +58,7 @@ class AutenticationServiceTest {
     }
 
     @Test
-    void checkIfAuthorized() throws ServletException, IOException {
+    void checkIfAuthorizedAdmin() throws ServletException, IOException {
         String adminToken = autenticationService.successfulAuthentication(adminUser);
         String studassToken = autenticationService.successfulAuthentication(studassUser);
         String userToken = autenticationService.successfulAuthentication(user);
@@ -66,15 +66,36 @@ class AutenticationServiceTest {
         Assertions.assertTrue(autenticationService.checkIfAuthorized(adminToken,2));
         Assertions.assertFalse(autenticationService.checkIfAuthorized(studassToken,2));
         Assertions.assertFalse(autenticationService.checkIfAuthorized(userToken,2));
+
+
+    }
+
+
+    @Test
+    void checkIfAuthorizeStudass() throws ServletException, IOException {
+        String adminToken = autenticationService.successfulAuthentication(adminUser);
+        String studassToken = autenticationService.successfulAuthentication(studassUser);
+        String userToken = autenticationService.successfulAuthentication(user);
         //for studass api calls
         Assertions.assertTrue(autenticationService.checkIfAuthorized(adminToken,1));
         Assertions.assertTrue(autenticationService.checkIfAuthorized(studassToken,1));
         Assertions.assertFalse(autenticationService.checkIfAuthorized(userToken,1));
+
+    }
+
+    @Test
+    void checkIfAuthorizeuser() throws ServletException, IOException {
+        String adminToken = autenticationService.successfulAuthentication(adminUser);
+        String studassToken = autenticationService.successfulAuthentication(studassUser);
+        String userToken = autenticationService.successfulAuthentication(user);
         //for user api calls
         Assertions.assertTrue(autenticationService.checkIfAuthorized(adminToken,0));
         Assertions.assertTrue(autenticationService.checkIfAuthorized(studassToken,0));
         Assertions.assertTrue(autenticationService.checkIfAuthorized(userToken,0));
+
     }
+
+
 
     @Test
     void getUserFromJWT() throws ServletException, IOException {

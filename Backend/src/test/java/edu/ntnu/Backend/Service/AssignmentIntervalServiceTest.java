@@ -33,7 +33,14 @@ class AssignmentIntervalServiceTest {
     }
 
     @Test
-    void findBySubjectCodeAndYear() {
+    void findBySubjectCodeAndYearPositive() {
         Assertions.assertEquals(assignmentIntervalService.findBySubjectCodeAndYear("alquid",2001),alquids);
     }
+
+    @Test
+    void findBySubjectCodeAndYearNegativeValues(){
+        Assertions.assertNull(assignmentIntervalService.findBySubjectCodeAndYear("wrong",2001));
+        Assertions.assertNull(assignmentIntervalService.findBySubjectCodeAndYear("alquid",1700));
+    }
+
 }

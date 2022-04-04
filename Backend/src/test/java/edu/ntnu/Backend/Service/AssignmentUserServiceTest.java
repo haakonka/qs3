@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AssignmentUserServiceTest {
-    AssignmentUserDAO aui3 = new AssignmentUserDAO(3,81,"alquid",2001,10,11);
-    AssignmentUserDAO aui4 = new AssignmentUserDAO(4,81,"alquid",2001,9,11);
+    AssignmentUserDAO aui3 = new AssignmentUserDAO(3,81,"alquid",2001,10,1);
+    AssignmentUserDAO aui4 = new AssignmentUserDAO(4,81,"alquid",2001,9,0);
     AssignmentUserDAO aui6 = new AssignmentUserDAO(6,83,"idatt2085",2075,1,0);
     ArrayList<AssignmentUserDAO> assignmentUserDAOS81 = new ArrayList<>();
     ArrayList<AssignmentUserDAO> assignmentUserDAOS83 = new ArrayList<>();
@@ -41,14 +41,23 @@ class AssignmentUserServiceTest {
 
         assignmentUserService = new AssignmentUserService(assignmentUserRepository);
 
+        Mockito.when(assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(6)).thenReturn(aui6);
         Mockito.when(assignmentUserRepository.findAssignmentUserDAOByUserID(83)).thenReturn(assignmentUserDAOS81);
         Mockito.when(assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID("alquid",2001,81)).thenReturn(assignmentUserDAOS83);
 
     }
 
     @Test
-    void findBySubjectCodeAndYearAndUserID(){
+    void findBySubjectCodeAndYearAndUserIdPositive(){
         Assertions.assertEquals(assignmentUserService.findBySubjectCodeAndYearAndUserID("alquid",2001,81),assignmentUserDAOS83);
+
+    }
+
+    @Test
+    void findBySubjectCodeAndYearAndUserIdNegative() {
+        Assertions.assertNull(assignmentUserService.findBySubjectCodeAndYearAndUserID("wrong", 2001, 81));
+        Assertions.assertNull(assignmentUserService.findBySubjectCodeAndYearAndUserID("alquid", 2000, 81));
+        Assertions.assertNull(assignmentUserService.findBySubjectCodeAndYearAndUserID("alquid", 2001, 1));
     }
 
     @Test
@@ -56,6 +65,12 @@ class AssignmentUserServiceTest {
         Assertions.assertEquals(assignmentUserService.findAllSubjectsByUserID(83),assignmentUserDAOS81);
 
     }
+
+    /*@Test
+    void changeStatusOfAAsignment(){
+        assignmentUserService.changeStatusOfAssignment(83);
+        Assertions.assertEquals(assignmentUserService.findAssignmentUserById(6).getStatus(),1);
+    }*/
 
 
 }

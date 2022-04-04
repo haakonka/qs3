@@ -19,6 +19,9 @@ public class AssignmentUserService {
     public List<AssignmentUserDAO> findBySubjectCodeAndYearAndUserID(String subjectCode, int schoolYear, int userID) {
         System.out.println("finding assignmentUser by userID, subjectCode and schoolYear: " + userID + ", " + subjectCode + " and " + schoolYear);
         List<AssignmentUserDAO> listOfAssigments = assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode,schoolYear,userID);
+        if(listOfAssigments.isEmpty()){
+            return null;
+        }
         listOfAssigments.sort(
                 (AssignmentUserDAO ad1,AssignmentUserDAO ad2) -> {
                     if(ad1.getAssignmentNumber() <= ad2.getAssignmentNumber()){
