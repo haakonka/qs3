@@ -16,30 +16,21 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class AssignmentController {
-    private final UserService userService;
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
     private final AssignmentUserService assignmentUserService;
     private final AssignmentIntervalService assignmentIntervalService;
-    private final SubjectService subjectService;
-    private final ParticipantInQueService participantInQueService;
     private final AssignmentService assignmentService;
-    private final EmailService emailService;
 
-    public AssignmentController(UserService userService, AutenticationService autenticationService,
-                                UserSubjectService userSubjectService, AssignmentUserService assignmentUserService,
-                                AssignmentIntervalService assignmentIntervalService, SubjectService subjectService,
-                                ParticipantInQueService participantInQueService, AssignmentService assignmentService,
-                                EmailService emailService) {
-        this.userService = userService;
+    public AssignmentController(AutenticationService autenticationService, UserSubjectService userSubjectService,
+                                AssignmentUserService assignmentUserService,
+                                AssignmentIntervalService assignmentIntervalService,
+                                AssignmentService assignmentService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
         this.assignmentUserService = assignmentUserService;
         this.assignmentIntervalService = assignmentIntervalService;
-        this.subjectService = subjectService;
-        this.participantInQueService = participantInQueService;
         this.assignmentService = assignmentService;
-        this.emailService = emailService;
     }
 
     @PostMapping("user/assignments")
@@ -59,8 +50,6 @@ public class AssignmentController {
             return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(
                     subjectIdDTO.getSubjectCode().replace("\\", ""),
                     Integer.valueOf(subjectIdDTO.getSchoolYear()), user.getId()));
-            // return
-            // ResponseEntity.ok().body(assignmentUserService.findAllSubjectsByUserID(user.getId()));
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
@@ -127,14 +116,12 @@ public class AssignmentController {
                 assignmentUserService.addAssignmentUser(assignmentUserDAO);
                 System.out.println("added assignment for user");
             }
-
         }
-
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("user/assignments/interval")
-    public ResponseEntity getAssignmentIntervallForASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
+    public ResponseEntity getAssignmentIntervalForASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access all assignments intervals within a specific subject");
         System.out.println("Token:" + subjectIdDTO.getToken());
         System.out.println("Subject code:" + subjectIdDTO.getSubjectCode().replace("\\", ""));

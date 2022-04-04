@@ -18,30 +18,15 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class SubjectController {
-    private final UserService userService;
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
-    private final AssignmentUserService assignmentUserService;
-    private final AssignmentIntervalService assignmentIntervalService;
     private final SubjectService subjectService;
-    private final ParticipantInQueService participantInQueService;
-    private final AssignmentService assignmentService;
-    private final EmailService emailService;
 
-    public SubjectController(UserService userService, AutenticationService autenticationService,
-                             UserSubjectService userSubjectService, AssignmentUserService assignmentUserService,
-                             AssignmentIntervalService assignmentIntervalService, SubjectService subjectService,
-                             ParticipantInQueService participantInQueService, AssignmentService assignmentService,
-                             EmailService emailService) {
-        this.userService = userService;
+    public SubjectController(AutenticationService autenticationService, UserSubjectService userSubjectService,
+                             SubjectService subjectService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
-        this.assignmentUserService = assignmentUserService;
-        this.assignmentIntervalService = assignmentIntervalService;
         this.subjectService = subjectService;
-        this.participantInQueService = participantInQueService;
-        this.assignmentService = assignmentService;
-        this.emailService = emailService;
     }
 
     @PostMapping("/user/subjects")

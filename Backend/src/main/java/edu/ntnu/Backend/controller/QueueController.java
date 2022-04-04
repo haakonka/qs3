@@ -21,30 +21,17 @@ import java.util.concurrent.atomic.AtomicReference;
 @RestController
 @CrossOrigin
 public class QueueController {
-    private final UserService userService;
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
-    private final AssignmentUserService assignmentUserService;
-    private final AssignmentIntervalService assignmentIntervalService;
     private final SubjectService subjectService;
     private final ParticipantInQueService participantInQueService;
-    private final AssignmentService assignmentService;
-    private final EmailService emailService;
 
-    public QueueController(UserService userService, AutenticationService autenticationService,
-                           UserSubjectService userSubjectService, AssignmentUserService assignmentUserService,
-                           AssignmentIntervalService assignmentIntervalService, SubjectService subjectService,
-                           ParticipantInQueService participantInQueService, AssignmentService assignmentService,
-                           EmailService emailService) {
-        this.userService = userService;
+    public QueueController(AutenticationService autenticationService, UserSubjectService userSubjectService,
+                           SubjectService subjectService, ParticipantInQueService participantInQueService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
-        this.assignmentUserService = assignmentUserService;
-        this.assignmentIntervalService = assignmentIntervalService;
         this.subjectService = subjectService;
         this.participantInQueService = participantInQueService;
-        this.assignmentService = assignmentService;
-        this.emailService = emailService;
     }
 
     @PostMapping("/studass/queStatus")
@@ -145,6 +132,4 @@ public class QueueController {
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
-
-
 }
