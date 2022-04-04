@@ -95,8 +95,8 @@ public class BackendController {
                 md.update(Base64.decodeBase64(salt.getBytes(StandardCharsets.UTF_8)));
                 String hashedPass = new String(
                         Base64.encodeBase64(md.digest(password.getBytes(StandardCharsets.UTF_8))));
-
-                emailService.sendAsHtml("baconvaffel@gmail.com", "Added in qs3 System",
+                System.out.println(newUserDTO.getEmail() + "sent email");
+                emailService.sendAsHtml(newUserDTO.getEmail(), "Added in qs3 System",
                         "<h2>Hey,</h2><p>your password and email:\n" +
                                 "password: " + password + "\nemail: " + newUserDTO.getEmail() + "</p>");
                 UserDAO userDAO = new UserDAO(newUserDTO.getFirstname(), newUserDTO.getLastname(), hashedPass, salt,

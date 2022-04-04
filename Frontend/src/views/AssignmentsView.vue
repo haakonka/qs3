@@ -223,7 +223,7 @@ export default {
           });
         console.log(res);
       }
-    },  
+    },
     async changeValidStatus(e) {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let assignmentId = e.target.classList[2];
