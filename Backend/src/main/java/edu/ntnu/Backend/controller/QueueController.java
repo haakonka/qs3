@@ -1,6 +1,6 @@
 package edu.ntnu.Backend.controller;
 
-import edu.ntnu.Backend.model.DAO.ParticipantInQueueDAO;
+import edu.ntnu.Backend.model.DAO.ParticipantInQueDAO;
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DAO.UserSubjectDAO;
 import edu.ntnu.Backend.model.DTO.*;
@@ -27,10 +27,10 @@ public class QueueController {
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
     private final SubjectService subjectService;
-    private final ParticipantInQueueService participantInQueueService;
+    private final ParticipantInQueService participantInQueueService;
 
     public QueueController(AutenticationService autenticationService, UserSubjectService userSubjectService,
-                           SubjectService subjectService, ParticipantInQueueService participantInQueueService) {
+                           SubjectService subjectService, ParticipantInQueService participantInQueueService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
         this.subjectService = subjectService;
@@ -120,13 +120,13 @@ public class QueueController {
      * A method to create a participantInQueueDAO object with some given data.
      * This method adds the object to the que within the given subject.
      * @param participantInQueueDTO The specific format of data that is needed.
-     *                              See {@link edu.ntnu.Backend.model.DTO.ParticipantInQueueDTO ParticipantInQueueDTO}
+     *                              See {@link ParticipantInQueDTO ParticipantInQueueDTO}
      *                              for more information.
      * @return Returns a response entity containing the status message of the request,
      * or a http status forbidden the user is not logged-in.
      */
     @PostMapping("user/participantInQue/create")
-    public ResponseEntity createParticipantInQueue(@RequestBody ParticipantInQueueDTO participantInQueueDTO) {
+    public ResponseEntity createParticipantInQueue(@RequestBody ParticipantInQueDTO participantInQueueDTO) {
         if (autenticationService.checkIfAuthorized(participantInQueueDTO.getToken(), 0)) {
             UserDAO user = autenticationService.getUserFromJWT(participantInQueueDTO.getToken());
             Date date = new Date(Long.parseLong(participantInQueueDTO.getJoinedQue()));
@@ -134,7 +134,7 @@ public class QueueController {
             format.setTimeZone(TimeZone.getTimeZone("GMT+2"));
             String formatted = format.format(date);
             Timestamp timeStamp = Timestamp.valueOf(formatted);
-            ParticipantInQueueDAO participant = new ParticipantInQueueDAO(
+            ParticipantInQueDAO participant = new ParticipantInQueDAO(
                     user.getId(), participantInQueueDTO.getSubjectCode().replace("\\", ""),
                     Integer.valueOf(participantInQueueDTO.getSchoolYear()),
                     Integer.valueOf(participantInQueueDTO.getAssignmentNumber()),

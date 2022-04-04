@@ -15,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserSubjectServiceTest {
 
     UserSubjectDAO userSubjectDAO1 = new UserSubjectDAO(2011,"Subjectcode1",1,0);
+    UserSubjectDAO userSubjectDAO2 = new UserSubjectDAO(2011,"Subjectcode1",2,0);
+    UserSubjectDAO userSubjectDAO3 = new UserSubjectDAO(2011,"Subjectcode1",3,0);
+    UserSubjectDAO userSubjectDAO4 = new UserSubjectDAO(2011,"Subjectcode1",1,0);
+    UserSubjectDAO userSubjectDAO5 = new UserSubjectDAO(2011,"Subjectcode1",1,0);
+    UserSubjectDAO userSubjectDAO6 = new UserSubjectDAO(2011,"Subjectcode1",1,0);
 
     UserSubjectService userSubjectService;
 

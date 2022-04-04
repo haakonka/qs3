@@ -1,6 +1,6 @@
 package edu.ntnu.Backend.service;
 
-import edu.ntnu.Backend.model.DAO.ParticipantInQueueDAO;
+import edu.ntnu.Backend.model.DAO.ParticipantInQueDAO;
 import edu.ntnu.Backend.repository.ParticipantInQueRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,19 +9,19 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ParticipantInQueueService {
+public class ParticipantInQueService {
     private final ParticipantInQueRepository participantInQueRepository;
 
-    public ParticipantInQueueService(ParticipantInQueRepository participantInQueRepository) {
+    public ParticipantInQueService(ParticipantInQueRepository participantInQueRepository) {
         this.participantInQueRepository = participantInQueRepository;
     }
 
-    public List<ParticipantInQueueDAO> findAllParticipantsInAQue(String subjectCode, int schoolYear) {
+    public List<ParticipantInQueDAO> findAllParticipantsInAQue(String subjectCode, int schoolYear) {
         System.out.println("Finding all participants in the que for: " + subjectCode + " at year: " + schoolYear);
-        List<ParticipantInQueueDAO> participantInQueueDAOS = participantInQueRepository.findAllBySubjectCodeAndSchoolYear(subjectCode, schoolYear);
+        List<ParticipantInQueDAO> participantInQueueDAOS = participantInQueRepository.findAllBySubjectCodeAndSchoolYear(subjectCode, schoolYear);
         participantInQueueDAOS
                 .sort(
-                        (ParticipantInQueueDAO p1, ParticipantInQueueDAO p2) -> {
+                        (ParticipantInQueDAO p1, ParticipantInQueDAO p2) -> {
                             if(p1.getJoinedQue().after(p2.getJoinedQue())){
                                 return -1;
                             }else return 1;
@@ -30,12 +30,12 @@ public class ParticipantInQueueService {
         return participantInQueRepository.findAllBySubjectCodeAndSchoolYear(subjectCode, schoolYear);
     }
 
-    public List<ParticipantInQueueDAO> findAllInstancesOfAParticipantInQue(String subjectCode, int schoolYear, int userId) {
+    public List<ParticipantInQueDAO> findAllInstancesOfAParticipantInQue(String subjectCode, int schoolYear, int userId) {
         System.out.println(String.format("Finding all instances of a participant in subject %s at year %s and with user id %s"
                 ,subjectCode,schoolYear,userId));
-        List<ParticipantInQueueDAO> allInstances = participantInQueRepository
+        List<ParticipantInQueDAO> allInstances = participantInQueRepository
                 .findParticipantInQueDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode, schoolYear, userId);
-        allInstances.sort((ParticipantInQueueDAO p1, ParticipantInQueueDAO p2) -> {
+        allInstances.sort((ParticipantInQueDAO p1, ParticipantInQueDAO p2) -> {
             if(p1.getJoinedQue().after(p2.getJoinedQue())){
                 return -1;
             }else return 1;
@@ -44,7 +44,7 @@ public class ParticipantInQueueService {
     }
 
     public void changeStatusOfParticipantInQueue(int participantInQueId, int statusChange) {
-        ParticipantInQueueDAO participant = participantInQueRepository.findParticipantInQueDAOByParticipantInQueID(participantInQueId);
+        ParticipantInQueDAO participant = participantInQueRepository.findParticipantInQueDAOByParticipantInQueID(participantInQueId);
         participant.setStatus(statusChange);
         participantInQueRepository.save(participant);
         System.out.println("The status of the participant has been changed");
@@ -60,7 +60,7 @@ public class ParticipantInQueueService {
         return 0;
     }
 
-    public Boolean createParticipantInQue(ParticipantInQueueDAO participant) {
+    public Boolean createParticipantInQue(ParticipantInQueDAO participant) {
         if(participant != null) {
             participantInQueRepository.save(participant);
             return true;

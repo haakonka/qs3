@@ -1,6 +1,6 @@
 package edu.ntnu.Backend.model.DTO;
 
-public class ParticipantInQueueDTO {
+public class ParticipantInQueDTO {
     String token;
     String subjectCode;
     String schoolYear;
