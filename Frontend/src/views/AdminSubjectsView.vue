@@ -3,6 +3,53 @@
     <h2 id="header1"></h2>
 
     <div class="teacherSubjects" id="assignmentsC"></div>
+    <button @click="addAssignmentActive">Legg til øving</button>
+    <form @submit.prevent="addAssignment" v-show="addButtonClicked">
+      <p>
+        <label for="Assignment" class="label"> Øvingsnr </label>
+        <input
+          class="input"
+          v-model="assignmentNumber"
+          name="assigmmentNumber"
+          type="number"
+          placeholder="Øving"
+        />
+      </p>
+      <p>
+        <label for="startOfRange" class="label"> Start på intervallet </label>
+        <input
+          class="input"
+          v-model="intervalStart"
+          type="number"
+          name="startOfRange"
+          placeholder="Start på intervallet"
+        />
+      </p>
+      <p>
+        <label for="endOfRange" class="label"> Slutt på intervallet </label>
+        <input
+          class="input"
+          v-model="intervalEnd"
+          type="number"
+          name="endOfRange"
+          placeholder="Slutt på intervallet"
+        />
+      </p>
+      <p>
+        <label for="obligatorisk" class="label">
+          Hvor mange av disse må være godkjent?
+        </label>
+        <input
+          class="input"
+          v-model="minAssignments"
+          type="number"
+          name="obligatorisk"
+          placeholder="Antall godkjent"
+        />
+      </p>
+      <button>Legg til</button>
+    </form>
+
     <div id="forAddButton"></div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
@@ -16,8 +63,11 @@ export default {
     return {
       assignments: [],
       assignmentIntervals: [],
-      studass: false,
-      teacher: false,
+      addButtonClicked: false,
+      assignmentNumber: null,
+      intervalStart: null,
+      intervalEnd: null,
+      minAssignments: null,
     };
   },
   created() {
@@ -64,58 +114,13 @@ export default {
       const header = document.getElementById("header1");
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
       const element = document.getElementById("assignmentsC");
-
       while (element.firstChild) {
         element.removeChild(element.firstChild);
       }
 
-      let assignmentDiv = null;
-
-      let userArray = localStorage.getItem("user");
-      console.log("Her er bruker data" + userArray);
-      let roleArrThing = userArray.split("exp");
-      console.log(roleArrThing);
-      console.log("Skal ha tilgang? " + roleArrThing[0].includes("1"));
-      if (roleArrThing[0].includes("1")) {
-        this.studass = true;
-      }
-      if (roleArrThing[0].includes("2")) {
-        this.teacher = true;
-      }
-      const addButtonDiv = document.getElementById("forAddButton");
-
-      while (addButtonDiv.firstChild) {
-        addButtonDiv.removeChild(addButtonDiv.firstChild);
-      }
-
-      if (this.teacher && addButtonDiv.childElementCount < 1) {
-        const addAssignmentButton = document.createElement("button");
-        const p = document.createElement("p");
-        const p1 = document.createElement("p");
-        p1.textContent = "Skriv inn start og slutt på intervallet";
-        p.textContent = "Skal øvingen være obligatorisk?";
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-        const inputNum1 = document.createElement("input");
-        const inputNum2 = document.createElement("input");
-
-        inputNum1.placeholder = "Start av intervall";
-        inputNum2.placeholder = "Slutt av intervall";
-        inputNum1.type = "number";
-        inputNum2.type = "number";
-        addAssignmentButton.textContent = "Legg til øving";
-
-        addButtonDiv.appendChild(p1);
-        addButtonDiv.appendChild(inputNum1);
-        addButtonDiv.appendChild(inputNum2);
-        addButtonDiv.appendChild(p);
-        addButtonDiv.appendChild(checkBox);
-        addButtonDiv.appendChild(addAssignmentButton);
-      }
-
       console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
-        assignmentDiv = document.createElement("div");
+        let assignmentDiv = document.createElement("div");
         assignmentDiv.textContent =
           "Øving " + this.assignments[j].assignmentNumber;
         assignmentDiv.className = "teacherSubject";
@@ -179,7 +184,7 @@ export default {
       );
       console.log(res.data);
 
-      console.log("HEi jeg blir trykka på");
+      console.log("Hei jeg blir trykka på");
       this.onStart();
       this.listAssignments();
     },
@@ -196,6 +201,27 @@ export default {
         }
       }
       return out;
+    },
+    addAssignmentActive() {
+      this.addButtonClicked = true;
+    },
+    async addAssignment() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let schoolYearFromLocal = JSON.stringify(
+        localStorage.getItem("schoolYear")
+      );
+
+      await axios.post("http://localhost:8081/api/admin/addAsignment", {
+        token: tokenFromLocal,
+        subjectCode: localStorage.getItem("subjectCode"),
+        schoolYear: schoolYearFromLocal,
+        assignmentNumber: this.assignmentNumber,
+        intervalStart: this.intervalStart,
+        intervalEnd: this.intervalEnd,
+        minAssignments: this.minAssignments,
+      });
+      this.listAssignments();
+      this.addButtonClicked = false;
     },
   },
 };

@@ -19,7 +19,6 @@ export default {
     return {
       assignments: [],
       assignmentIntervals: [],
-      studass: false,
       teacher: false,
     };
   },
@@ -82,11 +81,7 @@ export default {
       let userArray = localStorage.getItem("user");
       console.log("Her er bruker data" + userArray);
       let roleArrThing = userArray.split("exp");
-      console.log(roleArrThing);
-      console.log("Skal ha tilgang? " + roleArrThing[0].includes("1"));
-      if (roleArrThing[0].includes("1")) {
-        this.studass = true;
-      }
+
       if (roleArrThing[0].includes("2")) {
         this.teacher = true;
       }
@@ -131,10 +126,7 @@ export default {
         validDiv.textContent = this.assignments[j].status;
         validDiv.className = "assignments inactiveAssignments";
         validDiv.classList.add(this.assignments[j].assignmentUserID);
-        if (this.studass) {
-          validDiv.onclick = this.changeValidStatus;
-          validDiv.id = "studAss";
-        }
+
         validC.appendChild(validDiv);
         element.appendChild(assignmentDiv);
       }
@@ -208,39 +200,7 @@ export default {
         console.log(res);
       }
     },
-    async changeStatusOfAssignments() {
-      //This method does not work if user is not studass or admin
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      for (var i = 0; i < this.assignments.length; i++) {
-        let assignmentId = this.assignments[i].assignmentUserID;
-        let res = await axios
-          .post("http://localhost:8081/api/studass/assignment/status", {
-            token: tokenFromLocal,
-            uniqueId: assignmentId,
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log(res);
-      }
-    },
-    async changeValidStatus(e) {
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      let assignmentId = e.target.classList[2];
-      console.log("assignment id" + assignmentId);
-      let res = await axios.post(
-        "http://localhost:8081/api/studass/assignment/status",
-        {
-          token: tokenFromLocal,
-          uniqueId: assignmentId,
-        }
-      );
-      console.log(res.data);
 
-      console.log("HEi jeg blir trykka på");
-      this.onStart();
-      this.listAssignments();
-    },
     uniq_fast(a) {
       var seen = {};
       var out = [];
@@ -276,9 +236,7 @@ export default {
 p {
   color: #cdcdcd;
 }
-#studAss:hover {
-  background-color: #a7a4a4;
-}
+
 #assignmentsC > div {
   background-color: #ebe8e8;
 }
