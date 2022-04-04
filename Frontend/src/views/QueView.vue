@@ -3,7 +3,7 @@
     <h2 id="id123"></h2>
     <button @click.prevent="returnToStart">Return to home</button>
     <button @click="displayQueueMenu">Still deg i kø</button>
-    <div id="queueMenu" style="display: none">Ok</div>
+    <div id="queueMenu" style="display: none"></div>
     <h2>Din plass i køen: 3</h2>
 
     <div id="que"></div>
@@ -126,24 +126,51 @@ export default {
           });
         console.log(res.data);
 
-        /*
         //Infinite loop, why????
         while (myQueueMenu.firstChild) {
-          myQueueMenu.remove(myQueueMenu.firstChild);
+          myQueueMenu.removeChild(myQueueMenu.firstChild);
         }
-        
+
         for (var j = 0; j < res.data.length; j++) {
-          if (res.data.at(j).status === "0") {
+          if (res.data.at(j).status === 0) {
             var myActiveAssignmentsBox = document.createElement("INPUT");
             myActiveAssignmentsBox.setAttribute("type", "checkbox");
-            myActiveAssignmentsBox.className = "Active assignments";
-            myActiveAssignmentsBox.textContent =
+            myActiveAssignmentsBox.setAttribute(
+              "value",
+              res.data.at(j).assignmentNumber
+            );
+            myActiveAssignmentsBox.className = "Checkboxes";
+
+            var label = document.createElement("label");
+            label.htmlFor =
               "Assignment number: " + res.data.at(j).assignmentNumber;
+            label.appendChild(
+              document.createTextNode(
+                "Øving " + res.data.at(j).assignmentNumber
+              )
+            );
+
+            myQueueMenu.appendChild(label);
             myQueueMenu.appendChild(myActiveAssignmentsBox);
           }
         }
-        */
+
+        var joinButton = document.createElement("BUTTON");
+        joinButton.setAttribute("id", "joinTheQue");
+        joinButton.textContet = "Join que now!";
+        joinButton.onclick = "onJoinQueue";
+        myQueueMenu.appendChild(joinButton);
       }
+    },
+    //Må få denne til å virker for knappen over
+    async onJoinQueue() {
+      let checkboxes = document.querySelectorAll(
+        'input[name="Active assignments"]:checked'
+      );
+      checkboxes.forEach((checkbox) => {
+        this.AssignmentsToApprove.push(checkbox.values);
+      });
+      this.makeParticipantInQue;
     },
     returnToStart() {
       this.$router.push("/home");
