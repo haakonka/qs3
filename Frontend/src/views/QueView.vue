@@ -7,8 +7,9 @@
     <h2>Din plass i køen: 3</h2>
 
     <div id="que"></div>
-    <h2 id="numOfStud"></h2>
+
     <button>Vis ekstra info</button>
+    <h2 id="numOfStud"></h2>
     <h2 id="time"></h2>
   </div>
 </template>
