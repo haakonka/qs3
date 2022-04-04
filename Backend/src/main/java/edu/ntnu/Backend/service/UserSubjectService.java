@@ -3,6 +3,7 @@ package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.UserDAO;
 import edu.ntnu.Backend.model.DAO.UserSubjectDAO;
+import edu.ntnu.Backend.model.DTO.NewUserDTO;
 import edu.ntnu.Backend.repository.UserRepository;
 import edu.ntnu.Backend.repository.UserSubjectRepository;
 import edu.ntnu.Backend.repository.UserSubjectRepository;
@@ -18,6 +19,11 @@ public class UserSubjectService {
 
     public UserSubjectService(UserSubjectRepository userSubjectRepository) {
         this.userSubjectRepository = userSubjectRepository;
+    }
+
+    public void saveSubjectUser(UserSubjectDAO userSubjectDAO){
+
+        this.userSubjectRepository.save(userSubjectDAO);
     }
 
 
