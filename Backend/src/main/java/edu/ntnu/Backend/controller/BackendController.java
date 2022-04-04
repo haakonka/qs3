@@ -3,7 +3,6 @@ package edu.ntnu.Backend.controller;
 import edu.ntnu.Backend.model.DAO.*;
 import edu.ntnu.Backend.model.DTO.*;
 import edu.ntnu.Backend.service.*;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +30,11 @@ public class BackendController {
     private final AssignmentIntervalService assignmentIntervalService;
     private final SubjectService subjectService;
     private final ParticipantInQueService participantInQueService;
+    private final AssignmentService assignmentService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
-            AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
-            SubjectService subjectService, ParticipantInQueService participantInQueService) {
+                             AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
+                             SubjectService subjectService, ParticipantInQueService participantInQueService, AssignmentService assignmentService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
@@ -42,6 +42,7 @@ public class BackendController {
         this.assignmentIntervalService = assignmentIntervalService;
         this.subjectService = subjectService;
         this.participantInQueService = participantInQueService;
+        this.assignmentService = assignmentService;
     }
 
     @PostMapping("/login/authentication")
@@ -189,8 +190,23 @@ public class BackendController {
     @PostMapping("admin/addAsignment")
     public ResponseEntity addAsignment(@RequestBody newAsignemntDTO newAsignemntDTO){
         if(autenticationService.checkIfAuthorized(newAsignemntDTO.getToken(),2)){
+            AssignmentDAO assignmentDAO = new AssignmentDAO(newAsignemntDTO.getAssignmentNumber(), newAsignemntDTO.getSubjectCode(), Integer.parseInt(newAsignemntDTO.getSchoolYear()));
+            assignmentService.saveAssignment(assignmentDAO);
+            System.out.println("added the assignment : " + assignmentDAO.getSubjectCode() +" nr: " + assignmentDAO.getAssignmentNumber());
+            AssignmentIntervalDAO assignmentIntervalDAO = new AssignmentIntervalDAO(newAsignemntDTO.getSubjectCode(),Integer.parseInt(newAsignemntDTO.getSchoolYear())
+                    ,newAsignemntDTO.getAssignmentNumber(),newAsignemntDTO.getIntervalStart(),newAsignemntDTO.getIntervalEnd(),newAsignemntDTO.getMinAssignments());
+
+            assignmentIntervalService.saveAssginmentInterval(assignmentIntervalDAO);
 
             List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(Integer.parseInt(newAsignemntDTO.getSchoolYear()),newAsignemntDTO.getSubjectCode());
+
+            for(int i = 0; i<usersInSub.size(); i++){
+                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(
+                        usersInSub.get(i).getUserId(),newAsignemntDTO.getSubjectCode(),Integer.parseInt(newAsignemntDTO.getSchoolYear()),
+                        newAsignemntDTO.getAssignmentNumber(), 0);
+                assignmentUserService.addAssignmentUser(assignmentUserDAO);
+                System.out.println("added assignment for user");
+            }
 
         }
 
