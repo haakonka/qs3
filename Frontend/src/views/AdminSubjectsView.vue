@@ -1,5 +1,5 @@
 <template>
-  <div class="assignmentsContainer">
+  <div>
     <h2 id="header1"></h2>
 
     <div class="teacherSubjects" id="assignmentsC"></div>
