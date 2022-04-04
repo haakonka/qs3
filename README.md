@@ -33,14 +33,65 @@ MySQL database which is hosted on a server PC in the apartment of one of the dev
 * Possibility to add a singular student instead of csv importing.
 * Add test for frontend. This was not prioritized as we had a limited time constraint. 
 * Implement the ability for admin to archive subjects, or delete them.
-* Let students 
-
-  
-
+* CSS seems to sometimes disappear when loading the page.
 
 ## Dependencies
+* Maven: https://maven.apache.org
 
-## Installation Guide And How To Use
+* MavenDependencies:
+    * Java (https://www.oracle.com/java/technologies/downloads/#java8)
+    * SpringBootFramework
+    * Javax.mail
+    * mySQL-connector-java
+    * javaJwt
+    * javaee-api
+    * lombok
+    * springdoc-openapi-ui
+    * springdoc-openapi-data-rest
+    
+* FrontendDependencies:
+    * vueFramework
+    * axios
+
+
+
+## Frontend Installation Guide And How To Use 
+
+For running the frontend application we have included a normal vue project setup readme:
+
+### Project setup 
+```npm install```
+
+
+### Compiles and hot-reloads for development
+```npm run serve```
+
+
+### #Compiles and minifies for production
+```npm run build```
+
+
+### Run your unit tests
+```npm run test:unit```
+
+
+### Lints and fixes files
+```npm run lint```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
+##Backend How To Start
+
+Open the backend folder and run the given command.
+```mvn spring-boot:run```
+
+
+
+
+
+
+
 
 ## API docs
 When running the backend (the SpringBoot application) you can find the api documentation in this swagger link.
