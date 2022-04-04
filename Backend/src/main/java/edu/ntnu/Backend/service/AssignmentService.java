@@ -22,12 +22,19 @@ public class AssignmentService {
         this.assignmentRepository = assignmentRepository;
     }
 
+    /**
+     * A method to make a new assignmentDAO object within the database.
+     * @param assignmentDAO
+     */
     public void saveAssignment(AssignmentDAO assignmentDAO){
         assignmentRepository.save(assignmentDAO);
     }
+
+    /**
+     * A method to remove a assignmentDAO object from the database.
+     * @param assignmentDAO the assignmentDAO object to be deleted.
+     */
     public void removeAssignment(AssignmentDAO assignmentDAO){
         assignmentRepository.delete(assignmentDAO);
     }
-
-
 }

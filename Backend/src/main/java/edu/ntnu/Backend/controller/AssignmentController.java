@@ -134,7 +134,7 @@ public class AssignmentController {
                     newAssignmentDTO.getIntervalStart(), newAssignmentDTO.getIntervalEnd(),
                     newAssignmentDTO.getMinAssignments());
 
-            assignmentIntervalService.saveAssginmentInterval(assignmentIntervalDAO);
+            assignmentIntervalService.saveAssignmentInterval(assignmentIntervalDAO);
 
             List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(
                     Integer.parseInt(newAssignmentDTO.getSchoolYear()), newAssignmentDTO.getSubjectCode());

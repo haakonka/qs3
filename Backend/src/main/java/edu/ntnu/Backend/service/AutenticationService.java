@@ -19,7 +19,8 @@ import java.util.Base64;
 import java.util.Date;
 
 /**
- * A class containing additional methods for the {@link edu.ntnu.Backend.controller.AuthenticationController AuthenticationController}
+ * A class containing additional methods for the
+ * {@link edu.ntnu.Backend.controller.AuthenticationController AuthenticationController}
  */
 @Service
 public class AutenticationService {
@@ -31,6 +32,13 @@ public class AutenticationService {
         this.userService = userService;
     }
 
+    /**
+     * A method to attempt authentication.
+     * @param email the email of the user you want to authenticate.
+     * @param password the password of the user you want to authenticate.
+     * @return returns true only if the email and password matches with a user in the database. Else returns false.
+     * @throws NoSuchAlgorithmException
+     */
     public boolean attemptAuthentication(String email, String password) throws NoSuchAlgorithmException {
         System.out.println("The email was: " + email + " And the password is: " + password);
         UserDAO user = userService.findByEmail(email);
@@ -50,6 +58,14 @@ public class AutenticationService {
         return false;
     }
 
+    /**
+     * A method for after you have done a successful authentication.
+     * This method generates an access token representing this user.
+     * @param user the user that was successfully authenticated.
+     * @return Returns the access token for this user.
+     * @throws IOException
+     * @throws ServletException
+     */
     public String successfulAuthentication(UserDAO user) throws IOException, ServletException {
         ArrayList<String> privs = new ArrayList<>();
         for (int i = 0; i <= user.getRoles(); i++) {
@@ -71,6 +87,12 @@ public class AutenticationService {
         return access_token;
     }
 
+    /**
+     * A method to check if a user token is authorized for the given requirement.
+     * @param token the token for the user.
+     * @param requirment the requirement for the user.
+     * @return returns true if the user satisfies the requirements and false if not.
+     */
     public boolean checkIfAuthorized(String token, int requirment){
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);
@@ -85,11 +107,14 @@ public class AutenticationService {
         return false;
     }
 
+    /**
+     * A method to get a userDAO object from a token.
+     * @param token the token for the user.
+     * @return Returns the userDAO object for the given token.
+     */
     public UserDAO getUserFromJWT(String token){
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);
         return userService.findByEmail(decodedJWT.getSubject());
     }
-
-
 }

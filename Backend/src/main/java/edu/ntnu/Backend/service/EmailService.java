@@ -7,6 +7,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * A method containing different methods for sending updating email.
+ */
 @Service
 public class EmailService {
     private static final String senderEmail = "ugleskippy123@gmail.com";//sender email

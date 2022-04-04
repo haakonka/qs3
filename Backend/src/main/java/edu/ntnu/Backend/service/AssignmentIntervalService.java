@@ -21,10 +21,20 @@ public class AssignmentIntervalService {
         this.assignmentIntervalRepository = assignmentIntervalRepository;
     }
 
-    public void saveAssginmentInterval(AssignmentIntervalDAO assignmentIntervalDAO){
+    /**
+     * A method to save a new assignmentIntervalDAO object to the database.
+     * @param assignmentIntervalDAO the assignmentIntervalDAO object you want to save.
+     */
+    public void saveAssignmentInterval(AssignmentIntervalDAO assignmentIntervalDAO){
      assignmentIntervalRepository.save(assignmentIntervalDAO);
     }
 
+    /**
+     * A method to find all assignmentIntervalDAO objects for a given subject code and subject year.
+     * @param subjectCode the subject code to search for.
+     * @param schoolYear the school year to search for.
+     * @return Returns a list of all assignmentIntervalDAO objects in this specific subject.
+     */
     public List<AssignmentIntervalDAO> findBySubjectCodeAndYear(String subjectCode, int schoolYear) {
         System.out.println("finding assignment interval by subjectCode and schoolYear: " + subjectCode + " and " + schoolYear);
         if( assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear).isEmpty()){

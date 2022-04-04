@@ -34,7 +34,7 @@ public class AssignmentUserService {
      * @param subjectCode The subject code to check for assignments in.
      * @param schoolYear The school year to check for assignments in.
      * @param userID The user you want the assignments for.
-     * @return 
+     * @return Returns the list of assignments for this user in this subject.
      */
     public List<AssignmentUserDAO> findBySubjectCodeAndYearAndUserID(String subjectCode, int schoolYear, int userID) {
         System.out.println("finding assignmentUser by userID, subjectCode and schoolYear: " + userID + ", " + subjectCode + " and " + schoolYear);
@@ -55,11 +55,20 @@ public class AssignmentUserService {
         return listOfAssignments;
     }
 
+    /**
+     * A method to find all subjects for a user.
+     * @param userID the given user you want to search for.
+     * @return returns all the subjects for this user.
+     */
     public List<AssignmentUserDAO> findAllSubjectsByUserID(int userID) {
         System.out.println("FINDING ALL SUBJECTS FOR USER ID: " + userID);
         return assignmentUserRepository.findAssignmentUserDAOByUserID(userID);
     }
 
+    /**
+     * A method to change the status of an assignment.
+     * @param assignmentUserId the unique id for the specific assignment you want to change the status of.
+     */
     public void changeStatusOfAssignment(int assignmentUserId) {
         AssignmentUserDAO assignmentToChange = assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(assignmentUserId);
         if(assignmentToChange.getStatus() == 1) {
@@ -71,6 +80,11 @@ public class AssignmentUserService {
         System.out.println("The assignment status has been changed");
     }
 
+    /**
+     * A method to find a specific assignment.
+     * @param assignmentUserId the unique id for the specific assignment you want.
+     * @return Returns the specific assignment.
+     */
     public AssignmentUserDAO findAssignmentUserById(int assignmentUserId) {
         System.out.println("FINDING A ASSIGNMENT FOR ID: " + assignmentUserId);
         return assignmentUserRepository.findAssignmentUserDAOByAssignmentUserID(assignmentUserId);
