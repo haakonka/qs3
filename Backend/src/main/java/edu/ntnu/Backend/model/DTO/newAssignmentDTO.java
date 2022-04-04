@@ -1,6 +1,6 @@
 package edu.ntnu.Backend.model.DTO;
 
-public class newAsignemntDTO {
+public class newAssignmentDTO {
 
     String token;
     String subjectCode;

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A controller for the api calls towards the subjects.
+ */
 @RequestMapping("/api")
 @RestController
 @CrossOrigin

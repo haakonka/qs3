@@ -4,7 +4,7 @@ import edu.ntnu.Backend.model.DAO.*;
 import edu.ntnu.Backend.model.DTO.InstancesOfUserInSubjectDTO;
 import edu.ntnu.Backend.model.DTO.SubjectIdDTO;
 import edu.ntnu.Backend.model.DTO.UniqueIdDTO;
-import edu.ntnu.Backend.model.DTO.newAsignemntDTO;
+import edu.ntnu.Backend.model.DTO.newAssignmentDTO;
 import edu.ntnu.Backend.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * A class that functions at the main controller for the api calls related to assignments.
+ */
 @RequestMapping("/api")
 @RestController
 @CrossOrigin
@@ -33,6 +36,13 @@ public class AssignmentController {
         this.assignmentService = assignmentService;
     }
 
+    /**
+     * A method to get all assignments of a user in a specific subject
+     * @param subjectIdDTO The specific format of data that is needed.
+     *                     See {@link edu.ntnu.Backend.model.DTO.SubjectIdDTO SubjectIdDTO} for more information.
+     * @return Returns a response entity containing the assignmentDAO objects if the user is a logged-in user,
+     * and Http status forbidden if a user is not logged-in.
+     */
     @PostMapping("user/assignments")
     public ResponseEntity getAssignmentsForUserInASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access all assignments within a specific subject for a user");
@@ -54,6 +64,14 @@ public class AssignmentController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method to change the status of the given assignment for a user.
+     * Only accessible to users with role studass or admin, not students.
+     * @param assignmentUserDTO The specific format of data that is needed.
+     *                          See {@link edu.ntnu.Backend.model.DTO.UniqueIdDTO UniqueIdDTO} for more information.
+     * @return Returns a response entity containing information regarding whether the assignment was changed or not.
+     * Returns Http status forbidden if a user is not logged-in, or not of an allowed role.
+     */
     @PostMapping("studass/assignment/status")
     public ResponseEntity changeAssignmentStatusOfAssignmentForUser(@RequestBody UniqueIdDTO assignmentUserDTO) {
         System.out.println("Trying to change the status of the assignment");
@@ -80,6 +98,13 @@ public class AssignmentController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method to get all assignments for a user given the token of another user.
+     * @param instances The specific format of data that is needed.
+     *                  See {@link edu.ntnu.Backend.model.DTO.InstancesOfUserInSubjectDTO InstancesOfUserInSubjectDTO}
+     *                  for more information.
+     * @return Returns all the assignments for the specified user, or Http status forbidden if a user is not logged-in.
+     */
     @PostMapping("user/assignments/instance")
     public ResponseEntity getAllAssignmentsForAUserWithDifferentId(@RequestBody InstancesOfUserInSubjectDTO instances) {
         if (autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
@@ -90,29 +115,35 @@ public class AssignmentController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method for an admin to add an assignment to a subject.
+     * @param newAssignmentDTO The specific format of data that is needed.
+     *                         See {@link edu.ntnu.Backend.model.DTO.newAssignmentDTO newAssignmentDTO} for more information.
+     * @return Returns nothing if the method works or Http status forbidden if a user is not logged-in or not of role admin.
+     */
     @PostMapping("admin/addAsignment")
-    public ResponseEntity addAsignment(@RequestBody newAsignemntDTO newAsignemntDTO) {
-        if (autenticationService.checkIfAuthorized(newAsignemntDTO.getToken(), 2)) {
-            AssignmentDAO assignmentDAO = new AssignmentDAO(newAsignemntDTO.getAssignmentNumber(),
-                    newAsignemntDTO.getSubjectCode(), Integer.parseInt(newAsignemntDTO.getSchoolYear()));
+    public ResponseEntity addAssignment(@RequestBody newAssignmentDTO newAssignmentDTO) {
+        if (autenticationService.checkIfAuthorized(newAssignmentDTO.getToken(), 2)) {
+            AssignmentDAO assignmentDAO = new AssignmentDAO(newAssignmentDTO.getAssignmentNumber(),
+                    newAssignmentDTO.getSubjectCode(), Integer.parseInt(newAssignmentDTO.getSchoolYear()));
             assignmentService.saveAssignment(assignmentDAO);
             System.out.println("added the assignment : " + assignmentDAO.getSubjectCode() + " nr: "
                     + assignmentDAO.getAssignmentNumber());
-            AssignmentIntervalDAO assignmentIntervalDAO = new AssignmentIntervalDAO(newAsignemntDTO.getSubjectCode(),
-                    Integer.parseInt(newAsignemntDTO.getSchoolYear()), newAsignemntDTO.getAssignmentNumber(),
-                    newAsignemntDTO.getIntervalStart(), newAsignemntDTO.getIntervalEnd(),
-                    newAsignemntDTO.getMinAssignments());
+            AssignmentIntervalDAO assignmentIntervalDAO = new AssignmentIntervalDAO(newAssignmentDTO.getSubjectCode(),
+                    Integer.parseInt(newAssignmentDTO.getSchoolYear()), newAssignmentDTO.getAssignmentNumber(),
+                    newAssignmentDTO.getIntervalStart(), newAssignmentDTO.getIntervalEnd(),
+                    newAssignmentDTO.getMinAssignments());
 
             assignmentIntervalService.saveAssginmentInterval(assignmentIntervalDAO);
 
             List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(
-                    Integer.parseInt(newAsignemntDTO.getSchoolYear()), newAsignemntDTO.getSubjectCode());
+                    Integer.parseInt(newAssignmentDTO.getSchoolYear()), newAssignmentDTO.getSubjectCode());
 
             for (int i = 0; i < usersInSub.size(); i++) {
                 AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(
-                        usersInSub.get(i).getUserId(), newAsignemntDTO.getSubjectCode(),
-                        Integer.parseInt(newAsignemntDTO.getSchoolYear()),
-                        newAsignemntDTO.getAssignmentNumber(), 0);
+                        usersInSub.get(i).getUserId(), newAssignmentDTO.getSubjectCode(),
+                        Integer.parseInt(newAssignmentDTO.getSchoolYear()),
+                        newAssignmentDTO.getAssignmentNumber(), 0);
                 assignmentUserService.addAssignmentUser(assignmentUserDAO);
                 System.out.println("added assignment for user");
             }
@@ -120,6 +151,13 @@ public class AssignmentController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method to get all assignment intervals in the specified subject.
+     * @param subjectIdDTO The specific format of data that is needed.
+     *                     See {@link edu.ntnu.Backend.model.DTO.SubjectIdDTO SubjectIdDTO} for more information.
+     * @return Returns a response entity containing the assignmentIntervalDAO objects in its body. This method may also
+     * return Http status forbidden if a user is not logged-in.
+     */
     @PostMapping("user/assignments/interval")
     public ResponseEntity getAssignmentIntervalForASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access all assignments intervals within a specific subject");

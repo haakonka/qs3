@@ -12,18 +12,32 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * A controller for the authentication api calls of the backend.
+ */
 @RequestMapping("/api")
 @RestController
 @CrossOrigin
-public class AuthentificationController {
+public class AuthenticationController {
     private final UserService userService;
     private final AutenticationService autenticationService;
 
-    public AuthentificationController(UserService userService, AutenticationService autenticationService) {
+    public AuthenticationController(UserService userService, AutenticationService autenticationService) {
         this.userService = userService;
         this.autenticationService = autenticationService;
     }
 
+    /**
+     * A method to authenticate the login of a user to the queue system.
+     * @param loginDTO The specific format of data that is needed.
+     *                 See {@link edu.ntnu.Backend.model.DTO.LoginDTO LoginDTO} for more information.
+     * @return Returns a response entity containing ether a generated token if the login is successful,
+     * or a http status bad request if the login is not successful.
+     * @throws NoSuchAlgorithmException
+     * @throws ServletException
+     * @throws IOException
+     * @throws MessagingException
+     */
     @PostMapping("/login/authentication")
     public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO)
             throws NoSuchAlgorithmException, ServletException, IOException, MessagingException {
