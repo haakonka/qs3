@@ -8,7 +8,6 @@
 body {
   background: #121212;
   color: #cdcdcd;
-  /* background: linear-gradient(-45deg, #ff6ec7, #feeb75);*/
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
