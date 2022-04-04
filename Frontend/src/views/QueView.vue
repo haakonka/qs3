@@ -36,7 +36,7 @@ export default {
         localStorage.getItem("schoolYear")
       );
       let res = await axios
-        .post("http://localhost:8081/api/user/assignments", {
+        .post("http://localhost:8081/api/user/participantsInQue", {
           token: tokenFromLocal,
           subjectCode: subjectCodeFromLocal,
           schoolYear: schoolYearFromLocal,
@@ -72,7 +72,7 @@ export default {
       element3.textContent = localStorage.getItem("subjectCode");
       console.log("antall folk i køen" + res.data.length);
     },
-    async makeParticipantInQue() {
+    async makeParticipantInQue(assignmentNumb) {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let subjectCodeFromLocal = JSON.stringify(
         localStorage.getItem("subjectCode")
@@ -80,9 +80,7 @@ export default {
       let schoolYearFromLocal = JSON.stringify(
         localStorage.getItem("schoolYear")
       );
-      let assignmetLast =
-        this.assignments[this.assignments.length - 1].assignmentUserID;
-      assignmetLast++;
+      let assignmetLast = assignmentNumb;
       var joined = new Date().getTime();
       console.log(joined);
       let res = await axios
@@ -139,6 +137,7 @@ export default {
               "value",
               res.data.at(j).assignmentNumber
             );
+            myActiveAssignmentsBox.setAttribute("name", "checkboxes");
             myActiveAssignmentsBox.className = "Checkboxes";
 
             var label = document.createElement("label");
@@ -158,19 +157,24 @@ export default {
         var joinButton = document.createElement("BUTTON");
         joinButton.setAttribute("id", "joinTheQue");
         joinButton.textContet = "Join que now!";
-        joinButton.onclick = "onJoinQueue";
+        joinButton.onclick = this.onJoinQueue;
         myQueueMenu.appendChild(joinButton);
       }
     },
     //Må få denne til å virker for knappen over
     async onJoinQueue() {
       let checkboxes = document.querySelectorAll(
-        'input[name="Active assignments"]:checked'
+        'input[name="checkboxes"]:checked'
       );
+      var assignmentsInTheQue = [];
       checkboxes.forEach((checkbox) => {
-        this.AssignmentsToApprove.push(checkbox.values);
+        assignmentsInTheQue.push(checkbox.value);
       });
-      this.makeParticipantInQue;
+      for (var i = 0; i < assignmentsInTheQue.length; i++) {
+        this.makeParticipantInQue(assignmentsInTheQue[i]);
+      }
+      //Fix so the view updates after this, to get the new participants.
+      //this.getQueParticipants;
     },
     returnToStart() {
       this.$router.push("/home");
