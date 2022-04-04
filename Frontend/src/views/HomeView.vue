@@ -4,22 +4,14 @@
     <h2>Aktiv kø</h2>
     <div class="container">
       <div></div>
-      <div class="activeSubjects" id="test"></div>
-      <div class="assignments1" id="test2"></div>
+      <div class="activeSubjects" id="activeSubjectsDiv"></div>
+      <div id="activeAssignmentsDiv"></div>
     </div>
     <h2>Inaktiv kø</h2>
     <div class="container">
       <div></div>
-      <div class="activeSubjects" id="inactiveSubjects">
-        <div class="inactiveSubject">Emne 1</div>
-        <div class="inactiveSubject">Emne 2</div>
-        <div class="inactiveSubject">Emne 3</div>
-      </div>
-      <div class="assignments1" id="inactiveAssignmentsID">
-        <div class="assignments inactiveAssignments">Øvinger</div>
-        <div class="assignments inactiveAssignments">Øvinger</div>
-        <div class="assignments inactiveAssignments">Øvinger</div>
-      </div>
+      <div class="activeSubjects" id="inactiveSubjects"></div>
+      <div id="inactiveAssignmentsDiv"></div>
     </div>
   </div>
 </template>
@@ -58,10 +50,6 @@ export default {
 
     async showAllUsers() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      console.log({
-        token: tokenFromLocal,
-      });
-
       let res = await axios
         .post("http://localhost:8081/api/user/subjects", {
           token: tokenFromLocal,
@@ -70,30 +58,28 @@ export default {
           console.log(error);
         });
 
-      console.log(res.data);
+      const activeSubjectsDiv = document.getElementById("activeSubjectsDiv");
+      const activeAssignmentsDiv = document.getElementById(
+        "activeAssignmentsDiv"
+      );
+      const inactiveSubjectsDiv = document.getElementById("inactiveSubjects");
+      const inactiveAssignmentsDiv = document.getElementById(
+        "inactiveAssignmentsDiv"
+      );
 
-      //let array = JSON.parse(JSON.stringify(res.data));
-
-      console.log("kode" + res.data.at(0).subjectCode);
-
-      const element = document.getElementById("test");
-      const element2 = document.getElementById("test2");
-      const element3 = document.getElementById("inactiveSubjects");
-      const element4 = document.getElementById("inactiveAssignmentsID");
-
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
+      while (activeSubjectsDiv.firstChild) {
+        activeSubjectsDiv.removeChild(activeSubjectsDiv.firstChild);
       }
-      while (element2.firstChild) {
-        element2.removeChild(element2.firstChild);
+      while (activeAssignmentsDiv.firstChild) {
+        activeAssignmentsDiv.removeChild(activeAssignmentsDiv.firstChild);
       }
 
-      while (element3.firstChild) {
-        element3.removeChild(element3.firstChild);
+      while (inactiveSubjectsDiv.firstChild) {
+        inactiveSubjectsDiv.removeChild(inactiveSubjectsDiv.firstChild);
       }
 
-      while (element4.firstChild) {
-        element4.removeChild(element4.firstChild);
+      while (inactiveAssignmentsDiv.firstChild) {
+        inactiveAssignmentsDiv.removeChild(inactiveAssignmentsDiv.firstChild);
       }
 
       let subjectQue = null;
@@ -109,13 +95,13 @@ export default {
         if (res.data.at(i).statusQue == 1) {
           subjectQue.className = "activeSubject";
           subjectQue.onclick = this.goToQue;
-          element.appendChild(subjectQue);
-          element2.appendChild(subjectAssignment);
+          activeSubjectsDiv.appendChild(subjectQue);
+          activeAssignmentsDiv.appendChild(subjectAssignment);
         } else {
           subjectQue.className = "inactiveSubject";
           subjectAssignment.classList.add("inactiveAssignments");
-          element3.appendChild(subjectQue);
-          element4.appendChild(subjectAssignment);
+          inactiveSubjectsDiv.appendChild(subjectQue);
+          inactiveAssignmentsDiv.appendChild(subjectAssignment);
         }
 
         subjectAssignment.classList.add(res.data.at(i).subjectCode);
@@ -126,29 +112,22 @@ export default {
       }
     },
     async onAssignmentSubmit(e) {
-      console.log(e.target);
-      let subjectThingy = e.target.classList;
-      if (subjectThingy[1] != "inactiveAssignments") {
-        console.log(subjectThingy[1]);
-        console.log(subjectThingy[2]);
-        localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
-        localStorage.setItem("schoolYear", subjectThingy[2]);
+      let subjectArray = e.target.classList;
+      if (subjectArray[1] != "inactiveAssignments") {
+        localStorage.setItem("subjectCode", JSON.stringify(subjectArray[1]));
+        localStorage.setItem("schoolYear", subjectArray[2]);
       } else {
-        console.log(subjectThingy[2]);
-        console.log(subjectThingy[3]);
-        localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[2]));
-        localStorage.setItem("schoolYear", subjectThingy[3]);
+        localStorage.setItem("subjectCode", JSON.stringify(subjectArray[2]));
+        localStorage.setItem("schoolYear", subjectArray[3]);
       }
 
       this.$router.push("/assignments");
     },
     goToQue(e) {
-      console.log(e.target);
-      let subjectThingy = e.target.classList;
-      console.log(subjectThingy[1]);
-      console.log(subjectThingy[2]);
-      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[1]));
-      localStorage.setItem("schoolYear", subjectThingy[2]);
+      let subjectArray = e.target.classList;
+
+      localStorage.setItem("subjectCode", JSON.stringify(subjectArray[1]));
+      localStorage.setItem("schoolYear", subjectArray[2]);
       this.$router.push("/que");
     },
   },

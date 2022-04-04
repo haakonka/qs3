@@ -1,8 +1,9 @@
 <template>
   <div>
-    <h2 id="header1"></h2>
+    <button @click="goToAdminPage">Home</button>
+    <h2 id="subjectHeader"></h2>
 
-    <div class="teacherSubjects" id="assignmentsC"></div>
+    <div class="teacherSubjects" id="subjectContainer"></div>
     <button @click="addAssignmentActive">Legg til øving</button>
     <form @submit.prevent="addAssignment" v-show="addButtonClicked">
       <p>
@@ -111,9 +112,9 @@ export default {
       this.listAssignments();
     },
     listAssignments() {
-      const header = document.getElementById("header1");
+      const header = document.getElementById("subjectHeader");
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
-      const element = document.getElementById("assignmentsC");
+      const element = document.getElementById("subjectContainer");
       while (element.firstChild) {
         element.removeChild(element.firstChild);
       }
@@ -157,7 +158,9 @@ export default {
         elementor.removeChild(elementor.firstChild);
       }
 
-      this.assignmentIntervals = this.uniq_fast(this.assignmentIntervals);
+      this.assignmentIntervals = this.removeDuplicateElements(
+        this.assignmentIntervals
+      );
       let passedReq1 = null;
       for (var i = 0; i < this.assignmentIntervals.length; i++) {
         passedReq1 = document.createElement("p");
@@ -171,24 +174,7 @@ export default {
         elementor.appendChild(passedReq1);
       }
     },
-    async changeValidStatus(e) {
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      let assignmentId = e.target.classList[2];
-      console.log("assignment id" + assignmentId);
-      let res = await axios.post(
-        "http://localhost:8081/api/studass/assignment/status",
-        {
-          token: tokenFromLocal,
-          uniqueId: assignmentId,
-        }
-      );
-      console.log(res.data);
-
-      console.log("Hei jeg blir trykka på");
-      this.onStart();
-      this.listAssignments();
-    },
-    uniq_fast(a) {
+    removeDuplicateElements(a) {
       var seen = {};
       var out = [];
       var len = a.length;
@@ -204,6 +190,9 @@ export default {
     },
     addAssignmentActive() {
       this.addButtonClicked = true;
+    },
+    goToAdminPage() {
+      this.$router.push("/admin");
     },
     async addAssignment() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
@@ -228,7 +217,7 @@ export default {
 </script>
 
 <style>
-.assignmentsContainer {
+.subjectContainerontainer {
   font-size: 20px;
   height: 100vh;
   width: 100%;
@@ -245,7 +234,7 @@ p {
   color: #cdcdcd;
 }
 
-#assignmentsC > div {
+#subjectContainer > div {
   font-size: 25px;
   width: 40%;
   display: block;

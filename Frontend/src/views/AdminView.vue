@@ -1,7 +1,6 @@
 <template>
   <div class="teacher">
-    <h1>Velkommen</h1>
-    <h1>{{ this.username }}</h1>
+    <h1>Velkommen {{ this.username }}</h1>
     <h2>Dine emner</h2>
     <div id="subjects"></div>
     <button @click="changeClicked">Legg til emne</button>
@@ -68,23 +67,17 @@ export default {
     };
   },
   created() {
-    this.showAllUsers();
+    this.getSubjects();
   },
 
   methods: {
     goToSubjectPage(e) {
-      console.log("her er jeg");
-      console.log("knappen som blir trykka på" + e.target);
-      let subjectThingy = e.target.classList;
-
-      console.log("SUbject code" + subjectThingy[0]);
-      console.log("Subject year" + subjectThingy[1]);
-      localStorage.setItem("subjectCode", JSON.stringify(subjectThingy[0]));
-      localStorage.setItem("schoolYear", subjectThingy[1]);
-
+      let subjectArray = e.target.classList;
+      localStorage.setItem("subjectCode", JSON.stringify(subjectArray[0]));
+      localStorage.setItem("schoolYear", subjectArray[1]);
       this.$router.push("/adminSubjects");
     },
-    async showAllUsers() {
+    async getSubjects() {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       console.log({
         token: tokenFromLocal,
@@ -98,20 +91,16 @@ export default {
           console.log(error);
         });
 
-      console.log(res.data);
+      const subjectsDiv = document.getElementById("subjects");
 
-      console.log("kode" + res.data.at(0).subjectCode);
-
-      const element = document.getElementById("subjects");
-
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
+      while (subjectsDiv.firstChild) {
+        subjectsDiv.removeChild(subjectsDiv.firstChild);
       }
 
-      let subjectQue = null;
+      let subjectDiv = null;
 
       for (var i = 0; i < res.data.length; i++) {
-        subjectQue = document.createElement("div");
+        subjectDiv = document.createElement("div");
         let addStudents = document.createElement("button");
         let goToSubjectsButton = document.createElement("button");
 
@@ -126,20 +115,19 @@ export default {
 
         addStudents.onclick = this.addStudentsToSubject;
 
-        subjectQue.textContent =
+        subjectDiv.textContent =
           "" + res.data.at(i).subjectCode + "\n" + res.data.at(i).subjectName;
 
-        subjectQue.appendChild(goToSubjectsButton);
+        subjectDiv.appendChild(goToSubjectsButton);
         if (res.data.at(i).statusQue == 1) {
-          subjectQue.className = "adminSubject";
-          element.appendChild(subjectQue);
+          subjectDiv.className = "adminSubject";
+          subjectsDiv.appendChild(subjectDiv);
         } else {
-          subjectQue.className = "adminSubject";
-          element.appendChild(subjectQue);
+          subjectDiv.className = "adminSubject";
+          subjectsDiv.appendChild(subjectDiv);
         }
-        subjectQue.classList.add(res.data.at(i).subjectCode);
-        subjectQue.classList.add(res.data.at(i).schoolYear);
-        //subjectQue.onclick = this.goToSubjectPage;
+        subjectDiv.classList.add(res.data.at(i).subjectCode);
+        subjectDiv.classList.add(res.data.at(i).schoolYear);
       }
     },
     async onStart() {
@@ -176,8 +164,7 @@ export default {
         });
       if (!gotError) {
         console.log(res);
-        this.showAllUsers();
-        //do stuff
+        this.getSubjects();
         this.isClicked = false;
       }
     },

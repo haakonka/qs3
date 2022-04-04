@@ -77,9 +77,16 @@ export default {
           }
         }
         studentInQueDiv.classList.add(res.data.at(j).participantInQueID + "!");
-        console.log("The assignment id is: " + theAssignmentId);
+
         studentInQueDiv.classList.add(theAssignmentId + ",");
-        console.log("the status is: " + res.data.at(j).status);
+        console.log(res.data.at(j).status);
+        if (res.data.at(j).status == 0) {
+          res.data.at(j).status = "Hjelp";
+        } else if (res.data.at(j).status == 1) {
+          res.data.at(j).status = "Godkjenning";
+        } else {
+          res.data.at(j).status = "Betjent";
+        }
         studentInQueDiv.classList.add("," + res.data.at(j).status);
         studentInQueDiv.addEventListener("click", (e) => {
           var target = e.target;
@@ -181,7 +188,6 @@ export default {
           });
         console.log(res.data);
 
-        //Infinite loop, why????
         while (myQueueMenu.firstChild) {
           myQueueMenu.removeChild(myQueueMenu.firstChild);
         }
@@ -212,6 +218,7 @@ export default {
         }
 
         var joinButton = document.createElement("BUTTON");
+        joinButton.textContent = "Still i kø";
         joinButton.setAttribute("id", "joinTheQue");
         joinButton.textContet = "Join que now!";
         joinButton.onclick = this.onJoinQueue;

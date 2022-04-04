@@ -2,13 +2,12 @@
   <div class="assignmentsContainer">
     <button @click="returnToStart">Home</button>
     <h2>Navn</h2>
-    <h2 id="header1"></h2>
+    <h2 id="assignmentsHeader"></h2>
     <div class="container">
       <div></div>
-      <div class="activeSubjects" id="assignmentsC"></div>
-      <div class="assignments1" id="validC"></div>
+      <div class="activeSubjects" id="assignmentsDivContainer"></div>
+      <div id="validDivContainer"></div>
     </div>
-    <div id="forAddButton"></div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
   </div>
@@ -46,12 +45,10 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      console.log("Localstorage get item" + subjectCodeFromLocal);
-      //Do a check on res to see if correct
+
       if (res != undefined) {
-        console.log("Her er assignment array ting" + res.data);
         let jsonArray = res.data;
-        console.log(jsonArray[0].schoolYear);
+
         for (var i = 0; i < jsonArray.length; i++) {
           if (jsonArray[i].status === 1) {
             jsonArray[i].status = "Godkjent";
@@ -65,60 +62,31 @@ export default {
       this.listAssignments();
     },
     listAssignments() {
-      const header = document.getElementById("header1");
+      const header = document.getElementById("assignmentsHeader");
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
-      const element = document.getElementById("assignmentsC");
-      const validC = document.getElementById("validC");
+      const assignmentsDivContainer = document.getElementById(
+        "assignmentsDivContainer"
+      );
+      const validDivContainer = document.getElementById("validDivContainer");
 
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
+      while (assignmentsDivContainer.firstChild) {
+        assignmentsDivContainer.removeChild(assignmentsDivContainer.firstChild);
       }
-      while (validC.firstChild) {
-        validC.removeChild(validC.firstChild);
+      while (validDivContainer.firstChild) {
+        validDivContainer.removeChild(validDivContainer.firstChild);
       }
 
       let assignmentDiv = null;
       let validDiv = null;
 
       let userArray = localStorage.getItem("user");
-      console.log("Her er bruker data" + userArray);
+
       let roleArrThing = userArray.split("exp");
 
       if (roleArrThing[0].includes("2")) {
         this.teacher = true;
       }
-      const addButtonDiv = document.getElementById("forAddButton");
 
-      while (addButtonDiv.firstChild) {
-        addButtonDiv.removeChild(addButtonDiv.firstChild);
-      }
-
-      if (this.teacher && addButtonDiv.childElementCount < 1) {
-        const addAssignmentButton = document.createElement("button");
-        const p = document.createElement("p");
-        const p1 = document.createElement("p");
-        p1.textContent = "Skriv inn start og slutt på intervallet";
-        p.textContent = "Skal øvingen være obligatorisk?";
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-        const inputNum1 = document.createElement("input");
-        const inputNum2 = document.createElement("input");
-
-        inputNum1.placeholder = "Start av intervall";
-        inputNum2.placeholder = "Slutt av intervall";
-        inputNum1.type = "number";
-        inputNum2.type = "number";
-        addAssignmentButton.textContent = "Legg til øving";
-
-        addButtonDiv.appendChild(p1);
-        addButtonDiv.appendChild(inputNum1);
-        addButtonDiv.appendChild(inputNum2);
-        addButtonDiv.appendChild(p);
-        addButtonDiv.appendChild(checkBox);
-        addButtonDiv.appendChild(addAssignmentButton);
-      }
-
-      console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
         assignmentDiv = document.createElement("div");
         validDiv = document.createElement("div");
@@ -129,8 +97,8 @@ export default {
         validDiv.className = "assignments inactiveAssignments";
         validDiv.classList.add(this.assignments[j].assignmentUserID);
 
-        validC.appendChild(validDiv);
-        element.appendChild(assignmentDiv);
+        validDivContainer.appendChild(validDiv);
+        assignmentsDivContainer.appendChild(assignmentDiv);
       }
     },
     returnToStart() {
@@ -154,29 +122,31 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      console.log(res);
+
       if (res != undefined) {
         let jsonArray = res.data;
         this.assignmentIntervals = jsonArray;
       }
 
-      const elementor = document.getElementById("passedReq");
-      while (elementor.firstChild) {
-        elementor.removeChild(elementor.firstChild);
+      const passedRequirementsDiv = document.getElementById("passedReq");
+      while (passedRequirementsDiv.firstChild) {
+        passedRequirementsDiv.removeChild(passedRequirementsDiv.firstChild);
       }
 
-      this.assignmentIntervals = this.uniq_fast(this.assignmentIntervals);
-      let passedReq1 = null;
+      this.assignmentIntervals = this.removeDuplicates(
+        this.assignmentIntervals
+      );
+      let passedRequirementParagraph = null;
       for (var i = 0; i < this.assignmentIntervals.length; i++) {
-        passedReq1 = document.createElement("p");
-        passedReq1.textContent =
+        passedRequirementParagraph = document.createElement("p");
+        passedRequirementParagraph.textContent =
           "Du må ha bestått: " +
           this.assignmentIntervals[i].minAssignments +
           " av øving " +
           this.assignmentIntervals[i].intervalStart +
           " - " +
           this.assignmentIntervals[i].intervalEnd;
-        elementor.appendChild(passedReq1);
+        passedRequirementsDiv.appendChild(passedRequirementParagraph);
       }
     },
     async getAllAssignments() {
@@ -189,7 +159,7 @@ export default {
       );
       for (var i = 0; this.assignments.length; i++) {
         let userId = this.assignments[i].userID;
-        let res = await axios
+        await axios
           .post(
             "http://localhost:8081/api/user/participantInQue/allInstances",
             {
@@ -202,11 +172,10 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-        console.log(res);
       }
     },
 
-    uniq_fast(a) {
+    removeDuplicates(a) {
       var seen = {};
       var out = [];
       var len = a.length;
@@ -242,10 +211,10 @@ p {
   color: #cdcdcd;
 }
 
-#assignmentsC > div {
+#assignmentsDivContainer > div {
   background-color: #ebe8e8;
 }
-#validC > div {
+#validDivContainer > div {
   background-color: #ebe8e8;
 }
 .assignments2 {
