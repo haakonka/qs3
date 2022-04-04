@@ -66,8 +66,6 @@ class AutenticationServiceTest {
         Assertions.assertTrue(autenticationService.checkIfAuthorized(adminToken,2));
         Assertions.assertFalse(autenticationService.checkIfAuthorized(studassToken,2));
         Assertions.assertFalse(autenticationService.checkIfAuthorized(userToken,2));
-
-
     }
 
 

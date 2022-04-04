@@ -42,8 +42,7 @@ public class UserService{
         return name;
     }
 
-    public void saveNewUser(NewUserDTO newUserDTO){
-        UserDAO user = new UserDAO(newUserDTO.getEmail(),newUserDTO.getFirstname(),newUserDTO.getLastname());
+    public void saveUser(UserDAO user){
         userRepository.save(user);
     }
 
@@ -61,6 +60,13 @@ public class UserService{
 
         return false;
     }
+
+    public String makePassword(){
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[8];
+        random.nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
+    };
 
     public String generateSalt() {
         SecureRandom random = new SecureRandom();

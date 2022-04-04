@@ -63,14 +63,18 @@ class AssignmentUserServiceTest {
     @Test
     void findAllSubjectsByUserID(){
         Assertions.assertEquals(assignmentUserService.findAllSubjectsByUserID(83),assignmentUserDAOS81);
-
     }
 
-    /*@Test
-    void changeStatusOfAAsignment(){
-        assignmentUserService.changeStatusOfAssignment(83);
-        Assertions.assertEquals(assignmentUserService.findAssignmentUserById(6).getStatus(),1);
-    }*/
+
+    @Test
+    void findAssignmentByUserIdPositive(){
+        Assertions.assertEquals(assignmentUserService.findAssignmentUserById(6),aui6);
+    }
+
+    @Test
+    void findAssignmentByUserIdNegative(){
+        Assertions.assertNull(assignmentUserService.findAssignmentUserById(7));
+    }
 
 
 }

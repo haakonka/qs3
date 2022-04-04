@@ -62,8 +62,12 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserDAOByEmail() {
+    void deleteUserDAOByEmailPositive() {
         Assertions.assertTrue(userService.deleteUserDAO("omar@omar.com"));
+    }
+
+    @Test
+    void deleteUserDAOByEmailNegative(){
         Assertions.assertFalse(userService.deleteUserDAO("wrongEmail@wrong.com"));
     }
 

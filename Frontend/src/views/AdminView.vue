@@ -1,6 +1,7 @@
 <template>
   <div class="teacher">
-    <h1>Velkommen Omar</h1>
+    <h1>Velkommen</h1>
+    <h1>{{ this.username }}</h1>
     <h2>Dine emner</h2>
     <div id="subjects"></div>
     <button @click="changeClicked">Legg til emne</button>
@@ -29,6 +30,25 @@
       <button>Legg til emne</button>
     </form>
     <button @click="addStudentsToSubject">Legg til studenter</button>
+    <form v-show="addingStudents">
+      <label class="file-select">
+        <div class="select-button">
+          <span v-if="value">Selected File: {{ value.name }}</span>
+          <span v-else>Select File</span>
+        </div>
+        <input id="fileinput" type="file" @change="handleFileChange" />
+        <input
+          type="text"
+          v-model="subjectCodeForNewStudents"
+          placeholder="SubjectCode"
+        />
+        <input
+          type="text"
+          v-model="subjectYearForStudents"
+          placeholder="Year of subject (2011)"
+        />
+      </label>
+    </form>
   </div>
 </template>
 
@@ -41,6 +61,10 @@ export default {
       subjectCode: "",
       subjectName: "",
       isClicked: false,
+      addingStudents: false,
+      subjectCodeForNewStudents: "",
+      subjectYearForStudents: "",
+      username: "Omar", // should fix for other teachers
     };
   },
   created() {
@@ -162,7 +186,72 @@ export default {
     },
 
     async addStudentsToSubject() {
-      alert("adding students");
+      this.addingStudents = !this.addingStudents;
+    },
+    async handleFileChange(e) {
+      this.$emit("input", e.target.files[0]);
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let file = e.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = async () => {
+        let testInFile = reader.result;
+        console.log("token: " + tokenFromLocal);
+        testInFile = JSON.stringify(testInFile);
+
+        console.log("fileinput: " + testInFile);
+
+        let line = testInFile.split("\\r\\n")[0];
+        console.log(
+          "hvor mange folk skal addes" + testInFile.split("\\r\\n").length - 1
+        );
+        //first user
+        console.log("firstline: " + line);
+        console.log("lastname: " + line.split(",")[0].substring(1));
+        console.log("firstname: " + line.split(",")[1]);
+        console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
+        console.log("subjectCode: " + this.subjectCodeForNewStudents);
+        console.log("subjectYear: " + this.subjectYearForStudents);
+
+        let res = await axios.post(
+          "http://localhost:8081/api/admin/addUserToSubject",
+          {
+            token: tokenFromLocal,
+            lastname: line.split(",")[0].substring(1),
+            firstname: line.split(",")[1],
+            email: line.split(",")[2].split('\\"')[0],
+            subjectCode: this.subjectCodeForNewStudents,
+            subjectYear: this.subjectYearForStudents,
+          }
+        );
+        console.log(res);
+
+        //rest of the users
+        for (let i = 1; i < testInFile.split("\\r\\n").length - 1; i++) {
+          line = testInFile.split("\\r\\n")[i]; //1 is the next user i
+          console.log("genreal: " + i + " : " + line);
+          console.log("lastname: " + line.split(",")[0]);
+          console.log("firstname: " + line.split(",")[1]);
+          console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
+
+          res = await axios.post(
+            "http://localhost:8081/api/admin/addUserToSubject",
+            {
+              token: tokenFromLocal,
+              lastname: line.split(",")[0],
+              firstname: line.split(",")[1],
+              email: line.split(",")[2].split('\\"')[0],
+              subjectCode: this.subjectCodeForNewStudents,
+              subjectYear: this.subjectYearForStudents,
+            }
+          );
+          console.log(res);
+        }
+      };
+
+      reader.readAsText(file);
+
+      // Send your file to your server and retrieve the response
     },
   },
 };
@@ -199,6 +288,14 @@ button:hover {
   margin-bottom: 30px;
   color: #cdcdcd;
 }
+span {
+  font-size: 25px;
+}
+
+#fileinput {
+  font-size: 25px;
+}
+
 h1 {
   color: #cdcdcd;
 }

@@ -27,4 +27,5 @@ public class AssignmentIntervalService {
         }
         return assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear);
     }
+
 }

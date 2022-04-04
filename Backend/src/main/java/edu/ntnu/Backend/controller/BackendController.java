@@ -3,6 +3,7 @@ package edu.ntnu.Backend.controller;
 import edu.ntnu.Backend.model.DAO.*;
 import edu.ntnu.Backend.model.DTO.*;
 import edu.ntnu.Backend.service.*;
+import org.codehaus.plexus.util.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -51,13 +54,7 @@ public class BackendController {
 
     @PostMapping("/login/authentication")
     public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO)
-            throws NoSuchAlgorithmException, ServletException, IOException, MessagingException {
-        /*
-         * System.out.println("Tries TO send email");
-         * emailService.sendAsHtml("haakon.kanter@gmail.com",
-         * "LmaoSmollPePe","<h2>ThisIsOmar</h2><p>hi there!</p>");
-         */
-
+            throws NoSuchAlgorithmException, ServletException, IOException {
         System.out.println("in login methode");
         System.out.println(loginDTO.password);
         System.out.println(loginDTO.username);
@@ -83,21 +80,38 @@ public class BackendController {
     // Genreate user from name, password and emil.
 
     @PostMapping("/admin/addUserToSubject")
-    public ResponseEntity addNewUserFromFile(@RequestBody NewUserDTO newUserDTO) {
+    public ResponseEntity addNewUserFromFile(@RequestBody NewUserDTO newUserDTO)
+            throws MessagingException, NoSuchAlgorithmException {
 
         System.out.println("Token:" + newUserDTO.getToken());
         System.out.println("users:" + newUserDTO.getEmail());
         System.out.println("Subject:" + newUserDTO.getSubjectCode());
         if (autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)) {
             if (userService.findByEmail(newUserDTO.getEmail()) == null) {
-                userService.saveNewUser(newUserDTO);
+                String password = userService.makePassword();
+                String salt = userService.generateSalt();
+                MessageDigest md = MessageDigest.getInstance("SHA-512");
+
+                md.update(Base64.decodeBase64(salt.getBytes(StandardCharsets.UTF_8)));
+                String hashedPass = new String(
+                        Base64.encodeBase64(md.digest(password.getBytes(StandardCharsets.UTF_8))));
+                System.out.println(newUserDTO.getEmail() + "sent email");
+                emailService.sendAsHtml(newUserDTO.getEmail(), "Added in qs3 System",
+                        "<h2>Hey,</h2><p>your password and email:\n" +
+                                "password: " + password + "\nemail: " + newUserDTO.getEmail() + "</p>");
+                UserDAO userDAO = new UserDAO(newUserDTO.getFirstname(), newUserDTO.getLastname(), hashedPass, salt,
+                        newUserDTO.getEmail(), 0);
+
+                userService.saveUser(userDAO);
                 // reformat to UserSubjectDAO
                 System.out.println("adding new user to a subject: " + newUserDTO.getEmail() + " in: "
                         + newUserDTO.getSubjectCode());
                 UserSubjectDAO userSubjectDAO = new UserSubjectDAO(
                         newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(),
                         userService.findByEmail(newUserDTO.getEmail()).getId(), 0);
+
                 userSubjectService.saveSubjectUser(userSubjectDAO);
+
                 return ResponseEntity.ok().body(null);
 
             } else {
