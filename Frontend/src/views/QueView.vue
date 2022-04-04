@@ -55,6 +55,47 @@ export default {
       for (var j = 0; j < res.data.length; j++) {
         let studentInQueDiv = document.createElement("div");
         studentInQueDiv.className = "assignments inactiveAssignments";
+        let response = await axios
+          .post("http://localhost:8081/api/user/assignments/instance", {
+            token: tokenFromLocal,
+            subjectCode: subjectCodeFromLocal,
+            schoolYear: schoolYearFromLocal,
+            userId: res.data.at(j).userID,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(response);
+        var theAssignmentId = null;
+        for (var i = 0; i < response.data.length; i++) {
+          if (
+            response.data.at(i).assignmentNumber ==
+            res.data.at(j).assignmentNumber
+          ) {
+            theAssignmentId = response.data.at(i).assignmentUserID;
+          }
+        }
+        studentInQueDiv.classList.add(res.data.at(j).participantInQueID + "!");
+        console.log("The assignment id is: " + theAssignmentId);
+        studentInQueDiv.classList.add(theAssignmentId + ",");
+        console.log("the status is: " + res.data.at(j).status);
+        studentInQueDiv.classList.add("," + res.data.at(j).status);
+        studentInQueDiv.addEventListener("click", (e) => {
+          var target = e.target;
+          const valuesOfDiv = target.classList;
+          console.log(valuesOfDiv);
+          const participantId = valuesOfDiv[2].replace("!", "");
+          const theAssignmentID = valuesOfDiv[3].replace(",", "");
+          const participantStatus = valuesOfDiv[4].replace(",", "");
+
+          if (participantStatus == 0) {
+            this.changeQueStatus(participantId, 1);
+          } else if (participantStatus == 1) {
+            this.changeQueStatus(participantId, 2);
+          } else if (participantStatus == 2) {
+            this.checkOutOfQue(theAssignmentID, participantId);
+          }
+        });
         studentInQueDiv.textContent =
           "Navn " +
           "Øving " +
@@ -91,6 +132,19 @@ export default {
           schoolYear: schoolYearFromLocal,
           assignmentNumber: assignmetLast,
           joinedQue: joined,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+    },
+    async changeQueStatus(participantId, status) {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let res = await axios
+        .post("http://localhost:8081/api/studass/participantInQue/status", {
+          token: tokenFromLocal,
+          participantInQueId: participantId,
+          statusChange: status,
         })
         .catch((error) => {
           console.log(error);
@@ -176,6 +230,32 @@ export default {
       }
       //Fix so the view updates after this, to get the new participants.
       //this.getQueParticipants;
+    },
+    async checkOutOfQue(assignmentUserID, queueParticipantId) {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let assignmetLast = assignmentUserID;
+      console.log(assignmetLast);
+      let res = await axios
+        .post("http://localhost:8081/api/studass/assignment/status", {
+          token: tokenFromLocal,
+          uniqueId: assignmetLast,
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(res);
+      if (res.data === "The status was changed") {
+        //Change the value of uniqueId to the actual value of participant in que
+        res = await axios
+          .post("http://localhost:8081/api/user/participantInQue/delete", {
+            token: tokenFromLocal,
+            uniqueId: queueParticipantId,
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
+      }
     },
     returnToStart() {
       this.$router.push("/home");

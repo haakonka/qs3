@@ -11,5 +11,9 @@ public interface ParticipantInQueRepository extends JpaRepository<ParticipantInQ
 
     List<ParticipantInQueDAO> findAllBySubjectCodeAndSchoolYear(String subjectCode, int schoolYear);
 
+    List<ParticipantInQueDAO> findParticipantInQueDAOBySubjectCodeAndSchoolYearAndUserID(String subjectCode, int schoolYear, int userId);
+
     long deleteParticipantInQueDAOByParticipantInQueID(int participantInQueId);
+
+    ParticipantInQueDAO findParticipantInQueDAOByParticipantInQueID(int participantInQueId);
 }

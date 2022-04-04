@@ -1,11 +1,8 @@
 <template>
   <div class="assignmentsContainer">
     <h2 id="header1"></h2>
-    <div class="container">
-      <div></div>
-      <div class="activeSubjects" id="assignmentsC"></div>
-      <div class="assignments1" id="validC"></div>
-    </div>
+
+    <div class="teacherSubjects" id="assignmentsC"></div>
     <div id="forAddButton"></div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
@@ -67,17 +64,12 @@ export default {
       const header = document.getElementById("header1");
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
       const element = document.getElementById("assignmentsC");
-      const validC = document.getElementById("validC");
 
       while (element.firstChild) {
         element.removeChild(element.firstChild);
       }
-      while (validC.firstChild) {
-        validC.removeChild(validC.firstChild);
-      }
 
       let assignmentDiv = null;
-      let validDiv = null;
 
       let userArray = localStorage.getItem("user");
       console.log("Her er bruker data" + userArray);
@@ -124,18 +116,10 @@ export default {
       console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
         assignmentDiv = document.createElement("div");
-        validDiv = document.createElement("div");
         assignmentDiv.textContent =
           "Øving " + this.assignments[j].assignmentNumber;
-        assignmentDiv.className = "inactiveSubject";
-        validDiv.textContent = this.assignments[j].status;
-        validDiv.className = "assignments inactiveAssignments";
-        validDiv.classList.add(this.assignments[j].assignmentUserID);
-        if (this.studass) {
-          validDiv.onclick = this.changeValidStatus;
-          validDiv.id = "studAss";
-        }
-        validC.appendChild(validDiv);
+        assignmentDiv.className = "teacherSubject";
+
         element.appendChild(assignmentDiv);
       }
     },
@@ -182,48 +166,6 @@ export default {
         elementor.appendChild(passedReq1);
       }
     },
-    async getAllAssignments() {
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      let subjectCodeFromLocal = JSON.stringify(
-        localStorage.getItem("subjectCode")
-      );
-      let schoolYearFromLocal = JSON.stringify(
-        localStorage.getItem("schoolYear")
-      );
-      for (var i = 0; this.assignments.length; i++) {
-        let userId = this.assignments[i].userID;
-        let res = await axios
-          .post(
-            "http://localhost:8081/api/user/participantInQue/allInstances",
-            {
-              token: tokenFromLocal,
-              subjectCode: subjectCodeFromLocal,
-              schoolYear: schoolYearFromLocal,
-              userId: userId,
-            }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log(res);
-      }
-    },
-    async changeStatusOfAssignments() {
-      //This method does not work if user is not studass or admin
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      for (var i = 0; i < this.assignments.length; i++) {
-        let assignmentId = this.assignments[i].assignmentUserID;
-        let res = await axios
-          .post("http://localhost:8081/api/studass/assignment/status", {
-            token: tokenFromLocal,
-            uniqueId: assignmentId,
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log(res);
-      }
-    },  
     async changeValidStatus(e) {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       let assignmentId = e.target.classList[2];
@@ -276,15 +218,18 @@ export default {
 p {
   color: #cdcdcd;
 }
-#studAss:hover {
-  background-color: #a7a4a4;
-}
+
 #assignmentsC > div {
-  background-color: #ebe8e8;
+  font-size: 25px;
+  width: 40%;
+  display: block;
+  margin: auto;
+  background: #ebe8e8;
+  margin-top: 20px;
+  padding: 0.5em;
+  height: 2em;
 }
-#validC > div {
-  background-color: #ebe8e8;
-}
+
 .assignments2 {
   display: flex;
   height: 2em;
