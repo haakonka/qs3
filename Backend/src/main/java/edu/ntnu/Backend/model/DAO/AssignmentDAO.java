@@ -1,14 +1,16 @@
 package edu.ntnu.Backend.model.DAO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import edu.ntnu.Backend.model.PK.AssignmentPK;
+import edu.ntnu.Backend.model.PK.SubjectIDPK;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@IdClass(AssignmentPK.class)
 @Table(name = "assignment", schema = "qsusers")
 public class AssignmentDAO implements Serializable {
+
     @Id
     @Column(name = "assignment_number")
     private int assignmentNumber;
@@ -27,6 +29,10 @@ public class AssignmentDAO implements Serializable {
         this.assignmentNumber = assignmentNumber;
         this.subjectCode = subjectCode;
         this.schoolYear = schoolYear;
+    }
+
+    public AssignmentDAO() {
+
     }
 
     public int getAssignmentNumber() {

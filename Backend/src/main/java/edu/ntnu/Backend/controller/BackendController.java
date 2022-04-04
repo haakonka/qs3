@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -31,10 +32,11 @@ public class BackendController {
     private final SubjectService subjectService;
     private final ParticipantInQueService participantInQueService;
     private final AssignmentService assignmentService;
+    private final EmailService emailService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
                              AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
-                             SubjectService subjectService, ParticipantInQueService participantInQueService, AssignmentService assignmentService) {
+                             SubjectService subjectService, ParticipantInQueService participantInQueService, AssignmentService assignmentService, EmailService emailService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
@@ -43,11 +45,16 @@ public class BackendController {
         this.subjectService = subjectService;
         this.participantInQueService = participantInQueService;
         this.assignmentService = assignmentService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login/authentication")
     public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO)
-            throws NoSuchAlgorithmException, ServletException, IOException {
+            throws NoSuchAlgorithmException, ServletException, IOException, MessagingException {
+       /* System.out.println("Tries TO send email");
+        emailService.sendAsHtml("haakon.kanter@gmail.com","LmaoSmollPePe","<h2>ThisIsOmar</h2><p>hi there!</p>");*/
+
+
         System.out.println("in login methode");
         System.out.println(loginDTO.password);
         System.out.println(loginDTO.username);
