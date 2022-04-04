@@ -37,6 +37,14 @@ public class AssignmentUserDAO implements Serializable {
         this.status = status;
     }
 
+    public AssignmentUserDAO( int userID, String subjectCode, int schoolYear, int assignmentNumber, int status) {
+        this.userID = userID;
+        this.subjectCode = subjectCode;
+        this.schoolYear = schoolYear;
+        this.assignmentNumber = assignmentNumber;
+        this.status = status;
+    }
+
     public AssignmentUserDAO(){
     }
 

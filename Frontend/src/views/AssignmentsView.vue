@@ -1,9 +1,12 @@
 <template>
-  <button @click.prevent="returnToStart">Return to home</button>
-  <button @click.prevent="changeStatusOfAssignments">
-    Change status of all assignments
-  </button>
   <div class="assignmentsContainer">
+    <h2 id="header1"></h2>
+    <div class="container">
+      <div></div>
+      <div class="activeSubjects" id="assignmentsC"></div>
+      <div class="assignments1" id="validC"></div>
+    </div>
+    <div id="forAddButton"></div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
   </div>
@@ -16,6 +19,8 @@ export default {
     return {
       assignments: [],
       assignmentIntervals: [],
+      studass: false,
+      teacher: false,
     };
   },
   created() {
@@ -58,9 +63,6 @@ export default {
 
       this.listAssignments();
     },
-    returnToStart() {
-      this.$router.push("/home");
-    },
     listAssignments() {
       const header = document.getElementById("header1");
       header.textContent = localStorage.getItem("subjectCode") + " Øvinger";
@@ -76,6 +78,49 @@ export default {
 
       let assignmentDiv = null;
       let validDiv = null;
+
+      let userArray = localStorage.getItem("user");
+      console.log("Her er bruker data" + userArray);
+      let roleArrThing = userArray.split("exp");
+      console.log(roleArrThing);
+      console.log("Skal ha tilgang? " + roleArrThing[0].includes("1"));
+      if (roleArrThing[0].includes("1")) {
+        this.studass = true;
+      }
+      if (roleArrThing[0].includes("2")) {
+        this.teacher = true;
+      }
+      const addButtonDiv = document.getElementById("forAddButton");
+
+      while (addButtonDiv.firstChild) {
+        addButtonDiv.removeChild(addButtonDiv.firstChild);
+      }
+
+      if (this.teacher && addButtonDiv.childElementCount < 1) {
+        const addAssignmentButton = document.createElement("button");
+        const p = document.createElement("p");
+        const p1 = document.createElement("p");
+        p1.textContent = "Skriv inn start og slutt på intervallet";
+        p.textContent = "Skal øvingen være obligatorisk?";
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        const inputNum1 = document.createElement("input");
+        const inputNum2 = document.createElement("input");
+
+        inputNum1.placeholder = "Start av intervall";
+        inputNum2.placeholder = "Slutt av intervall";
+        inputNum1.type = "number";
+        inputNum2.type = "number";
+        addAssignmentButton.textContent = "Legg til øving";
+
+        addButtonDiv.appendChild(p1);
+        addButtonDiv.appendChild(inputNum1);
+        addButtonDiv.appendChild(inputNum2);
+        addButtonDiv.appendChild(p);
+        addButtonDiv.appendChild(checkBox);
+        addButtonDiv.appendChild(addAssignmentButton);
+      }
+
       console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
         assignmentDiv = document.createElement("div");
@@ -85,6 +130,11 @@ export default {
         assignmentDiv.className = "inactiveSubject";
         validDiv.textContent = this.assignments[j].status;
         validDiv.className = "assignments inactiveAssignments";
+        validDiv.classList.add(this.assignments[j].assignmentUserID);
+        if (this.studass) {
+          validDiv.onclick = this.changeValidStatus;
+          validDiv.id = "studAss";
+        }
         validC.appendChild(validDiv);
         element.appendChild(assignmentDiv);
       }
@@ -125,7 +175,7 @@ export default {
         passedReq1.textContent =
           "Du må ha bestått: " +
           this.assignmentIntervals[i].minAssignments +
-          " av øving " +
+          " av øving" +
           this.assignmentIntervals[i].intervalStart +
           " - " +
           this.assignmentIntervals[i].intervalEnd;
@@ -173,6 +223,23 @@ export default {
           });
         console.log(res);
       }
+    },  
+    async changeValidStatus(e) {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let assignmentId = e.target.classList[2];
+      console.log("assignment id" + assignmentId);
+      let res = await axios.post(
+        "http://localhost:8081/api/studass/assignment/status",
+        {
+          token: tokenFromLocal,
+          uniqueId: assignmentId,
+        }
+      );
+      console.log(res.data);
+
+      console.log("HEi jeg blir trykka på");
+      this.onStart();
+      this.listAssignments();
     },
     uniq_fast(a) {
       var seen = {};
@@ -208,6 +275,15 @@ export default {
 }
 p {
   color: #cdcdcd;
+}
+#studAss:hover {
+  background-color: #a7a4a4;
+}
+#assignmentsC > div {
+  background-color: #ebe8e8;
+}
+#validC > div {
+  background-color: #ebe8e8;
 }
 .assignments2 {
   display: flex;

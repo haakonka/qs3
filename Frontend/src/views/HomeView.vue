@@ -1,22 +1,6 @@
 <template>
   <div class="about">
     <h2>Aktiv kø</h2>
-    <button v-on:click="showAllUsers">TestingShit</button>
-    <!--//MEKKE FIL
-    -->
-    <input
-      type="text"
-      id="subjectCode"
-      placeholder="SubjectCode"
-      v-model="subjectCodeForNewStudents"
-    />
-    <input
-      type="text"
-      id="subjectYear"
-      placeholder="Year of the subject (2011)"
-      v-model="subjectYearForStudents"
-    />
-
     <label class="file-select">
       <div class="select-button">
         <span v-if="value">Selected File: {{ value.name }}</span>
@@ -209,7 +193,7 @@ export default {
             subjectYear: this.subjectYearForStudents,
           }
         );
-        console.log("first post was sent");
+        console.log(res);
 
         //rest of the users
         for (let i = 1; i < testInFile.split("\\r\\n").length - 1; i++) {

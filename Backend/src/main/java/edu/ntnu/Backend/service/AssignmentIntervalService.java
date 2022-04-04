@@ -16,6 +16,10 @@ public class AssignmentIntervalService {
         this.assignmentIntervalRepository = assignmentIntervalRepository;
     }
 
+    public void saveAssginmentInterval(AssignmentIntervalDAO assignmentIntervalDAO){
+     assignmentIntervalRepository.save(assignmentIntervalDAO);
+    }
+
     public List<AssignmentIntervalDAO> findBySubjectCodeAndYear(String subjectCode, int schoolYear) {
         System.out.println("finding assignment interval by subjectCode and schoolYear: " + subjectCode + " and " + schoolYear);
         if( assignmentIntervalRepository.findAssignmentIntervalDAOBySubjectCodeAndSchoolYear(subjectCode,schoolYear).isEmpty()){

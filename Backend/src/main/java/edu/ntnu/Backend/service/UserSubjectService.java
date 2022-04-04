@@ -26,6 +26,10 @@ public class UserSubjectService {
         this.userSubjectRepository.save(userSubjectDAO);
     }
 
+    public List<UserSubjectDAO> findAllUsersInSubject(int schoolyear, String subjectCode){
+        return userSubjectRepository.findUserSubjectDAOBySchoolYearAndSubjectCode(schoolyear,subjectCode);
+    }
+
 
     public List<UserSubjectDAO> findByUserId(int userId) {
         System.out.println("finding userSubject by userID: " + userId);

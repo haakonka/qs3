@@ -41,6 +41,16 @@ public class AssignmentIntervalDAO implements Serializable {
         this.minAssignments = minAssignments;
     }
 
+    //since id is autoIncrement
+    public AssignmentIntervalDAO(String subjectCode, int schoolYear, int assignmentNumber, int intervalStart, int intervalEnd, int minAssignments) {
+        this.subjectCode = subjectCode;
+        this.schoolYear = schoolYear;
+        this.assignmentNumber = assignmentNumber;
+        this.intervalStart = intervalStart;
+        this.intervalEnd = intervalEnd;
+        this.minAssignments = minAssignments;
+    }
+
     public AssignmentIntervalDAO() {
     }
 

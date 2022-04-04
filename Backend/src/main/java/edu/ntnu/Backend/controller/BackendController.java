@@ -3,11 +3,11 @@ package edu.ntnu.Backend.controller;
 import edu.ntnu.Backend.model.DAO.*;
 import edu.ntnu.Backend.model.DTO.*;
 import edu.ntnu.Backend.service.*;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -31,10 +31,13 @@ public class BackendController {
     private final AssignmentIntervalService assignmentIntervalService;
     private final SubjectService subjectService;
     private final ParticipantInQueService participantInQueService;
+    private final AssignmentService assignmentService;
+    private final EmailService emailService;
 
     public BackendController(UserService userService, UserSubjectService userSubjectService,
             AssignmentUserService assignmentUserService, AssignmentIntervalService assignmentIntervalService,
-            SubjectService subjectService, ParticipantInQueService participantInQueService) {
+            SubjectService subjectService, ParticipantInQueService participantInQueService,
+            AssignmentService assignmentService, EmailService emailService) {
         this.userService = userService;
         this.autenticationService = new AutenticationService(userService);
         this.userSubjectService = userSubjectService;
@@ -42,11 +45,19 @@ public class BackendController {
         this.assignmentIntervalService = assignmentIntervalService;
         this.subjectService = subjectService;
         this.participantInQueService = participantInQueService;
+        this.assignmentService = assignmentService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login/authentication")
     public ResponseEntity<String> loggingIn(@RequestBody LoginDTO loginDTO)
-            throws NoSuchAlgorithmException, ServletException, IOException {
+            throws NoSuchAlgorithmException, ServletException, IOException, MessagingException {
+        /*
+         * System.out.println("Tries TO send email");
+         * emailService.sendAsHtml("haakon.kanter@gmail.com",
+         * "LmaoSmollPePe","<h2>ThisIsOmar</h2><p>hi there!</p>");
+         */
+
         System.out.println("in login methode");
         System.out.println(loginDTO.password);
         System.out.println(loginDTO.username);
@@ -76,24 +87,26 @@ public class BackendController {
 
         System.out.println("Token:" + newUserDTO.getToken());
         System.out.println("users:" + newUserDTO.getEmail());
-        System.out.println("Subject:" + newUserDTO.getSubjectCode() );
-        if(autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)){
-            if(userService.findByEmail(newUserDTO.getEmail()) == null){
+        System.out.println("Subject:" + newUserDTO.getSubjectCode());
+        if (autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)) {
+            if (userService.findByEmail(newUserDTO.getEmail()) == null) {
                 userService.saveNewUser(newUserDTO);
-                //reformat to UserSubjectDAO
-                System.out.println("adding new user to a subject: " + newUserDTO.getEmail() + " in: " + newUserDTO.getSubjectCode());
+                // reformat to UserSubjectDAO
+                System.out.println("adding new user to a subject: " + newUserDTO.getEmail() + " in: "
+                        + newUserDTO.getSubjectCode());
                 UserSubjectDAO userSubjectDAO = new UserSubjectDAO(
-                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(), userService.findByEmail(newUserDTO.getEmail()).getId(),0);
+                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(),
+                        userService.findByEmail(newUserDTO.getEmail()).getId(), 0);
                 userSubjectService.saveSubjectUser(userSubjectDAO);
                 return ResponseEntity.ok().body(null);
 
-            }else {
+            } else {
                 UserSubjectDAO userSubjectDAO = new UserSubjectDAO(
-                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(), userService.findByEmail(newUserDTO.getEmail()).getId(),0);
+                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(),
+                        userService.findByEmail(newUserDTO.getEmail()).getId(), 0);
                 userSubjectService.saveSubjectUser(userSubjectDAO);
                 return ResponseEntity.ok().body(null);
             }
-
 
         }
 
@@ -156,8 +169,9 @@ public class BackendController {
             for (int i = 0; i < userSubjects.size(); i++) {
                 if ((userSubjects.get(i).getSubjectCode().contentEquals(assignment.getSubjectCode()))
                         && (userSubjects.get(i).getSchoolYear() == assignment.getSchoolYear())) {
-                    if(userSubjects.get(i).getStatusOfUser() >= 1) {
-                        assignmentUserService.changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getUniqueId()));
+                    if (userSubjects.get(i).getStatusOfUser() >= 1) {
+                        assignmentUserService
+                                .changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getUniqueId()));
                         return ResponseEntity.ok().body("The status was changed");
                     } else {
                         return ResponseEntity.ok().body("The user is not a studass in this subject");
@@ -170,11 +184,67 @@ public class BackendController {
 
     @PostMapping("user/assignments/instance")
     public ResponseEntity getAllAssignmentsForAUserWithDifferentId(@RequestBody InstancesOfUserInSubjectDTO instances) {
-        if(autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
+        if (autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
             return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(
                     instances.getSubjectCode().replace("\\", ""),
                     Integer.valueOf(instances.getSchoolYear()), Integer.valueOf(instances.getUserId())));
         }
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("admin/addSubject")
+    public ResponseEntity addSubject(@RequestBody SubjectDTO subjectDTO) {
+        if (autenticationService.checkIfAuthorized(subjectDTO.getToken(), 2)) {
+            SubjectDAO subjectDAO = new SubjectDAO(subjectDTO.getSubjectCode(),
+                    Integer.parseInt(subjectDTO.getSchoolYear()), subjectDTO.getSubjectName(), 0);
+            subjectService.saveNewSubject(subjectDAO);
+            return ResponseEntity.ok().body("subjectAdded");
+        }
+
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("admin/removeSubject")
+    public ResponseEntity removeSubject(@RequestBody SubjectDTO subjectDTO) {
+        if (autenticationService.checkIfAuthorized(subjectDTO.getToken(), 2)) {
+            SubjectDAO subjectDAO = new SubjectDAO(subjectDTO.getSubjectCode(),
+                    Integer.parseInt(subjectDTO.getSchoolYear()), subjectDTO.getSubjectName(), 0);
+            subjectService.removeSubject(subjectDAO);
+            return ResponseEntity.ok().body("subjectRemoved");
+        }
+
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("admin/addAsignment")
+    public ResponseEntity addAsignment(@RequestBody newAsignemntDTO newAsignemntDTO) {
+        if (autenticationService.checkIfAuthorized(newAsignemntDTO.getToken(), 2)) {
+            AssignmentDAO assignmentDAO = new AssignmentDAO(newAsignemntDTO.getAssignmentNumber(),
+                    newAsignemntDTO.getSubjectCode(), Integer.parseInt(newAsignemntDTO.getSchoolYear()));
+            assignmentService.saveAssignment(assignmentDAO);
+            System.out.println("added the assignment : " + assignmentDAO.getSubjectCode() + " nr: "
+                    + assignmentDAO.getAssignmentNumber());
+            AssignmentIntervalDAO assignmentIntervalDAO = new AssignmentIntervalDAO(newAsignemntDTO.getSubjectCode(),
+                    Integer.parseInt(newAsignemntDTO.getSchoolYear()), newAsignemntDTO.getAssignmentNumber(),
+                    newAsignemntDTO.getIntervalStart(), newAsignemntDTO.getIntervalEnd(),
+                    newAsignemntDTO.getMinAssignments());
+
+            assignmentIntervalService.saveAssginmentInterval(assignmentIntervalDAO);
+
+            List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(
+                    Integer.parseInt(newAsignemntDTO.getSchoolYear()), newAsignemntDTO.getSubjectCode());
+
+            for (int i = 0; i < usersInSub.size(); i++) {
+                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(
+                        usersInSub.get(i).getUserId(), newAsignemntDTO.getSubjectCode(),
+                        Integer.parseInt(newAsignemntDTO.getSchoolYear()),
+                        newAsignemntDTO.getAssignmentNumber(), 0);
+                assignmentUserService.addAssignmentUser(assignmentUserDAO);
+                System.out.println("added assignment for user");
+            }
+
+        }
+
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
@@ -292,7 +362,7 @@ public class BackendController {
 
     @PostMapping("user/participantInQue/allInstances")
     public ResponseEntity getAllInstancesOfAUserInTheQueue(@RequestBody InstancesOfUserInSubjectDTO instances) {
-        if(autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
+        if (autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
             return ResponseEntity.ok().body(participantInQueService.findAllInstancesOfAParticipantInQue(
                     instances.getSubjectCode().replace("\\", ""),
                     Integer.valueOf(instances.getSchoolYear()),
@@ -303,8 +373,9 @@ public class BackendController {
 
     @PostMapping("studass/participantInQue/status")
     public ResponseEntity changeStatusOfAParticipantInQue(@RequestBody ParticipantStatusDTO participant) {
-        if(autenticationService.checkIfAuthorized(participant.getToken(), 1)) {
-            participantInQueService.changeStatusOfParticipantInQueue(participant.getParticipantInQueId(),participant.getStatusChange());
+        if (autenticationService.checkIfAuthorized(participant.getToken(), 1)) {
+            participantInQueService.changeStatusOfParticipantInQueue(participant.getParticipantInQueId(),
+                    participant.getStatusChange());
             return ResponseEntity.ok().body("The status of the participant was successfully changed");
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);

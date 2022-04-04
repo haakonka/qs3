@@ -11,7 +11,7 @@ public interface UserSubjectRepository extends JpaRepository<UserSubjectDAO, Lon
 
     List<UserSubjectDAO> findUserSubjectDAOByUserId(int userid);
 
-
+    List<UserSubjectDAO> findUserSubjectDAOBySchoolYearAndSubjectCode(int schoolYear, String subjectCode);
 
     
 }
