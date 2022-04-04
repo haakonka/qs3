@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * A class that functions at the main controller for the api calls related to assignments.
+ * A class that functions as the main controller for the api calls related to assignments.
  */
 @RequestMapping("/api")
 @RestController

@@ -32,6 +32,13 @@ public class SubjectController {
         this.subjectService = subjectService;
     }
 
+    /**
+     * A method to get all the subjects for a given user.
+     * @param token The specific format of data that is needed.
+     *              See {@link edu.ntnu.Backend.model.DTO.TokenDTO TokenDTO} for more information.
+     * @return Returns a list of the subjectDAOs contained within a response entity,
+     * or a http status forbidden if the user is not logged-in.
+     */
     @PostMapping("/user/subjects")
     public ResponseEntity getSubjectsForUser(@RequestBody TokenDTO token) {
         System.out.println("Tryng to acess all users");
@@ -52,6 +59,14 @@ public class SubjectController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method for an admin to add a subject.
+     * @param subjectDTO The specific format of data that is needed.
+     *                   See {@link edu.ntnu.Backend.model.DTO.SubjectDTO SubjectDTO} for more information.
+     * @return Returns a response entity with the status of the request,
+     * or a http status forbidden if the user is not logged-in.
+     * The user also have to be of the role admin for the forbidden response to not be triggered.
+     */
     @PostMapping("admin/addSubject")
     public ResponseEntity addSubject(@RequestBody SubjectDTO subjectDTO) {
         if (autenticationService.checkIfAuthorized(subjectDTO.getToken(), 2)) {
@@ -64,6 +79,14 @@ public class SubjectController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method for an admin to remove a subject.
+     * @param subjectDTO The specific format of data that is needed.
+     *                   See {@link edu.ntnu.Backend.model.DTO.SubjectDTO SubjectDTO} for more information.
+     * @return Returns a response entity with the status of the request,
+     * or a http status forbidden if the user is not logged-in.
+     * The user also have to be of the role admin for the forbidden response to not be triggered.
+     */
     @PostMapping("admin/removeSubject")
     public ResponseEntity removeSubject(@RequestBody SubjectDTO subjectDTO) {
         if (autenticationService.checkIfAuthorized(subjectDTO.getToken(), 2)) {
@@ -76,6 +99,13 @@ public class SubjectController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method to get a specific subject for a user.
+     * @param subjectIdDTO The specific format of data that is needed.
+     *                   See {@link edu.ntnu.Backend.model.DTO.SubjectIdDTO SubjectIdDTO} for more information.
+     * @return Returns a response entity containing the specific subject. As with the other methods of this class this
+     * method may also return a http status forbidden if the user is not logged-in.
+     */
     @PostMapping("user/subject")
     public ResponseEntity getASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access a specific subject");

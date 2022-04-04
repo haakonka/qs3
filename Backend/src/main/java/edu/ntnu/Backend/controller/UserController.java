@@ -16,6 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * The main controller for the api requests related to a user.
+ */
 @RequestMapping("/api")
 @RestController
 @CrossOrigin
@@ -33,6 +36,14 @@ public class UserController {
         this.emailService = emailService;
     }
 
+    /**
+     * A method to add a new user from a csv file. Only allowed for a user of role admin.
+     * @param newUserDTO The specific format of data that is needed.
+     *                   See {@link edu.ntnu.Backend.model.DTO.NewUserDTO NewUserDTO} for more information.
+     * @return
+     * @throws MessagingException
+     * @throws NoSuchAlgorithmException
+     */
     @PostMapping("/admin/addUserToSubject")
     public ResponseEntity addNewUserFromFile(@RequestBody NewUserDTO newUserDTO)
             throws MessagingException, NoSuchAlgorithmException {

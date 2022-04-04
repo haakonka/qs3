@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.ntnu.Backend"},{"l":"edu.ntnu.Backend.controller"},{"l":"edu.ntnu.Backend.model.DAO"},{"l":"edu.ntnu.Backend.model.DTO"},{"l":"edu.ntnu.Backend.model.PK"},{"l":"edu.ntnu.Backend.repository"},{"l":"edu.ntnu.Backend.service"}];updateSearchResults();
