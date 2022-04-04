@@ -175,7 +175,7 @@ export default {
         passedReq1.textContent =
           "Du må ha bestått: " +
           this.assignmentIntervals[i].minAssignments +
-          " av øving" +
+          " av øving " +
           this.assignmentIntervals[i].intervalStart +
           " - " +
           this.assignmentIntervals[i].intervalEnd;

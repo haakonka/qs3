@@ -10,7 +10,7 @@ import java.util.Properties;
 @Service
 public class EmailService {
     private static final String senderEmail = "ugleskippy123@gmail.com";//sender email
-    private static final String senderPassword = "vnvekxgyzxodffke";//sender password
+    private static final String senderPassword = "igjjqominyjeebrr";//sender password
 
     public void sendAsHtml(String to, String title, String html) throws MessagingException {
         System.out.println("Sending email to " + to);
@@ -41,7 +41,7 @@ public class EmailService {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");//Outgoing server requires authentication
         props.put("mail.smtp.starttls.enable", "true");//TLS must be activated
-        props.put("mail.smtp.host", "smtp.1and1.com"); //Outgoing server (SMTP) - change it to your SMTP server
+        props.put("mail.smtp.host", "smtp.gmail.com"); //Outgoing server (SMTP) - change it to your SMTP server
         props.put("mail.smtp.port", "587");//Outgoing port
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
