@@ -3,6 +3,11 @@ package edu.ntnu.Backend.model.PK;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * This class is made as a representation of the composite primary key in the assignment table in the database.
+ * It contains necessary access methods.
+ * This class also has an equal method for comparing instances of primary keys from the assignment table in the database.
+ */
 public class AssignmentPK implements Serializable {
     int assignmentNumber;
     String subjectCode;

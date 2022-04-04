@@ -6,6 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
+/**
+ * This class function as a representation of the table assignmentuser from the database.
+ * This class contains the same fields as the columns from the database.
+ * Access methods for these values is also contained in this class.
+ */
 @Entity
 @Table(name = "assignmentuser", schema = "qsusers")
 public class AssignmentUserDAO implements Serializable {

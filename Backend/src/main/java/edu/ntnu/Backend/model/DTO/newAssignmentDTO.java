@@ -1,7 +1,13 @@
 package edu.ntnu.Backend.model.DTO;
 
+/**
+ * A class made to represent the data needed for the creation of a new assignment.
+ * The has no constructor as it is only meant to transfer the data, not store it.
+ * This class has necessary access methods.
+ * The format needed for this class is token, subjectCode, schoolYear, assignmentNumber,
+ * intervalStart, intervalEnd and minAssignments.
+ */
 public class newAssignmentDTO {
-
     String token;
     String subjectCode;
     String schoolYear;

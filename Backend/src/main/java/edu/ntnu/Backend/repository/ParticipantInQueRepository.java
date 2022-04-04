@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * A class meant to access the participantInQue table in the database.
+ * This class contains some premade methods and four custom-made ones.
+ */
 @Repository
 public interface ParticipantInQueRepository extends JpaRepository<ParticipantInQueueDAO, Long> {
 

@@ -1,5 +1,11 @@
 package edu.ntnu.Backend.model.DTO;
 
+/**
+ * A class made to represent the data needed for the creation of a new user.
+ * The has no constructor as it is only meant to transfer the data, not store it.
+ * This class has necessary access methods.
+ * The format needed for this class is token, lastname, firstname, email, subjectCode and subjectYear.
+ */
 public class NewUserDTO {
     String token;
     String lastname;

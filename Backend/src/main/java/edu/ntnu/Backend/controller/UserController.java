@@ -40,7 +40,8 @@ public class UserController {
      * A method to add a new user from a csv file. Only allowed for a user of role admin.
      * @param newUserDTO The specific format of data that is needed.
      *                   See {@link edu.ntnu.Backend.model.DTO.NewUserDTO NewUserDTO} for more information.
-     * @return
+     * @return Returns a response entity containing null if the request was successful or a http status forbidden if the
+     * user was either not of role admin or not logged-in.
      * @throws MessagingException
      * @throws NoSuchAlgorithmException
      */
@@ -87,6 +88,13 @@ public class UserController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * A method to get a userServiceDAO object by a userId.
+     * @param userbyIdDTO The specific format of data that is needed.
+     *                   See {@link edu.ntnu.Backend.model.DTO.UserbyIdDTO UserbyIdDTO} for more information.
+     * @return Returns a response entity containing the userServiceDAO object or http status forbidden if the user
+     * is not logged-in.
+     */
     @PostMapping("user/getUser")
     public ResponseEntity getStudentByStudentID(@RequestBody UserbyIdDTO userbyIdDTO) {
 

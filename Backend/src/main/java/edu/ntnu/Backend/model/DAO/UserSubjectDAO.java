@@ -6,6 +6,11 @@ import edu.ntnu.Backend.model.PK.UserSubjectPK;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * This class function as a representation of the table usersubjects from the database.
+ * This class contains the same fields as the columns from the database.
+ * Access methods for these values is also contained in this class.
+ */
 @Entity
 @IdClass(UserSubjectPK.class)
 @Table(name = "usersubjects", schema = "qsusers")

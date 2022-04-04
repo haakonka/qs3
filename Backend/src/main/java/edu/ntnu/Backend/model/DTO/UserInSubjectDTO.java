@@ -1,5 +1,11 @@
 package edu.ntnu.Backend.model.DTO;
 
+/**
+ * A class that functions as a container containing certain data.
+ * The format for said data is token, userid, subjectCode and schoolYear.
+ * This class has no constructor due to it being a data transfer object.
+ * This class contains necessary access methods for the variable it contains.
+ */
 public class UserInSubjectDTO {
     String token;
     int userid;

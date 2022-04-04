@@ -7,6 +7,11 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * This class function as a representation of the table participantinque from the database.
+ * This class contains the same fields as the columns from the database.
+ * Access methods for these values is also contained in this class.
+ */
 @Entity
 @Table(name = "participantinque", schema = "qsusers")
 public class ParticipantInQueueDAO implements Serializable {

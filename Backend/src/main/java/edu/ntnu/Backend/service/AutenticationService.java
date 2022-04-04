@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
+/**
+ * A class containing additional methods for the {@link edu.ntnu.Backend.controller.AuthenticationController AuthenticationController}
+ */
 @Service
 public class AutenticationService {
     //make jwt TOKEN with name, role, epost

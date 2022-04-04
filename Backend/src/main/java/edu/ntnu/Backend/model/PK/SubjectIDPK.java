@@ -2,6 +2,11 @@ package edu.ntnu.Backend.model.PK;
 
 import java.io.Serializable;
 
+/**
+ * This class is made as a representation of the multiple composite primary keys in the database.
+ * It contains necessary access methods.
+ * This class also has an equal method for comparing instances of similar primary keys from the database.
+ */
 public class SubjectIDPK implements Serializable {
     private String subjectCode;
     private int schoolYear;

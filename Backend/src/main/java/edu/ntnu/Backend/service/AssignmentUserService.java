@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * A class meant to use the access-point made to the assignmentUser table in the database.
+ * This class uses the methods from the
+ * {@link edu.ntnu.Backend.repository.AssignmentUserRepository AssignmentUserRepository}
+ */
 @Service
 @Transactional
 public class AssignmentUserService {
@@ -16,10 +21,21 @@ public class AssignmentUserService {
         this.assignmentUserRepository = assignmentUserRepository;
     }
 
+    /**
+     * A method to add a assignmentUserDAO object to the database.
+     * @param assignmentUserDAO The assignmentUserDAO object to be added.
+     */
     public void addAssignmentUser(AssignmentUserDAO assignmentUserDAO){
         assignmentUserRepository.save(assignmentUserDAO);
     }
 
+    /**
+     * A method to find all assignments for a user given a user id, subject code and school year.
+     * @param subjectCode The subject code to check for assignments in.
+     * @param schoolYear The school year to check for assignments in.
+     * @param userID The user you want the assignments for.
+     * @return 
+     */
     public List<AssignmentUserDAO> findBySubjectCodeAndYearAndUserID(String subjectCode, int schoolYear, int userID) {
         System.out.println("finding assignmentUser by userID, subjectCode and schoolYear: " + userID + ", " + subjectCode + " and " + schoolYear);
         List<AssignmentUserDAO> listOfAssignments = assignmentUserRepository.findAssignmentUserDAOBySubjectCodeAndSchoolYearAndUserID(subjectCode,schoolYear,userID);

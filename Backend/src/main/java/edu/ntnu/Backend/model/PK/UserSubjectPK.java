@@ -3,7 +3,11 @@ package edu.ntnu.Backend.model.PK;
 
 import java.io.Serializable;
 
-
+/**
+ * This class is made as a representation of the composite primary key in the userSubject table in the database.
+ * It contains necessary access methods.
+ * This class also has an equal method for comparing instances of primary keys from the userSubject table in the database.
+ */
 public class UserSubjectPK implements Serializable {
     private int schoolYear;
     private String subjectCode;

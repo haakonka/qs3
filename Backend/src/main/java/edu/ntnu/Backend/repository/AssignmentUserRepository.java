@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * A class meant to access the assignmentUser table in the database.
+ * This class contains some premade methods and three custom-made ones.
+ */
 @Repository
 public interface AssignmentUserRepository extends JpaRepository<AssignmentUserDAO, Long> {
 

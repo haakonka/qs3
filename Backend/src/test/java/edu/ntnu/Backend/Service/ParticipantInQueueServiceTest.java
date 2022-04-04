@@ -1,9 +1,8 @@
 package edu.ntnu.Backend.Service;
 
-import edu.ntnu.Backend.model.DAO.ParticipantInQueDAO;
+import edu.ntnu.Backend.model.DAO.ParticipantInQueueDAO;
 import edu.ntnu.Backend.repository.ParticipantInQueRepository;
-import edu.ntnu.Backend.service.ParticipantInQueService;
-import edu.ntnu.Backend.service.UserService;
+import edu.ntnu.Backend.service.ParticipantInQueueService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,12 +15,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ParticipantInQueServiceTest {
+public class ParticipantInQueueServiceTest {
     java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf("2001-04-03 13:25:50.0");
-    ParticipantInQueDAO user1 = new ParticipantInQueDAO(1,23,"alquid",2001,1,timestamp,0);
-    List<ParticipantInQueDAO> users = new LinkedList<>();
-    List<ParticipantInQueDAO> users2 = new LinkedList<>();
-    ParticipantInQueService participantInQueService;
+    ParticipantInQueueDAO user1 = new ParticipantInQueueDAO(1,23,"alquid",2001,1,timestamp,0);
+    List<ParticipantInQueueDAO> users = new LinkedList<>();
+    List<ParticipantInQueueDAO> users2 = new LinkedList<>();
+    ParticipantInQueueService participantInQueService;
     @Mock
     ParticipantInQueRepository participantInQueRepository;
 
@@ -29,7 +28,7 @@ public class ParticipantInQueServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         users.add(user1);
-        participantInQueService = new ParticipantInQueService(participantInQueRepository);
+        participantInQueService = new ParticipantInQueueService(participantInQueRepository);
         Mockito.when(participantInQueRepository.deleteParticipantInQueDAOByParticipantInQueID(1)).thenReturn(1L);
         Mockito.when(participantInQueRepository.findAllBySubjectCodeAndSchoolYear("alquid",2001)).thenReturn(users);
     }
@@ -47,7 +46,7 @@ public class ParticipantInQueServiceTest {
 
     @Test
     void addParticipantInQuePositive(){
-        Assertions.assertTrue(participantInQueService.createParticipantInQue(new ParticipantInQueDAO(1,23,"alquid",2001,1,timestamp,0)));
+        Assertions.assertTrue(participantInQueService.createParticipantInQue(new ParticipantInQueueDAO(1,23,"alquid",2001,1,timestamp,0)));
     }
 
     @Test

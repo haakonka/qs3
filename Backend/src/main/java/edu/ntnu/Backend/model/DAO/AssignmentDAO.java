@@ -1,11 +1,15 @@
 package edu.ntnu.Backend.model.DAO;
 
 import edu.ntnu.Backend.model.PK.AssignmentPK;
-import edu.ntnu.Backend.model.PK.SubjectIDPK;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * This class function as a representation of the table assignment from the database.
+ * This class contains the same fields as the columns from the database.
+ * Access methods for these values is also contained in this class.
+ */
 @Entity
 @IdClass(AssignmentPK.class)
 @Table(name = "assignment", schema = "qsusers")
