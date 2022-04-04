@@ -54,6 +54,9 @@ public class AssignmentUserService {
                 } );
         return listOfAssignments;
     }
+    public List<AssignmentUserDAO> findAllThatHasLargerIdThan(int value){
+        return assignmentUserRepository.findAssignmentUserDAOByAssignmentUserIDIsGreaterThan(value);
+    }
 
     /**
      * A method to find all subjects for a user.

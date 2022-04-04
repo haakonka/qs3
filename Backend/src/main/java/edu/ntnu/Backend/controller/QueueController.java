@@ -27,10 +27,10 @@ public class QueueController {
     private final AutenticationService autenticationService;
     private final UserSubjectService userSubjectService;
     private final SubjectService subjectService;
-    private final ParticipantInQueueService participantInQueueService;
+    private final ParticipantInQueService participantInQueueService;
 
     public QueueController(AutenticationService autenticationService, UserSubjectService userSubjectService,
-                           SubjectService subjectService, ParticipantInQueueService participantInQueueService) {
+                           SubjectService subjectService, ParticipantInQueService participantInQueueService) {
         this.autenticationService = autenticationService;
         this.userSubjectService = userSubjectService;
         this.subjectService = subjectService;
@@ -75,7 +75,7 @@ public class QueueController {
     /**
      * A method to get all the participants within a que of a subject.
      * @param subjectIdDTO The specific format of data that is needed.
-     *                     See {@link edu.ntnu.Backend.model.DTO.SubjectIdDTO SubjectIdDTO} for more information.
+     *                     See {@link SubjectIdDTO SubjectIdDTO} for more information.
      * @return Returns a response entity containing the participantInQueueDAO objects,
      * or a http status forbidden the user is not logged-in.
      */
@@ -120,7 +120,7 @@ public class QueueController {
      * A method to create a participantInQueueDAO object with some given data.
      * This method adds the object to the que within the given subject.
      * @param participantInQueueDTO The specific format of data that is needed.
-     *                              See {@link edu.ntnu.Backend.model.DTO.ParticipantInQueueDTO ParticipantInQueueDTO}
+     *                              See {@link ParticipantInQueueDTO ParticipantInQueueDTO}
      *                              for more information.
      * @return Returns a response entity containing the status message of the request,
      * or a http status forbidden the user is not logged-in.
@@ -139,7 +139,7 @@ public class QueueController {
                     Integer.valueOf(participantInQueueDTO.getSchoolYear()),
                     Integer.valueOf(participantInQueueDTO.getAssignmentNumber()),
                     timeStamp);
-            if (participantInQueueService.createParticipantInQue(participant)) {
+            if (participantInQueueService.createParticipantInQueue(participant)) {
                 return ResponseEntity.ok().body("The participant was made");
             }
         }

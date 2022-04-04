@@ -18,4 +18,6 @@ public interface AssignmentUserRepository extends JpaRepository<AssignmentUserDA
     List<AssignmentUserDAO> findAssignmentUserDAOByUserID(int userId);
 
     AssignmentUserDAO findAssignmentUserDAOByAssignmentUserID(int assignmentUserId);
+
+    List<AssignmentUserDAO> findAssignmentUserDAOByAssignmentUserIDIsGreaterThan(int valueofId);
 }

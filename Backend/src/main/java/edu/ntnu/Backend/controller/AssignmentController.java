@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * A class that functions as the main controller for the api calls related to assignments.
@@ -138,12 +139,23 @@ public class AssignmentController {
 
             List<UserSubjectDAO> usersInSub = userSubjectService.findAllUsersInSubject(
                     Integer.parseInt(newAssignmentDTO.getSchoolYear()), newAssignmentDTO.getSubjectCode());
+            System.out.println("size" + usersInSub.size());
+            System.out.println("1 " + usersInSub.get(0).getUserId());
+            System.out.println("2 " + usersInSub.get(1).getUserId());
+            System.out.println("3 " + usersInSub.get(2).getUserId());
 
+            Random rand = new Random();
+            int upperbound = 4000000;
+
+            int j = rand.nextInt(upperbound);
             for (int i = 0; i < usersInSub.size(); i++) {
-                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(
+                //GET HIGEST NUMBER OF ASSIGNMENT ID AND USE THAT MANUALLY
+                System.out.println(j+i);
+                AssignmentUserDAO assignmentUserDAO = new AssignmentUserDAO(j+i,
                         usersInSub.get(i).getUserId(), newAssignmentDTO.getSubjectCode(),
                         Integer.parseInt(newAssignmentDTO.getSchoolYear()),
                         newAssignmentDTO.getAssignmentNumber(), 0);
+
                 assignmentUserService.addAssignmentUser(assignmentUserDAO);
                 System.out.println("added assignment for user");
             }

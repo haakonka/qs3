@@ -1,14 +1,14 @@
 <template>
   <div class="que">
+    <button @click.prevent="returnToStart">Home</button>
     <h2 id="id123"></h2>
-    <button @click.prevent="returnToStart">Return to home</button>
+
     <button @click="displayQueueMenu">Still deg i kø</button>
     <div id="queueMenu" style="display: none"></div>
-    <h2>Din plass i køen: 3</h2>
+    <h2>Din plass i køen: {{ this.positionInQueue }}</h2>
 
     <div id="que"></div>
 
-    <button>Vis ekstra info</button>
     <h2 id="numOfStud"></h2>
     <h2 id="time"></h2>
   </div>
@@ -21,6 +21,7 @@ export default {
     return {
       AssignmentsToApprove: [],
       Assignments: [],
+      positionInQueue: null,
     };
   },
   created() {
@@ -76,9 +77,16 @@ export default {
           }
         }
         studentInQueDiv.classList.add(res.data.at(j).participantInQueID + "!");
-        console.log("The assignment id is: " + theAssignmentId);
+
         studentInQueDiv.classList.add(theAssignmentId + ",");
-        console.log("the status is: " + res.data.at(j).status);
+        console.log(res.data.at(j).status);
+        if (res.data.at(j).status == 0) {
+          res.data.at(j).status = "Hjelp";
+        } else if (res.data.at(j).status == 1) {
+          res.data.at(j).status = "Godkjenning";
+        } else {
+          res.data.at(j).status = "Betjent";
+        }
         studentInQueDiv.classList.add("," + res.data.at(j).status);
         studentInQueDiv.addEventListener("click", (e) => {
           var target = e.target;
@@ -106,10 +114,11 @@ export default {
         queDiv.appendChild(studentInQueDiv);
       }
 
-      const element = document.getElementById("numOfStud");
       const element2 = document.getElementById("time");
-      element.textContent = "Antall studenter i køen: " + res.data.length;
-      element2.textContent = "Estimert ventetid: " + res.data.length * 3;
+      this.positionInQueue = res.data.length;
+
+      element2.textContent =
+        "Estimert ventetid: " + res.data.length * 3 + " min";
       const element3 = document.getElementById("id123");
       element3.textContent = localStorage.getItem("subjectCode");
       console.log("antall folk i køen" + res.data.length);
@@ -179,7 +188,6 @@ export default {
           });
         console.log(res.data);
 
-        //Infinite loop, why????
         while (myQueueMenu.firstChild) {
           myQueueMenu.removeChild(myQueueMenu.firstChild);
         }
@@ -210,6 +218,7 @@ export default {
         }
 
         var joinButton = document.createElement("BUTTON");
+        joinButton.textContent = "Still i kø";
         joinButton.setAttribute("id", "joinTheQue");
         joinButton.textContet = "Join que now!";
         joinButton.onclick = this.onJoinQueue;
@@ -270,5 +279,8 @@ export default {
 }
 #que > div {
   width: 50%;
+}
+#homeBtn {
+  width: 4em;
 }
 </style>
