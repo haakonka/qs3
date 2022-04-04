@@ -1,6 +1,7 @@
 <template>
   <div class="teacher">
-    <h1>Velkommen Omar</h1>
+    <h1>Velkommen</h1>
+    <h1>{{ this.username }}</h1>
     <h2>Dine emner</h2>
     <div id="subjects"></div>
     <button @click="changeClicked">Legg til emne</button>
@@ -63,6 +64,7 @@ export default {
       addingStudents: false,
       subjectCodeForNewStudents: "",
       subjectYearForStudents: "",
+      username: "Omar", // should fix for other teachers
     };
   },
   created() {

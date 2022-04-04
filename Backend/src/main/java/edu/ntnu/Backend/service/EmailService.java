@@ -14,16 +14,10 @@ public class EmailService {
 
     public void sendAsHtml(String to, String title, String html) throws MessagingException {
         System.out.println("Sending email to " + to);
-
-
         Session session = createSession();
-
-
         //create message using session
         MimeMessage message = new MimeMessage(session);
         prepareEmailMessage(message, to, title, html);
-
-
         //sending message
         Transport.send(message);
         System.out.println("Done");

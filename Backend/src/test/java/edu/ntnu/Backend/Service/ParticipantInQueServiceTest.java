@@ -30,7 +30,7 @@ public class ParticipantInQueServiceTest {
         MockitoAnnotations.initMocks(this);
         users.add(user1);
         participantInQueService = new ParticipantInQueService(participantInQueRepository);
-
+        Mockito.when(participantInQueRepository.deleteParticipantInQueDAOByParticipantInQueID(1)).thenReturn(1L);
         Mockito.when(participantInQueRepository.findAllBySubjectCodeAndSchoolYear("alquid",2001)).thenReturn(users);
     }
 
@@ -39,4 +39,25 @@ public class ParticipantInQueServiceTest {
         Assertions.assertEquals(participantInQueService.findAllParticipantsInAQue("alquid",2001),users);
         Assertions.assertNotEquals(participantInQueService.findAllParticipantsInAQue("alquid",2001),users2);
     }
+
+    @Test
+    void addParticipantInQueNegative(){
+        Assertions.assertFalse(participantInQueService.createParticipantInQue(null));
+    }
+
+    @Test
+    void addParticipantInQuePositive(){
+        Assertions.assertTrue(participantInQueService.createParticipantInQue(new ParticipantInQueDAO(1,23,"alquid",2001,1,timestamp,0)));
+    }
+
+    @Test
+    void deleteParticipantInQueNull(){
+        Assertions.assertEquals(participantInQueService.deleteParticipantInQue(0),0l);
+    }
+
+    @Test
+    void deleteParticipantInQuePositive(){
+        Assertions.assertEquals(participantInQueService.deleteParticipantInQue(1),1l);
+    }
+
 }

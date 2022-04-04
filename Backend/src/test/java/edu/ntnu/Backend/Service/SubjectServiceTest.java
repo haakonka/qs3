@@ -41,8 +41,14 @@ class SubjectServiceTest {
     }
 
     @Test
-    void changeStatusOfQue() {
+    void changeStatusOfQuePositive() {
         Assertions.assertTrue(subjectService.changeStatusOfQue("alquid",2001));
+
+    }
+
+    @Test
+    void changeStatusOfQueNegative(){
         Assertions.assertFalse(subjectService.changeStatusOfQue("",0));
     }
+
 }
