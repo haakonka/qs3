@@ -46,9 +46,6 @@ export default {
         });
 
       console.log(res.data);
-
-      //let array = JSON.parse(JSON.stringify(res.data));
-
       console.log("kode" + res.data.at(0).subjectCode);
 
       const element = document.getElementById("test");

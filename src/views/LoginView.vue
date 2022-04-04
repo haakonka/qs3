@@ -73,6 +73,9 @@ export default {
     };
   },
   methods: {
+    data() {
+      return { teacher: false };
+    },
     async onSubmit() {
       console.log("data :" + this.password + "   " + this.email);
       let gotError = false;
@@ -92,7 +95,21 @@ export default {
         let decoded = jwt_decode(token);
         localStorage.setItem("user", JSON.stringify(decoded));
         console.log("user: " + decoded);
-        this.$router.push("/home");
+
+        let userArray = localStorage.getItem("user");
+        console.log("Her er bruker data" + userArray);
+        let roleArrThing = userArray.split("exp");
+        console.log(roleArrThing);
+        console.log("Skal ha tilgang? " + roleArrThing[0].includes("1"));
+        if (roleArrThing[0].includes("2")) {
+          this.teacher = true;
+        }
+
+        if (this.teacher) {
+          this.$router.push("/admin");
+        } else {
+          this.$router.push("/home");
+        }
       }
     },
   },

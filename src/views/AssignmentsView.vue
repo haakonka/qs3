@@ -184,8 +184,6 @@ export default {
     },
     async changeValidStatus(e) {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      //finne ut den riktige
-      //Fikse så denne endrer den den skal endre, ikke en helt random en, sette den i loopen over
       let assignmentId = e.target.classList[2];
       console.log("assignment id" + assignmentId);
       let res = await axios.post(
@@ -200,10 +198,6 @@ export default {
       console.log("HEi jeg blir trykka på");
       this.onStart();
       this.listAssignments();
-      /*
-      if (e.target.textContent == "Ikke godkjent") {
-        e.target.textContent = "Godkjent";
-      } */
     },
     uniq_fast(a) {
       var seen = {};
