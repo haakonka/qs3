@@ -156,10 +156,24 @@ public class BackendController {
             for (int i = 0; i < userSubjects.size(); i++) {
                 if ((userSubjects.get(i).getSubjectCode().contentEquals(assignment.getSubjectCode()))
                         && (userSubjects.get(i).getSchoolYear() == assignment.getSchoolYear())) {
-                    assignmentUserService.changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getUniqueId()));
-                    return ResponseEntity.ok().body("The status was changed");
+                    if(userSubjects.get(i).getStatusOfUser() >= 1) {
+                        assignmentUserService.changeStatusOfAssignment(Integer.valueOf(assignmentUserDTO.getUniqueId()));
+                        return ResponseEntity.ok().body("The status was changed");
+                    } else {
+                        return ResponseEntity.ok().body("The user is not a studass in this subject");
+                    }
                 }
             }
+        }
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("user/assignments/instance")
+    public ResponseEntity getAllAssignmentsForAUserWithDifferentId(@RequestBody InstancesOfUserInSubjectDTO instances) {
+        if(autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
+            return ResponseEntity.ok().body(assignmentUserService.findBySubjectCodeAndYearAndUserID(
+                    instances.getSubjectCode().replace("\\", ""),
+                    Integer.valueOf(instances.getSchoolYear()), Integer.valueOf(instances.getUserId())));
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
@@ -261,7 +275,7 @@ public class BackendController {
             UserDAO user = autenticationService.getUserFromJWT(participantInQueDTO.getToken());
             Date date = new Date(Long.parseLong(participantInQueDTO.getJoinedQue()));
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+            format.setTimeZone(TimeZone.getTimeZone("GMT+2"));
             String formatted = format.format(date);
             Timestamp timeStamp = Timestamp.valueOf(formatted);
             ParticipantInQueDAO participant = new ParticipantInQueDAO(
@@ -272,6 +286,26 @@ public class BackendController {
             if (participantInQueService.createParticipantInQue(participant)) {
                 return ResponseEntity.ok().body("The participant was made");
             }
+        }
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("user/participantInQue/allInstances")
+    public ResponseEntity getAllInstancesOfAUserInTheQueue(@RequestBody InstancesOfUserInSubjectDTO instances) {
+        if(autenticationService.checkIfAuthorized(instances.getToken(), 0)) {
+            return ResponseEntity.ok().body(participantInQueService.findAllInstancesOfAParticipantInQue(
+                    instances.getSubjectCode().replace("\\", ""),
+                    Integer.valueOf(instances.getSchoolYear()),
+                    Integer.valueOf(instances.getUserId())));
+        }
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("studass/participantInQue/status")
+    public ResponseEntity changeStatusOfAParticipantInQue(@RequestBody ParticipantStatusDTO participant) {
+        if(autenticationService.checkIfAuthorized(participant.getToken(), 1)) {
+            participantInQueService.changeStatusOfParticipantInQueue(participant.getParticipantInQueId(),participant.getStatusChange());
+            return ResponseEntity.ok().body("The status of the participant was successfully changed");
         }
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }

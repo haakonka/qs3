@@ -132,6 +132,32 @@ export default {
         elementor.appendChild(passedReq1);
       }
     },
+    async getAllAssignments() {
+      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
+      let subjectCodeFromLocal = JSON.stringify(
+        localStorage.getItem("subjectCode")
+      );
+      let schoolYearFromLocal = JSON.stringify(
+        localStorage.getItem("schoolYear")
+      );
+      for (var i = 0; this.assignments.length; i++) {
+        let userId = this.assignments[i].userID;
+        let res = await axios
+          .post(
+            "http://localhost:8081/api/user/participantInQue/allInstances",
+            {
+              token: tokenFromLocal,
+              subjectCode: subjectCodeFromLocal,
+              schoolYear: schoolYearFromLocal,
+              userId: userId,
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log(res);
+      }
+    },
     async changeStatusOfAssignments() {
       //This method does not work if user is not studass or admin
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
@@ -141,32 +167,6 @@ export default {
           .post("http://localhost:8081/api/studass/assignment/status", {
             token: tokenFromLocal,
             uniqueId: assignmentId,
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log(res);
-      }
-    },
-    async checkOutOfQue() {
-      let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
-      let assignmetLast = this.assignments[0].assignmentUserID;
-      console.log(assignmetLast);
-      let res = await axios
-        .post("http://localhost:8081/api/studass/assignment/status", {
-          token: tokenFromLocal,
-          uniqueId: assignmetLast,
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      console.log(res);
-      if (res.data === "The status was changed") {
-        //Change the value of uniqueId to the actual value of participant in que
-        res = await axios
-          .post("http://localhost:8081/api/user/participantInQue/delete", {
-            token: tokenFromLocal,
-            uniqueId: 7,
           })
           .catch((error) => {
             console.log(error);
