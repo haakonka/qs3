@@ -55,9 +55,6 @@ public class ParticipantInQueueService {
             System.out.println("DELETING PARTICIPANT IN THE QUE AT ID: " + participantInQueId);
             long deleteRecords = participantInQueRepository.deleteParticipantInQueDAOByParticipantInQueID(participantInQueId);
             System.out.println("Length of deleteRecords are: " + deleteRecords);
-            if(deleteRecords == 1) {
-                return deleteRecords;
-            }
             return deleteRecords;
         }
         return 0;
