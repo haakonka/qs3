@@ -3,6 +3,7 @@ package edu.ntnu.Backend.controller;
 import edu.ntnu.Backend.model.DAO.*;
 import edu.ntnu.Backend.model.DTO.*;
 import edu.ntnu.Backend.service.*;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,14 +71,30 @@ public class BackendController {
 
     // Genreate user from name, password and emil.
 
-    @PostMapping("/admin/addUserFromFile")
+    @PostMapping("/admin/addUserToSubject")
     public ResponseEntity addNewUserFromFile(@RequestBody NewUserDTO newUserDTO) {
 
         System.out.println("Token:" + newUserDTO.getToken());
-        System.out.println("users:\n" + newUserDTO.getEmail());
-        if (autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)) {
-            userService.saveNewUser(newUserDTO);
-            return ResponseEntity.ok().body(null);
+        System.out.println("users:" + newUserDTO.getEmail());
+        System.out.println("Subject:" + newUserDTO.getSubjectCode() );
+        if(autenticationService.checkIfAuthorized(newUserDTO.getToken(), 2)){
+            if(userService.findByEmail(newUserDTO.getEmail()) == null){
+                userService.saveNewUser(newUserDTO);
+                //reformat to UserSubjectDAO
+                System.out.println("adding new user to a subject: " + newUserDTO.getEmail() + " in: " + newUserDTO.getSubjectCode());
+                UserSubjectDAO userSubjectDAO = new UserSubjectDAO(
+                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(), userService.findByEmail(newUserDTO.getEmail()).getId(),0);
+                userSubjectService.saveSubjectUser(userSubjectDAO);
+                return ResponseEntity.ok().body(null);
+
+            }else {
+                UserSubjectDAO userSubjectDAO = new UserSubjectDAO(
+                        newUserDTO.getSubjectYear(), newUserDTO.getSubjectCode(), userService.findByEmail(newUserDTO.getEmail()).getId(),0);
+                userSubjectService.saveSubjectUser(userSubjectDAO);
+                return ResponseEntity.ok().body(null);
+            }
+
+
         }
 
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);

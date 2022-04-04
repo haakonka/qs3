@@ -4,6 +4,19 @@
     <button v-on:click="showAllUsers">TestingShit</button>
     <!--//MEKKE FIL
     -->
+    <input
+      type="text"
+      id="subjectCode"
+      placeholder="SubjectCode"
+      v-model="subjectCodeForNewStudents"
+    />
+    <input
+      type="text"
+      id="subjectYear"
+      placeholder="Year of the subject (2011)"
+      v-model="subjectYearForStudents"
+    />
+
     <label class="file-select">
       <div class="select-button">
         <span v-if="value">Selected File: {{ value.name }}</span>
@@ -37,6 +50,13 @@
 import axios from "axios";
 export default {
   setup() {},
+  data() {
+    return {
+      subjectCodeForNewStudents: "",
+      subjectYearForStudents: "",
+    };
+  },
+
   created() {
     this.showAllUsers();
   },
@@ -175,15 +195,21 @@ export default {
         console.log("lastname: " + line.split('"\\"')[1].split(",")[0]);
         console.log("firstname: " + line.split(",")[1]);
         console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
+        console.log("subjectCode: " + this.subjectCodeForNewStudents);
+        console.log("subjectYear: " + this.subjectYearForStudents);
+
         let res = await axios.post(
-          "http://localhost:8081/api/admin/addUserFromFile",
+          "http://localhost:8081/api/admin/addUserToSubject",
           {
             token: tokenFromLocal,
-            firstname: line.split(",")[1],
             lastname: line.split('"\\"')[1].split(",")[0],
+            firstname: line.split(",")[1],
             email: line.split(",")[2].split('\\"')[0],
+            subjectCode: this.subjectCodeForNewStudents,
+            subjectYear: this.subjectYearForStudents,
           }
         );
+        console.log("first post was sent");
 
         //rest of the users
         for (let i = 1; i < testInFile.split("\\r\\n").length - 1; i++) {
@@ -193,12 +219,14 @@ export default {
           console.log("firstname: " + line.split(",")[1]);
           console.log("emailadre: " + line.split(",")[2].split('\\"')[0]);
           res = await axios.post(
-            "http://localhost:8081/api/admin/addUserFromFile",
+            "http://localhost:8081/api/admin/addUserToSubject",
             {
               token: tokenFromLocal,
-              firstname: line.split(",")[1],
               lastname: line.split(",")[0],
+              firstname: line.split(",")[1],
               email: line.split(",")[2].split('\\"')[0],
+              subjectCode: this.subjectCodeForNewStudents,
+              subjectYear: this.subjectYearForStudents,
             }
           );
         }

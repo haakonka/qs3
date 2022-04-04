@@ -5,6 +5,8 @@ public class NewUserDTO {
     String lastname;
     String firstname;
     String email;
+    String subjectCode;
+    String subjectYear;
 
     public String getToken() {return token.replace("\"", "");}
 
@@ -26,6 +28,22 @@ public class NewUserDTO {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public int getSubjectYear() {
+        return Integer.parseInt(subjectYear);
+    }
+
+    public void setSubjectYear(String subjectYear) {
+        this.subjectYear = subjectYear;
     }
 
     public String getEmail() {
