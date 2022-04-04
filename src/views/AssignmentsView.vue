@@ -6,6 +6,7 @@
       <div class="activeSubjects" id="assignmentsC"></div>
       <div class="assignments1" id="validC"></div>
     </div>
+    <div id="forAddButton"></div>
     <h2>For å få bestått i dette faget må du ha:</h2>
     <div id="passedReq"></div>
   </div>
@@ -19,6 +20,7 @@ export default {
       assignments: [],
       assignmentIntervals: [],
       studass: false,
+      teacher: false,
     };
   },
   created() {
@@ -85,6 +87,39 @@ export default {
       if (roleArrThing[0].includes("1")) {
         this.studass = true;
       }
+      if (roleArrThing[0].includes("2")) {
+        this.teacher = true;
+      }
+      const addButtonDiv = document.getElementById("forAddButton");
+
+      while (addButtonDiv.firstChild) {
+        addButtonDiv.removeChild(addButtonDiv.firstChild);
+      }
+
+      if (this.teacher && addButtonDiv.childElementCount < 1) {
+        const addAssignmentButton = document.createElement("button");
+        const p = document.createElement("p");
+        const p1 = document.createElement("p");
+        p1.textContent = "Skriv inn start og slutt på intervallet";
+        p.textContent = "Skal øvingen være obligatorisk?";
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        const inputNum1 = document.createElement("input");
+        const inputNum2 = document.createElement("input");
+
+        inputNum1.placeholder = "Start av intervall";
+        inputNum2.placeholder = "Slutt av intervall";
+        inputNum1.type = "number";
+        inputNum2.type = "number";
+        addAssignmentButton.textContent = "Legg til øving";
+
+        addButtonDiv.appendChild(p1);
+        addButtonDiv.appendChild(inputNum1);
+        addButtonDiv.appendChild(inputNum2);
+        addButtonDiv.appendChild(p);
+        addButtonDiv.appendChild(checkBox);
+        addButtonDiv.appendChild(addAssignmentButton);
+      }
 
       console.log("length of assignments" + this.assignments.length);
       for (var j = 0; j < this.assignments.length; j++) {
@@ -95,6 +130,7 @@ export default {
         assignmentDiv.className = "inactiveSubject";
         validDiv.textContent = this.assignments[j].status;
         validDiv.className = "assignments inactiveAssignments";
+        validDiv.classList.add(this.assignments[j].assignmentUserID);
         if (this.studass) {
           validDiv.onclick = this.changeValidStatus;
           validDiv.id = "studAss";
@@ -146,11 +182,11 @@ export default {
         elementor.appendChild(passedReq1);
       }
     },
-    async changeValidStatus() {
+    async changeValidStatus(e) {
       let tokenFromLocal = JSON.stringify(localStorage.getItem("token"));
       //finne ut den riktige
       //Fikse så denne endrer den den skal endre, ikke en helt random en, sette den i loopen over
-      let assignmentId = this.assignments[0].assignmentUserID;
+      let assignmentId = e.target.classList[2];
       console.log("assignment id" + assignmentId);
       let res = await axios.post(
         "http://localhost:8081/api/user/assignment/status",
@@ -162,6 +198,8 @@ export default {
       console.log(res.data);
 
       console.log("HEi jeg blir trykka på");
+      this.onStart();
+      this.listAssignments();
       /*
       if (e.target.textContent == "Ikke godkjent") {
         e.target.textContent = "Godkjent";
