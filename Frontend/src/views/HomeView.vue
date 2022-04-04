@@ -209,7 +209,7 @@ export default {
             subjectYear: this.subjectYearForStudents,
           }
         );
-        console.log("first post was sent");
+        console.log(res);
 
         //rest of the users
         for (let i = 1; i < testInFile.split("\\r\\n").length - 1; i++) {

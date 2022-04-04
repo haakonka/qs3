@@ -164,6 +164,31 @@ public class BackendController {
         return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
     }
 
+    @PostMapping("admin/addSubject")
+    public ResponseEntity addSubject(@RequestBody SubjectDTO subjectDTO){
+        if(autenticationService.checkIfAuthorized(subjectDTO.getToken(),2)){
+            SubjectDAO subjectDAO = new SubjectDAO(subjectDTO.getSubjectCode(),Integer.parseInt(subjectDTO.getSchoolYear()),subjectDTO.getSubjectName(),0);
+            subjectService.saveNewSubject(subjectDAO);
+            return ResponseEntity.ok().body("subjectAdded");
+        }
+
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("admin/removeSubject")
+    public ResponseEntity removeSubject(@RequestBody SubjectDTO subjectDTO){
+        if(autenticationService.checkIfAuthorized(subjectDTO.getToken(),2)){
+            SubjectDAO subjectDAO = new SubjectDAO(subjectDTO.getSubjectCode(),Integer.parseInt(subjectDTO.getSchoolYear()),subjectDTO.getSubjectName(),0);
+            subjectService.removeSubject(subjectDAO);
+            return ResponseEntity.ok().body("subjectRemoved");
+        }
+
+        return new ResponseEntity("not authorized", HttpStatus.FORBIDDEN);
+    }
+
+
+
+
     @PostMapping("user/assignments/interval")
     public ResponseEntity getAssignmentIntervallForASpecificSubject(@RequestBody SubjectIdDTO subjectIdDTO) {
         System.out.println("Trying to access all assignments intervals within a specific subject");

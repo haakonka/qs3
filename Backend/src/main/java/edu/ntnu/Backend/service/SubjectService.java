@@ -1,6 +1,7 @@
 package edu.ntnu.Backend.service;
 
 import edu.ntnu.Backend.model.DAO.SubjectDAO;
+import edu.ntnu.Backend.model.DTO.SubjectDTO;
 import edu.ntnu.Backend.repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,14 @@ public class SubjectService {
 
     public SubjectService(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
+    }
+
+    public void saveNewSubject(SubjectDAO subjectDAO){
+        subjectRepository.save(subjectDAO);
+    }
+
+    public void removeSubject(SubjectDAO subjectDAO){
+        subjectRepository.delete(findSubjectBySubjectId(subjectDAO.getSubjectCode(),subjectDAO.getSchoolYear()));
     }
 
     public SubjectDAO findSubjectBySubjectId(String subjectCode, int schoolYear) {
