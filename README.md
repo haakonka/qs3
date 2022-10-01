@@ -4,14 +4,14 @@ Project for IDATT2105
 ## INTRO
 
 This application aims to provide a queue system for a students who want to get their assignments approved
-by student assistance. The application is focused on having the user being able to "get in line" for getting 
+by student assistants. The application is focused on having the user being able to "get in line" for getting 
 their assignment approved by a student assistant on their phones.
 
-The application also alowees admins to add subject, assignments, and to create new students.
-This can by simply importing a csv file of all the students that they want to add to any specific subject.
+The application also allows admins to add subjects, assignments, and to add new students.
+This can be done by simply importing a csv file of all the students who they want to add to any specific subject.
 
-This application consists 3 components. The frontend which consists of a Vue application,
-the backend which consists of a SpringBoot application, and a database. In our case this is a locally hosted
+This application consists of 3 components. The frontend which consists of a Vue application,
+the backend which consists of a SpringBoot application and a database. In our case this is a locally hosted
 MySQL database which is hosted on a server PC in the apartment of one of the developers.
 
 
