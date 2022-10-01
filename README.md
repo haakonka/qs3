@@ -1,7 +1,7 @@
 # QS3
 Project for IDATT2105
 
-##INTRO
+## INTRO
 
 This application aims to provide a queue system for a students who want to get their assignments approved
 by student assistance. The application is focused on having the user being able to "get in line" for getting 
@@ -15,7 +15,7 @@ the backend which consists of a SpringBoot application, and a database. In our c
 MySQL database which is hosted on a server PC in the apartment of one of the developers.
 
 
-##Implemented functionality
+## Implemented functionality
 * Communication to a database
 * Responsive frontend information
 * Database manipulation through frontend
